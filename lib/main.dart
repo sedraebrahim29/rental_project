@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rent/views/home_view.dart';
 
 void main() {
   runApp(const Rent());
@@ -10,7 +11,12 @@ class Rent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: HomeView(),
+    );
 
   }
+}
 
   
