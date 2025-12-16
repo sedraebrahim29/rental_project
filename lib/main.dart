@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rent/views/home_view.dart';
+import 'package:rent/views/login_view.dart';
 
 void main() {
   runApp(const Rent());
@@ -13,7 +13,7 @@ class Rent extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomeView(),
+      home: LoginView(),
     );
 
   }
