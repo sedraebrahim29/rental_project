@@ -7,7 +7,7 @@ import 'package:rent/views/signup_view.dart';
 import '../widgets/textfieldwidget.dart';
 
 class HomeView extends StatelessWidget {
-   HomeView({super.key});
+  const HomeView({super.key});
   //Function()? onTap;
 
   @override
@@ -37,23 +37,29 @@ child: Column(
     Textfieldwidget(passwordField),
     const Spacer(flex: 3,),
 
-    Container(
-      height: 60,
-      width: 250,
+    GestureDetector(
+      onTap: (){
+        //هون ربط ال API
+        Navigator.pushReplacementNamed(context, '/home');
+      },
+      child: Container(
+        height: 60,
+        width: 250,
 
-      decoration: BoxDecoration(
-        color: Color(0xff011963),
-        borderRadius: BorderRadius.circular(28),
+        decoration: BoxDecoration(
+          color: Color(0xff011963),
+          borderRadius: BorderRadius.circular(28),
 
+        ),
+        child: Center(
+        child:const
+        Text('Login',
+        style: TextStyle(
+          fontSize: 25,
+            fontFamily: 'DM Serif Display',
+          color: Colors.white
+        ),)),
       ),
-      child: Center(
-      child:const
-      Text('Login',
-      style: TextStyle(
-        fontSize: 25,
-          fontFamily: 'DM Serif Display',
-        color: Colors.white
-      ),)),
     ),
     const SizedBox(height: 20),
     Row(
@@ -69,9 +75,8 @@ child: Column(
 
         GestureDetector(
           onTap: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context){
-              return const SignupView();
-            }));
+            Navigator.pushNamed(context, '/signup');
+
         },
           child: const Text('Sing up',
           style: TextStyle(

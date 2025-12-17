@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:rent/models/textfield_model.dart';
 import 'package:rent/widgets/step_1.dart';
 import 'package:rent/widgets/step_2.dart';
 import 'package:rent/widgets/step_3.dart';
-import 'package:rent/widgets/textfieldwidget.dart';
+
 
 class SignupView extends StatefulWidget {
   const SignupView();
@@ -69,7 +68,7 @@ class _SignupViewState extends State<SignupView> {
                    ],
                  ),),
                SizedBox(height: 14),
-               Text('Creat a new account',
+               Text('Create a new account',
                  style: TextStyle(
                    fontSize: 25,
                    fontFamily: 'DM Serif Display',
@@ -87,39 +86,38 @@ class _SignupViewState extends State<SignupView> {
 
 
                SizedBox(height: 150,),
-          Container(
-            height: 60,
-            width: 250,
+               GestureDetector(
+                 onTap: () {
+                   if (currentStep < 2) {
+                     setState(() {
+                       currentStep++;
+                     });
+                   } else {
+                     //  API
+                     Navigator.pop(context);
+                   }
+                 },
+                 child: Container(
+                   height: 60,
+                   width: 250,
+                   decoration: BoxDecoration(
+                     color: const Color(0xff011963),
+                     borderRadius: BorderRadius.circular(28),
+                   ),
+                   child: Center(
+                     child: Text(
+                       currentStep < 2 ? 'Next' : 'Sign up',
+                       style: const TextStyle(
+                         fontSize: 25,
+                         color: Colors.white,
+                         fontFamily: 'DM Serif Display',
+                       ),
+                     ),
+                   ),
+                 ),
+               ),
 
-            decoration: BoxDecoration(
-              color: Color(0xff011963),
-              borderRadius: BorderRadius.circular(28),
-
-            ),
-            child: Center(
-                child:GestureDetector(
-                  onTap: () {
-                    if (currentStep < 2) {
-                      setState(() {
-                        currentStep++;
-                      });
-                    } else {
-                      //هون بدي حط ال api
-                      //submitSignup();
-                    }
-                  },
-                  child: Text(
-                    currentStep < 2 ? 'Next' : 'Sign up',
-                    style: const TextStyle(
-                      fontSize: 25,
-                      color: Colors.white,
-                      fontFamily: 'DM Serif Display',
-                    ),
-                  ),
-                )
-            ),
-          ),
-          const SizedBox(height: 20),
+               const SizedBox(height: 20),
                Row(
                  mainAxisAlignment: MainAxisAlignment.center,
                  children: [
@@ -133,9 +131,7 @@ class _SignupViewState extends State<SignupView> {
 
                    GestureDetector(
                      onTap: (){
-                       Navigator.push(context, MaterialPageRoute(builder: (context){
-                         return const SignupView();
-                       }));
+                       Navigator.pop(context);
                      },
                      child: const Text('Log in',
                        style: TextStyle(
