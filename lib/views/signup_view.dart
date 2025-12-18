@@ -5,7 +5,7 @@ import 'package:rent/widgets/step_3.dart';
 
 
 class SignupView extends StatefulWidget {
-  const SignupView();
+  const SignupView({super.key});
 
   @override
   State<SignupView> createState() => _SignupViewState();
@@ -94,7 +94,7 @@ class _SignupViewState extends State<SignupView> {
                      });
                    } else {
                      //  API
-                     Navigator.pop(context);
+                     Navigator.pushReplacementNamed(context, '/admin');
                    }
                  },
                  child: Container(

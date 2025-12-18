@@ -22,7 +22,7 @@ class MainDrawer extends StatelessWidget {
                 begin: Alignment.bottomLeft,
                 end: Alignment.topRight,
               ),
-              borderRadius: BorderRadius.only(bottomRight: Radius.circular(40)),
+              borderRadius: BorderRadius.only(bottomRight: Radius.circular(40),bottomLeft: Radius.circular(40)),
             ),
             child: Column(
               children: [

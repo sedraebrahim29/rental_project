@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rent/views/adminDashboard/admin_dashboard.dart';
 import 'package:rent/views/homeScreen/home_screen.dart';
 import 'package:rent/views/home_view.dart';
 import 'package:rent/views/signup_view.dart';
@@ -18,7 +19,8 @@ class Rent extends StatelessWidget {
       routes: {
         '/': (context) => const HomeView(),      // LogIn
         '/signup': (context) => const SignupView(), // SignUp
-        '/home': (context) => const HomeScreen(), // Apartments
+        '/home': (context) => const HomeScreen(), // Home
+        '/admin': (context) => const AdminDashboard(), // Admin
       },
     );
   }
