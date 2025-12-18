@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../data/apartments_data.dart';
-import '../../data/colors.dart';
 import '../../widgets/home_header.dart';
 import '../../widgets/home_screen_items.dart';
 import '../../widgets/main_drawer.dart';
@@ -12,24 +11,33 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: MyColor.offWhite,
       drawer: const MainDrawer(),
-      body: Column(
-        children: [
-          // CUSTOM HEADER
-          const HomeHeader(),
-
-          // LIST
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: ApartmentsData.items.length,
-              itemBuilder: (context, index) {
-                return HomeScreenItems(apartment: ApartmentsData.items[index]);
-              },
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/HomeBackground.png'),
+            fit: BoxFit.fill,
           ),
-        ],
+        ),
+        child: Column(
+          children: [
+            // CUSTOM HEADER
+            const HomeHeader(),
+            const SizedBox(height: 20),
+            // LIST
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: ApartmentsData.items.length,
+                itemBuilder: (context, index) {
+                  return HomeScreenItems(
+                    apartment: ApartmentsData.items[index],
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

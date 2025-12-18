@@ -49,11 +49,12 @@ class MainDrawer extends StatelessWidget {
           const SizedBox(height: 20),
 
           // MENU ITEMS
-          _DrawerItem(icon: Icons.person_outline, title: 'My profile'),
-          _DrawerItem(icon: Icons.favorite_border, title: 'My favorite'),
-          _DrawerItem(icon: Icons.archive_outlined, title: 'Archive'),
-          _DrawerItem(icon: Icons.settings_outlined, title: 'Setting'),
-          _DrawerItem(icon: Icons.help_outline, title: 'Help'),
+          _DrawerItem(icon: Icons.person_outline, title: 'My profile', onTap: () {  },),
+          _DrawerItem(icon: Icons.favorite_border, title: 'My favorite', onTap: () {  },),
+          _DrawerItem(icon: Icons.archive_outlined, title: 'Archive',onTap: () {  },),
+          _DrawerItem(icon: Icons.settings_outlined, title: 'Setting',onTap: () {  },),
+          _DrawerItem(icon: Icons.help_outline, title: 'Help',onTap: () {  },),
+          _DrawerItem(icon: Icons.logout, title: 'Log out',onTap: () {  },),
         ],
       ),
     );
@@ -63,13 +64,14 @@ class MainDrawer extends StatelessWidget {
 class _DrawerItem extends StatelessWidget {
   final IconData icon;
   final String title;
+  final Function() onTap;
 
-  const _DrawerItem({required this.icon, required this.title});
+  const _DrawerItem({required this.icon, required this.title, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: () {},
+      onTap: onTap,
       leading: CircleAvatar(
         radius: 18,
         backgroundColor: MyColor.skyBlue.withValues(alpha: 0.3),

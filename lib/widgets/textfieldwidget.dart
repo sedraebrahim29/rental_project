@@ -33,6 +33,7 @@ class _TextfieldwidgetState extends State<Textfieldwidget> {
     Padding(
     padding: const EdgeInsets.symmetric(horizontal: 40),
     child: TextField(
+      controller: widget.tx.controller,
       obscureText: widget.tx.isPassword ? obscure : false,
       cursorColor: Color(0xff5B7CA9),
     decoration: InputDecoration(

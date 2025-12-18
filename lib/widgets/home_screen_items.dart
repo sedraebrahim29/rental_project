@@ -13,25 +13,26 @@ class HomeScreenItems extends StatelessWidget {
     return InkWell(
       onTap: () {},
       borderRadius: BorderRadius.circular(16),
-      child: Card(
-        margin: const EdgeInsets.symmetric(vertical: 10),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-          side: BorderSide(color: MyColor.deepBlue, width: 1.5),
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: MyColor.offWhite,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: MyColor.deepBlue, width: 1.2),
         ),
-        color: MyColor.offWhite,
-        elevation: 4,
+
         child: Padding(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(2),
           child: Row(
             children: [
               // IMAGE
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.asset(
-                  apartment.image,
-                  width: 90,
-                  height: 90,
+                  apartment.imageUrl,
+                  width: 110,
+                  height: 130,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -52,27 +53,15 @@ class HomeScreenItems extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
 
-                    const SizedBox(height: 4),
-
-                    // LOCATION
-                    Text(
-                      apartment.location,
-                      style: TextStyle(color: MyColor.deepBlue),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-
-                    const SizedBox(height: 8),
+                    //const SizedBox(height: 4),
+                    const SizedBox(height: 6),
 
                     // INFO ROW
-                    Row(
-                      children: [
-                        InfoItem(icon: Icons.home, label: apartment.type),
-                        SizedBox(width: 12),
-                        InfoItem(
-                          icon: Icons.square_foot_sharp,
-                          label: apartment.size,
-                        ),
-                      ],
+                    InfoItem(icon: Icons.home, label: apartment.type),
+                    SizedBox(height: 3),
+                    InfoItem(
+                      icon: Icons.square_foot_sharp,
+                      label: apartment.size,
                     ),
 
                     const SizedBox(height: 6),
@@ -85,6 +74,32 @@ class HomeScreenItems extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         color: MyColor.deepBlue,
                       ),
+                    ),
+
+                    // LOCATION
+                    Row(
+                      children: [
+                        //Icon(Icons.location_on_outlined),
+
+                        Text(
+                          apartment.location,
+                          style: TextStyle(color: MyColor.deepBlue),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 4),
+                    //RATING
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.star,
+                          color: MyColor.warmGold,
+                          size: 18,
+                        ),
+                        Text(apartment.rating.toString()),
+                      ],
                     ),
                   ],
                 ),
