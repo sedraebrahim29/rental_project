@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:rent/views/login_view.dart';
+import 'package:rent/views/signup_view.dart';
+
 import 'package:rent/views/adminDashboard/admin_dashboard.dart';
 import 'package:rent/views/homeScreen/home_screen.dart';
-import 'package:rent/views/home_view.dart';
-import 'package:rent/views/signup_view.dart';
 
 void main() {
   runApp(const Rent());
@@ -15,15 +16,13 @@ class Rent extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: '/login',
       routes: {
-        '/': (context) => const HomeView(),      // LogIn
-        '/signup': (context) => const SignupView(), // SignUp
-        '/home': (context) => const HomeScreen(), // Home
-        '/admin': (context) => const AdminDashboard(), // Admin
+        '/login': (context) => LoginView(),
+        '/signup': (context) => const SignupView(),
+        '/home': (context) => const HomeScreen(),
+        '/admin': (context) => const AdminDashboard(),
       },
     );
   }
 }
-
-  
