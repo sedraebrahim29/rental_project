@@ -18,10 +18,7 @@ class _SignupViewState extends State<SignupView> {
   File? profileImage;
   File? idImage;
 
-  //////////////////
-  final firstNameController = TextEditingController();
-  final lastNameController = TextEditingController();
-///////////////
+
 
   @override
   Widget build(BuildContext context) {
@@ -44,44 +41,8 @@ class _SignupViewState extends State<SignupView> {
 
              child:  Column(
                children: [
-                 Center(
-                   child: Row(
-                     mainAxisAlignment: MainAxisAlignment.center,
 
-                     children: [
-                       Container(
-                         width: 10,
-                         height: 10,
-                         decoration: const BoxDecoration(
-                           color: Color(0xff011963),
-                           shape: BoxShape.circle,
-                         ),
-                       ),
-                       const SizedBox(width: 15),
-                       Container(
-                         width: 10,
-                         height: 10,
-                         decoration: const BoxDecoration(
-                           color: Colors.white,
-                           shape: BoxShape.circle,
-                         ),
-                       ),
-                       const SizedBox(width: 15),
-                       Container(
-                         width: 10,
-                         height: 10,
-                         decoration: const BoxDecoration(
-                           color: Colors.white,
-                           shape: BoxShape.circle,
-                         ),
-                       ),
-                     ],
-                   ),),
-                 SizedBox(
-                   height: 65,
-                 ),
-
-                 SizedBox(height: 14),
+                 SizedBox(height: 70),
                  Text('Creat a new account',
                    style: TextStyle(
                      fontSize: 25,
@@ -92,8 +53,8 @@ class _SignupViewState extends State<SignupView> {
                   IndexedStack(
                      index: currentStep,
                      children: [
-                       Step1(),
-                       Step2(),
+                       Step1(onNext: () => setState(() => currentStep = 1)),
+                       Step2(onNext: () => setState(() => currentStep = 2)),
                        Step3(
                          profileImage: profileImage,
                          idImage: idImage,
@@ -109,45 +70,20 @@ class _SignupViewState extends State<SignupView> {
                              setState(() => idImage = image);
                            }
                          },
+                         onSubmit: () {
+                           Navigator.pushReplacement(
+                             context,
+                             MaterialPageRoute(builder: (_) => LoginView()),
+                           );
+                         },
                        ),
                      ],
                    ),
 
 
-                 SizedBox(height: 150,),
-            Container(
-              height: 60,
-              width: 250,
 
-              decoration: BoxDecoration(
-                color: Color(0xff011963),
-                borderRadius: BorderRadius.circular(28),
 
-              ),
-              child: Center(
-                  child:GestureDetector(
-                    onTap: () {
-                      if (currentStep < 2) {
-                        setState(() => currentStep++);
-                      } else {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (_) =>  LoginView()),
-                        );
-                      }
-                    },
-                    child: Text(
-                      currentStep < 2 ? 'Next' : 'Sign up',
-                style: const TextStyle(
-                        fontSize: 25,
-                        color: Colors.white,
-                        fontFamily: 'DM Serif Display',
-                      ),
-                    ),
-                  )
-              ),
-            ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
                  Row(
                    mainAxisAlignment: MainAxisAlignment.center,
                    children: [
@@ -162,7 +98,7 @@ class _SignupViewState extends State<SignupView> {
                      GestureDetector(
                        onTap: (){
                          Navigator.push(context, MaterialPageRoute(builder: (context){
-                           return const SignupView();
+                           return  LoginView();
                          }));
                        },
                        child: const Text('Log in',
