@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:rent/models/textfield_model.dart';
 import 'package:rent/service/login_service.dart';
 
-import 'package:rent/views/homeScreen/home_screen.dart';
 import 'package:rent/views/home_view.dart';
 import 'package:rent/views/signup_view.dart';
 import '../widgets/textfieldwidget.dart';
+import 'homeScreenAndProperties/home_screen.dart';
 
 
 class LoginView extends StatefulWidget {

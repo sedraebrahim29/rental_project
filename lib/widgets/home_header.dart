@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:rent/views/homeScreenAndProperties/my_properties.dart';
 
 import '../data/colors.dart';
-import '../views/homeScreen/search_screen.dart';
+
+import '../views/homeScreenAndProperties/search_screen.dart';
 
 class HomeHeader extends StatelessWidget {
   const HomeHeader({super.key});
@@ -39,24 +41,28 @@ class HomeHeader extends StatelessWidget {
                         );
                       },
                       child: Container(
-
-                        height: 30,
-                        padding: const EdgeInsets.symmetric(horizontal: 16,),
+                        height: 35,
+                        width: 250,
+                        alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: MyColor.offWhite,
                           borderRadius: BorderRadius.circular(30),
-                        ),
-                        child:
-                            Text(
-                              'Search',
-                              style: TextStyle(
-                                color: MyColor.deepBlue,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                              ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
                             ),
-
-
+                          ],
+                        ),
+                        child: const Text(
+                          'Search',
+                          style: TextStyle(
+                            color: MyColor.deepBlue, //
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
 
@@ -74,11 +80,36 @@ class HomeHeader extends StatelessWidget {
                 const SizedBox(height: 7),
                 Row(
                   children: [
-                    _CategoryButtons(title: "My Properties",color: MyColor.offWhite, onTap: () {}),
-                    const SizedBox(width: 20,),
-                    _CategoryButtons(title: "Rent",color: MyColor.skyBlue, onTap: () {}),
-                    const SizedBox(width: 20,),
-                    _CategoryButtons(title: "Messages",color: MyColor.offWhite, onTap: () {}),
+                    //MY PROPERTIES
+                    _CategoryButtons(
+                      title: "My Properties",
+                      textColor: MyColor.deepBlue,
+                      color: MyColor.offWhite,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => MyPropertiesScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(width: 20),
+                    //RENT
+                    _CategoryButtons(
+                      title: "Rent",
+                      color: MyColor.skyBlue,
+                      textColor: MyColor.deepBlue,
+                      onTap: () {},
+                    ),
+                    const SizedBox(width: 20),
+                    //MESSAGES
+                    _CategoryButtons(
+                      title: "Messages",
+                      color: MyColor.offWhite,
+                      textColor: MyColor.deepBlue,
+                      onTap: () {},
+                    ),
                   ],
                 ),
               ],
@@ -94,8 +125,14 @@ class _CategoryButtons extends StatelessWidget {
   final String title;
   final Function() onTap;
   final Color color;
+  final Color textColor;
 
-  const _CategoryButtons({required this.title, required this.onTap, required this.color});
+  const _CategoryButtons({
+    required this.title,
+    required this.onTap,
+    required this.color,
+    required this.textColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -109,10 +146,7 @@ class _CategoryButtons extends StatelessWidget {
         ),
         child: Text(
           title,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            color: MyColor.deepBlue,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
         ),
       ),
     );
