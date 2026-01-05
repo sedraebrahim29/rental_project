@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:rent/views/login_view.dart';
 import 'cubit/property_cubit.dart';
 
 void main() {
-  runApp(const Rent());
+  runApp(ProviderScope(child: const Rent()));
 }
 
 class Rent extends StatelessWidget {

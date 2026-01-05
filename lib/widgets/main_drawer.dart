@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rent/views/my_booking.dart';
 
 import '../data/colors.dart';
 
@@ -22,7 +23,10 @@ class MainDrawer extends StatelessWidget {
                 begin: Alignment.bottomLeft,
                 end: Alignment.topRight,
               ),
-              borderRadius: BorderRadius.only(bottomRight: Radius.circular(40),bottomLeft: Radius.circular(40)),
+              borderRadius: BorderRadius.only(
+                bottomRight: Radius.circular(40),
+                bottomLeft: Radius.circular(40),
+              ),
             ),
             child: Column(
               children: [
@@ -49,12 +53,33 @@ class MainDrawer extends StatelessWidget {
           const SizedBox(height: 20),
 
           // MENU ITEMS
-          _DrawerItem(icon: Icons.person_outline, title: 'My profile', onTap: () {  },),
-          _DrawerItem(icon: Icons.favorite_border, title: 'My favorite', onTap: () {  },),
-          _DrawerItem(icon: Icons.archive_outlined, title: 'Archive',onTap: () {  },),
-          _DrawerItem(icon: Icons.settings_outlined, title: 'Setting',onTap: () {  },),
-          _DrawerItem(icon: Icons.help_outline, title: 'Help',onTap: () {  },),
-          _DrawerItem(icon: Icons.logout, title: 'Log out',onTap: () {  },),
+          _DrawerItem(
+            icon: Icons.person_outline,
+            title: 'My profile',
+            onTap: () {},
+          ),
+          _DrawerItem(
+            icon: Icons.favorite_border,
+            title: 'My favorite',
+            onTap: () {},
+          ),
+          _DrawerItem(
+            icon: Icons.apartment_sharp,
+            title: 'My booking',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => MyBooking()),
+              );
+            },
+          ),
+          _DrawerItem(
+            icon: Icons.settings_outlined,
+            title: 'Setting',
+            onTap: () {},
+          ),
+          _DrawerItem(icon: Icons.help_outline, title: 'Help', onTap: () {}),
+          _DrawerItem(icon: Icons.logout, title: 'Log out', onTap: () {}),
         ],
       ),
     );
@@ -66,7 +91,11 @@ class _DrawerItem extends StatelessWidget {
   final String title;
   final Function() onTap;
 
-  const _DrawerItem({required this.icon, required this.title, required this.onTap});
+  const _DrawerItem({
+    required this.icon,
+    required this.title,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
