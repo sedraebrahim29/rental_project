@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rent/helper/secure_storage_service.dart';
 import 'package:rent/helper/token_storage.dart';
 import 'details_state.dart';
 import '../../service/details_service.dart';
@@ -10,11 +11,8 @@ class DetailsCubit extends Cubit<DetailsState> {
     emit(DetailsLoading());
     try {
 
-      final token = await TokenStorage.getToken();
+      final token = await SecureStorage.getToken();
 
-      if (token == null) {
-        throw Exception('No token found');
-      }
 
       final property = await DetailsService().getDetails(
           id: id,

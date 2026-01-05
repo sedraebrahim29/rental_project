@@ -1,4 +1,5 @@
-import 'package:rent/models/booking_model.dart';
+
+import 'package:rent/models/conflict_booking_model.dart';
 
 abstract class BookingState {}
 

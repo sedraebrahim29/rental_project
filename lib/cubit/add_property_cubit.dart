@@ -2,46 +2,82 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-
+import '../core/constant.dart';
+import '../core/repos/add_property_repo.dart';
 import 'add_property_state.dart';
 
 class AddPropertyCubit extends Cubit<AddPropertyState> {
   AddPropertyCubit() : super(AddPropertyInitial());
 
+  final AddPropertyRepo repo = AddPropertyRepo();
   final ImagePicker _picker = ImagePicker();
 
-  final List<File> images = [];
+  List<File> images = [];
 
-  String? city, governorate, category ;
-  List<String> selectedAmenities = [];
+  // Data Lists from API
+  List<Map<String, dynamic>> governorates = [];
+  List<Map<String, dynamic>> cities = [];
+  List<Map<String, dynamic>> categories = [];
+  List<Map<String, dynamic>> amenitiesList = [];
 
-  final List<String> cities = ['Damascus', 'Aleppo', 'Homs', 'Latakia', 'Tortuous'];
-  final List<String> governorates = ['Maze', 'Dummar', 'Shahbaa', 'Medan'];
-  final List<String> categories = ['House', 'Apartment', 'Villa', 'Studio', 'Chalet'];
-  final List<String> amenitiesList = ['WiFi', 'Pool', 'Garden', 'Parking', 'Gym', 'Elevator', 'Balcony'];
+  // Selected Values (We store IDs now, not Names)
+  int? selectedGovId;
+  int? selectedCityId;
+  int? selectedCatId;
+  List<int> selectedAmenitiesIds = [];
 
-  /// controllers
+  // Controllers
   final areaCtrl = TextEditingController();
   final priceCtrl = TextEditingController();
   final bedsCtrl = TextEditingController();
   final bathsCtrl = TextEditingController();
   final addressCtrl = TextEditingController();
 
-
-
-  void toggleAmenity(String amenity) {
-    if (selectedAmenities.contains(amenity)) {
-      selectedAmenities.remove(amenity);
-    } else {
-      selectedAmenities.add(amenity);
+  /// 1. Fetch initial data (Govs, Cats, Amenities)
+  Future<void> loadInitialData() async {
+    print("--- Fetching data from: $baseUrl ---");
+    emit(AddPropertyLoading());
+    try {
+      governorates = await repo.fetchData('governorate');
+      print("--- Success: ${governorates.length} Govs found ---");
+      categories = await repo.fetchData('category');
+      amenitiesList = await repo.fetchData('amenities');
+      emit(AddPropertyInitial());
+    } catch (e) {
+      print("--- API ERROR: $e ---");
+      emit(AddPropertyError("Failed to load data: $e"));
     }
-    emit(AddPropertyImagesUpdated(List.from(images))); // تحديث الواجهة
   }
 
-  /// IMAGES
+  /// 2. When Governorate changes, fetch Cities
+  Future<void> changeGovernorate(int? govId) async {
+    if (govId == null) return;
+    selectedGovId = govId;
+    selectedCityId = null; // Reset city
+    cities = []; // Clear old cities
+
+    emit(AddPropertyLoading());
+    try {
+      cities = await repo.fetchData('cities', id: govId);
+      emit(AddPropertyInitial());
+    } catch (e) {
+      emit(AddPropertyError("Failed to load cities"));
+    }
+  }
+
+  /// 3. Toggle Amenities
+  void toggleAmenity(int id) {
+    if (selectedAmenitiesIds.contains(id)) {
+      selectedAmenitiesIds.remove(id);
+    } else {
+      selectedAmenitiesIds.add(id);
+    }
+    emit(AddPropertyImagesUpdated(List.from(images))); // Refresh UI
+  }
+
+  /// 4. Images
   Future<void> pickImage() async {
     if (images.length >= 6) return;
-
     final picked = await _picker.pickImage(source: ImageSource.gallery);
     if (picked != null) {
       images.add(File(picked.path));
@@ -54,7 +90,7 @@ class AddPropertyCubit extends Cubit<AddPropertyState> {
     emit(AddPropertyImagesUpdated(List.from(images)));
   }
 
-  ///  SUBMIT
+  /// 5. Submit
   void submitProperty() async {
     if (images.isEmpty) {
       emit(AddPropertyError('Please add at least one image'));
@@ -63,10 +99,27 @@ class AddPropertyCubit extends Cubit<AddPropertyState> {
 
     emit(AddPropertySubmitting());
 
-    // هنا نرسل البيانات للـ API
+    try {
+      Map<String, String> body = {
+        'governorate_id': selectedGovId.toString(),
+        'city_id': selectedCityId.toString(),
+        'category_id': selectedCatId.toString(),
+        'area': areaCtrl.text,
+        'price': priceCtrl.text,
+        'bedrooms': bedsCtrl.text,
+        'bathrooms': bathsCtrl.text,
+        'address': addressCtrl.text,
+      };
 
-    await Future.delayed(const Duration(seconds: 1));
+      // Add amenities as array
+      for (int i = 0; i < selectedAmenitiesIds.length; i++) {
+        body['amenities[$i]'] = selectedAmenitiesIds[i].toString();
+      }
 
-    emit(AddPropertySuccess());
+      await repo.submitProperty(body, images);
+      emit(AddPropertySuccess());
+    } catch (e) {
+      emit(AddPropertyError(e.toString()));
+    }
   }
 }

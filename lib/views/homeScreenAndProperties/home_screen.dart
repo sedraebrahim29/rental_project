@@ -29,7 +29,17 @@ class HomeScreen extends StatelessWidget {
             Expanded(
               child: BlocBuilder<PropertyCubit, PropertyState>(
                 builder: (context, state) {
-                  // جلب القائمة من الـ State
+                  // 1. Loading State
+                  if (state is PropertyLoading) {
+                    return const Center(child: CircularProgressIndicator(color: MyColor.deepBlue));
+                  }
+
+                  // 2. Error State
+                  if (state is PropertyError) {
+                    return Center(child: Text(state.message, style: const TextStyle(color: Colors.red)));
+                  }
+
+                  // 3. Success State
                   if (state is PropertyUpdated) {
                     final allProperties = state.properties;
 
@@ -37,7 +47,7 @@ class HomeScreen extends StatelessWidget {
                       return const Center(
                         child: Text(
                           "No Properties Available",
-                          style: TextStyle(color: MyColor.offWhite, fontSize: 18),
+                          style: TextStyle(color: MyColor.deepBlue, fontSize: 18),
                         ),
                       );
                     }
@@ -48,19 +58,21 @@ class HomeScreen extends StatelessWidget {
                       itemBuilder: (context, index) {
                         final prop = allProperties[index];
 
-                        //  تمرير الموديل  للـ Card
                         return PropertyCard(
                           property: prop,
+                          // Only onTap is provided.
+                          // onEdit is NOT provided, so the edit button remains hidden.
                           onTap: () {
-                            //  الانتقال لصفحة التفاصيل
+                            //  Navigate to Detail Screen
+
                           },
                         );
                       },
                     );
                   }
 
-                  // في حال كانت  Initial أو Loading
-                  return const Center(child: CircularProgressIndicator());
+                  // 4. Initial State
+                  return const SizedBox();
                 },
               ),
             ),

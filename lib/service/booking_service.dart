@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:rent/helper/api.dart';
-import 'package:rent/models/booking_model.dart';
+
+import 'package:rent/models/conflict_booking_model.dart';
 
 class BookingService {
   static const baseUrl = 'http://127.0.0.1:8000/api';

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:rent/categories/details_category.dart';
 import 'package:rent/cubit/details_cubit/details_cubit.dart';
@@ -16,7 +17,7 @@ import 'package:rent/widgets/details_widgets/booking_bottom_sheet.dart';
 import 'cubit/property_cubit.dart';
 
 void main() {
-  runApp(const Rent());
+  runApp(ProviderScope(child: const Rent()));
 }
 
 class Rent extends StatelessWidget {
@@ -33,7 +34,7 @@ class Rent extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-home:  SearchScreen(),
+home:  LoginView()
 // home:
 // Scaffold(
 //

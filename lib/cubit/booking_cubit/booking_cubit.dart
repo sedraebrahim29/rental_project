@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rent/cubit/booking_cubit/booking_state.dart';
+import 'package:rent/helper/secure_storage_service.dart';
 import 'package:rent/helper/token_storage.dart';
 import 'package:rent/service/booking_service.dart';
 
@@ -7,10 +8,9 @@ class BookingCubit extends Cubit<BookingState> {
   BookingCubit() : super(BookingInitial());
 // get
   Future<void> loadBookings(int propertyId) async {
+    final String token = await SecureStorage.getToken();
     emit(BookingLoading());
     try {
-      final token = await TokenStorage.getToken();
-      if (token == null) throw Exception('No token');
 
       final bookings = await BookingService().getPropertyBookings(
         propertyId: propertyId,

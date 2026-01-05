@@ -15,14 +15,14 @@ class PropertyModel {
   final double rating;
 
   // نوعين من الصور
-  final List<String> imageUrls;   // روابط صور (للقراءة من الـ API)
-  final List<File>? localImages;  // ملفات صور (عند الإضافة من الموبايل)
+  final List<String> imageUrls; // روابط صور (للقراءة من الـ API)
+  final List<File>? localImages; // ملفات صور (عند الإضافة من الموبايل)
 
   PropertyModel({
     this.id,
     required this.ownerName,
-     this.city,
-     this.governorate,
+    this.city,
+    this.governorate,
     required this.category,
     required this.amenities,
     required this.area,
@@ -30,16 +30,45 @@ class PropertyModel {
     required this.beds,
     required this.baths,
     required this.address,
-  this.rating = 0.0,
+    this.rating = 0.0,
     this.imageUrls = const [],
     this.localImages,
   });
+
+  factory PropertyModel.init() {
+    return PropertyModel(
+      ownerName: '',
+      city: '',
+      governorate: '',
+      category: '',
+      amenities: [],
+      area: '',
+      price: '',
+      beds: '',
+      baths: '',
+      address: '',
+    );
+  }
+
+  static List<PropertyModel> fromListProperties(Map<String, dynamic> json) {
+    List<PropertyModel> properties = [];
+    List jsonData = [...json["data"]];
+
+    for (int i = 0; i < jsonData.length; i++) {
+      PropertyModel propertyModel = PropertyModel.fromJson(jsonData[i]);
+      properties.add(propertyModel);
+    }
+
+    return properties;
+  }
 
   //  استقبال بيانات الـ API
   factory PropertyModel.fromJson(Map<String, dynamic> json) {
     return PropertyModel(
       id: json['id']?.toString(),
-      ownerName: json['owner']?['name'] ?? 'Unknown',//
+
+      ownerName: json['owner']?['name'] ?? 'Unknown',
+      // Nested in 'owner' object
       city: json['city'] ?? '',
       governorate: json['governorate'] ?? '',
       category: json['category'] ?? '',
@@ -48,18 +77,20 @@ class PropertyModel {
           : [],
       area: json['area']?.toString() ?? '',
       price: json['price']?.toString() ?? '',
-      beds: json['bedrooms']?.toString() ?? '',//
-      baths: json['bathrooms']?.toString() ?? '',//
-      address: json['address'] ?? '',
 
+      beds: json['bedrooms']?.toString() ?? '',
+      // Match API key 'bedrooms'
+      baths: json['bathrooms']?.toString() ?? '',
+
+      // Match API key 'bathrooms'
+      address: json['address'] ?? '',
       rating: (json['rating'] ?? 0.0).toDouble(),
 
-      imageUrls: json['images'] != null//
-          ? List<String>.from(
-        json['images'].map((img) => img['url']),
-      )
-          : [],
-
+      imageUrls: json['images'] != null
+          ? (json['images'] as List)
+                .map((i) => i['url'].toString())
+                .toList() // Extract 'url'
+          : const [],
     );
   }
 
