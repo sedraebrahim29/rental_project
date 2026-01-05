@@ -33,17 +33,23 @@ class _DetailsImageState extends State<DetailsImage> {
                   setState(() => currentIndex = index);
                 },
                 itemBuilder: (context, index) {
-                  return Image.asset(
+                  return widget.images[index].startsWith('http')
+                      ? Image.network(
+                    widget.images[index],
+                    fit: BoxFit.cover,
+                  )
+                      : Image.asset(
                     widget.images[index],
                     fit: BoxFit.cover,
                   );
+
                 },
               ),
             ),
 
             const SizedBox(height: 20),
 
-            /// DOTS INDICATOR
+            // DOTS INDICATOR
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(

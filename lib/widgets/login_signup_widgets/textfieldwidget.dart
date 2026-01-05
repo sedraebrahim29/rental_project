@@ -4,7 +4,7 @@ import 'package:rent/models/textfield_model.dart';
 
 
 class Textfieldwidget extends StatefulWidget {
-   Textfieldwidget(this.tx);
+   const Textfieldwidget(this.tx, {super.key});
 
 final TextFieldModel tx;
 

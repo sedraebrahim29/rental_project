@@ -15,14 +15,14 @@ class SignupModel {
     required this.passwordConfirmation,
   });
 
-  factory SignupModel.fromJson(Map<String, dynamic> json) {
-    return SignupModel(
-      firstName: json['first_name'],
-      lastName: json['last_name'],
-      birthday: json['birthday'],
-      phone: json['phone'],
-      password: json['password'],
-      passwordConfirmation: json['password_confirmation'],
-    );
+  Map<String, String> toJson() {
+    return {
+      'first_name': firstName,
+      'last_name': lastName,
+      'birth_date': birthday,
+      'phone': phone,
+      'password': password,
+      'password_confirmation': passwordConfirmation,
+    };
   }
 }

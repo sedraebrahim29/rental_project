@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rent/cubit/login_cubit/login_cubit.dart';
 import 'package:rent/cubit/login_cubit/login_state.dart';
 import 'package:rent/models/textfield_model.dart';
-import 'package:rent/service/login_service.dart';
+import 'package:rent/views/homeScreenAndProperties/home_screen.dart';
 import 'package:rent/views/signup_view.dart';
-import 'package:rent/views/homeScreen/home_screen.dart';
-import '../widgets/textfieldwidget.dart';
+
+import 'package:rent/widgets/login_signup_widgets/textfieldwidget.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -60,6 +60,7 @@ class _LoginViewState extends State<LoginView> {
                 borderRadius: BorderRadius.circular(28),
               ),
               child: Center(
+                // integrate cubitt
                 child: BlocConsumer<LoginCubit, LoginState>(
                   listener: (context, state) async {
                     if (state is LoginSuccess) {
@@ -84,17 +85,12 @@ class _LoginViewState extends State<LoginView> {
 
                     return GestureDetector(
                       onTap: () async {
-                        /// Bloc login (شغلك)
+                        //trigger cubit
                         context.read<LoginCubit>().login(
                           phone: phoneController.text,
                           password: passwordController.text,
                         );
 
-                        /// Service login (شغل زميلك – محفوظ)
-                        await LoginService().loginService(
-                          phone: phoneController.text,
-                          password: passwordController.text,
-                        );
                       },
                       child: const Text(
                         'Login',

@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rent/helper/token_storage.dart';
 import 'login_state.dart';
 import '../../service/login_service.dart';
 
@@ -9,10 +10,11 @@ class LoginCubit extends Cubit<LoginState> {
     emit(LoginLoading());
 
     try {
-      await LoginService().loginService(
+     final token =  await LoginService().loginService(
         phone: phone,
         password: password,
       );
+      await TokenStorage.saveToken(token);
       emit(LoginSuccess());
     } catch (e) {
       emit(LoginError(e.toString()));

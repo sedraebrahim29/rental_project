@@ -3,8 +3,8 @@ import 'dart:io';
 class PropertyModel {
   final String? id; //  اختياري لأنه عند الإضافة لا يكون لدينا ID بعد
   final String ownerName;
-  final String city;
-  final String governorate;
+  final String? city;
+  final String? governorate;
   final String category;
   final List<String> amenities;
   final String area;
@@ -21,8 +21,8 @@ class PropertyModel {
   PropertyModel({
     this.id,
     required this.ownerName,
-    required this.city,
-    required this.governorate,
+     this.city,
+     this.governorate,
     required this.category,
     required this.amenities,
     required this.area,
@@ -39,7 +39,7 @@ class PropertyModel {
   factory PropertyModel.fromJson(Map<String, dynamic> json) {
     return PropertyModel(
       id: json['id']?.toString(),
-      ownerName: json['owner_name'] ?? 'Unknown',
+      ownerName: json['owner']?['name'] ?? 'Unknown',//
       city: json['city'] ?? '',
       governorate: json['governorate'] ?? '',
       category: json['category'] ?? '',
@@ -48,15 +48,18 @@ class PropertyModel {
           : [],
       area: json['area']?.toString() ?? '',
       price: json['price']?.toString() ?? '',
-      beds: json['beds']?.toString() ?? '',
-      baths: json['baths']?.toString() ?? '',
+      beds: json['bedrooms']?.toString() ?? '',//
+      baths: json['bathrooms']?.toString() ?? '',//
       address: json['address'] ?? '',
 
       rating: (json['rating'] ?? 0.0).toDouble(),
 
-      imageUrls: json['images'] != null
-          ? List<String>.from(json['images'])
-          : const [],
+      imageUrls: json['images'] != null//
+          ? List<String>.from(
+        json['images'].map((img) => img['url']),
+      )
+          : [],
+
     );
   }
 

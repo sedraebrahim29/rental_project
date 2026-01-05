@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rent/categories/details_category.dart';
+import 'package:rent/cubit/details_cubit/details_cubit.dart';
+import 'package:rent/models/property_model.dart';
 
 import '../data/colors.dart';
-import 'package:rent/models/apartment.dart';
+
 
 class HomeScreenItems extends StatelessWidget {
-  const HomeScreenItems({super.key, required this.apartment});
+  const HomeScreenItems({super.key, required this.apartment,
+    required this.apartmentId,});
 
-  final Apartment apartment;
+  final PropertyModel apartment; //للعرض السريع بالـ Home
+  final int apartmentId; //للربط مع صفحة التفاصيل
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +21,14 @@ class HomeScreenItems extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => DetailsCategory(
-              apartment: apartment,
+            builder: (_) => BlocProvider(
+              create: (_) => DetailsCubit(),
+              child: DetailsCategory(
+
+                apartmentId: apartmentId,
+                
+                  
+              ),
             ),
           ),
         );
@@ -38,8 +49,15 @@ class HomeScreenItems extends StatelessWidget {
               // IMAGE
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.asset(
-                  apartment.image,
+                child: apartment.imageUrls.isNotEmpty
+                    ? Image.network(
+                  apartment.imageUrls.first,
+                  width: 90,
+                  height: 90,
+                  fit: BoxFit.cover,
+                )
+                    : Image.asset(
+                  'assets/apartment1.jpg',
                   width: 90,
                   height: 90,
                   fit: BoxFit.cover,
@@ -54,7 +72,7 @@ class HomeScreenItems extends StatelessWidget {
                   children: [
                     // NAME
                     Text(
-                      apartment.owner,
+                      apartment.ownerName,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -66,7 +84,7 @@ class HomeScreenItems extends StatelessWidget {
 
                     // LOCATION
                     Text(
-                      apartment.location,
+                      apartment.address,
                       style: TextStyle(color: MyColor.deepBlue),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -76,11 +94,11 @@ class HomeScreenItems extends StatelessWidget {
                     // INFO ROW
                     Row(
                       children: [
-                        InfoItem(icon: Icons.home, label: apartment.type),
+                        InfoItem(icon: Icons.home, label: apartment.category),
                         SizedBox(width: 12),
                         InfoItem(
                           icon: Icons.square_foot_sharp,
-                          label: apartment.size,
+                          label: apartment.area,
                         ),
                       ],
                     ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rent/models/property_model.dart';
+import 'package:rent/views/homeScreenAndProperties/profile.dart';
 
 import '../data/colors.dart';
 
@@ -49,7 +51,25 @@ class MainDrawer extends StatelessWidget {
           const SizedBox(height: 20),
 
           // MENU ITEMS
-          _DrawerItem(icon: Icons.person_outline, title: 'My profile', onTap: () {  },),
+          _DrawerItem(icon: Icons.person_outline, title: 'My profile', onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => Profile(
+                  apart: PropertyModel(
+                    ownerName: 'Test Owner',
+                    category: 'Apartment',
+                    amenities: [],
+                    area: '120',
+                    price: '500',
+                    beds: '3',
+                    baths: '2',
+                    address: 'Test Address',
+                  ),
+                ),
+              ),
+            );
+          },),
           _DrawerItem(icon: Icons.favorite_border, title: 'My favorite', onTap: () {  },),
           _DrawerItem(icon: Icons.archive_outlined, title: 'Archive',onTap: () {  },),
           _DrawerItem(icon: Icons.settings_outlined, title: 'Setting',onTap: () {  },),

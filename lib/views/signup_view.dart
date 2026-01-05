@@ -2,9 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:rent/image_picker/image_picker_method.dart';
 import 'package:rent/views/login_view.dart';
-import 'package:rent/widgets/step_1.dart';
-import 'package:rent/widgets/step_2.dart';
-import 'package:rent/widgets/step_3.dart';
+import 'package:rent/widgets/login_signup_widgets/step_1.dart';
+import 'package:rent/widgets/login_signup_widgets/step_2.dart';
+import 'package:rent/widgets/login_signup_widgets/step_3.dart';
+
 
 class SignupView extends StatefulWidget {
   const SignupView();
@@ -14,11 +15,16 @@ class SignupView extends StatefulWidget {
 }
 
 class _SignupViewState extends State<SignupView> {
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController birthDateController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
+
   int currentStep = 0;
   File? profileImage;
   File? idImage;
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +59,18 @@ class _SignupViewState extends State<SignupView> {
                   IndexedStack(
                      index: currentStep,
                      children: [
-                       Step1(onNext: () => setState(() => currentStep = 1)),
-                       Step2(onNext: () => setState(() => currentStep = 2)),
+                       Step1(
+                           firstNameController: firstNameController,
+                           lastNameController: lastNameController,
+                           birthDateController: birthDateController,
+                           onNext: () => setState(() => currentStep = 1)),
+
+                       Step2(
+                         phoneController: phoneController,
+                         passwordController: passwordController,
+                         confirmPasswordController: confirmPasswordController,
+                         onNext: () => setState(() => currentStep = 2),),
+
                        Step3(
                          profileImage: profileImage,
                          idImage: idImage,

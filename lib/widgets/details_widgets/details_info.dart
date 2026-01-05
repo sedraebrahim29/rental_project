@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rent/cubit/booking_cubit/booking_cubit.dart';
 import 'package:rent/data/colors.dart';
-import 'package:rent/models/apartment.dart';
-import 'package:rent/widgets/helper_chip.dart';
+
+import 'package:rent/models/property_model.dart';
+import 'package:rent/widgets/details_widgets/booking_bottom_sheet.dart';
+
+
 
 class DetailsInfo extends StatelessWidget {
-  final Apartment apartment;
+  final PropertyModel apartment;
 
-  const DetailsInfo({required this.apartment});
+
+
+   const DetailsInfo({super.key, required this.apartment});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +28,7 @@ class DetailsInfo extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                apartment.owner,
+                apartment.ownerName,
                 style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: MyColor.deepBlue),
               ),
               const Icon(Icons.favorite_border, color: Colors.red),
@@ -34,7 +41,7 @@ class DetailsInfo extends StatelessWidget {
           Row(
             children: [
               Text(
-                apartment.type,
+                apartment.category,
                 style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600,color: MyColor.deepBlue),
               ),
               const SizedBox(width: 8),
@@ -54,7 +61,7 @@ class DetailsInfo extends StatelessWidget {
               Icon(Icons.location_on, size: 18, color: MyColor.deepBlue),
               const SizedBox(width: 4),
               Text(
-                apartment.location,
+                apartment.address,
                 style: TextStyle(color: MyColor.deepBlue,fontSize: 15),
               ),
             ],
@@ -75,27 +82,25 @@ class DetailsInfo extends StatelessWidget {
           const SizedBox(height: 16),
 
           //bed + bath + area
-          if (apartment.bedrooms != null &&
-              apartment.bathrooms != null &&
-              apartment.size.isNotEmpty)
+
           Row(
             children: [
 
-              Text('bedrooms : ${apartment.bedrooms}',
+              Text('bedrooms : ${apartment.beds}',
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
                   color: MyColor.deepBlue,
                 ),),
               const SizedBox(width: 20),
-              Text('bathrooms : ${apartment.bathrooms}',
+              Text('bathrooms : ${apartment.baths}',
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
                   color: MyColor.deepBlue,
                 ),) ,
               const SizedBox(width: 20),
-              Text('area : ${apartment.size}',
+              Text('area : ${apartment.area}',
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
@@ -108,8 +113,7 @@ class DetailsInfo extends StatelessWidget {
 
           const SizedBox(height: 15),
 
-          //ameninties
-          if (apartment.amenities != null && apartment.amenities!.isNotEmpty) ...[
+    //ameninties
     Row(
       children: [
         Padding(
@@ -139,10 +143,10 @@ class DetailsInfo extends StatelessWidget {
           color: Colors.black12,
           blurRadius: 9,),],),
           child: Scrollbar(
-          thumbVisibility: true,
+          //thumbVisibility: false,
           child: ListView.builder(
             padding: EdgeInsets.zero,
-          itemCount: apartment.amenities?.length ?? 0,
+          itemCount: apartment.amenities.length ,
           itemBuilder: (context, index) {
           return Padding(
           padding: const EdgeInsets.only(bottom: 5,top: 7),
@@ -150,7 +154,7 @@ class DetailsInfo extends StatelessWidget {
           children: [
           const Icon(Icons.circle, size: 6, color: Colors.black54),
           const SizedBox(width: 8),
-          Text(apartment.amenities![index]),
+          Text(apartment.amenities[index]),
           ],),);},),),),
         ),
       ],
@@ -159,7 +163,7 @@ class DetailsInfo extends StatelessWidget {
 
     const SizedBox(height: 30),
 
-          /// BOOK BUTTON
+          // BOOK BUTTON
           Center(
             child: SizedBox(
               width: 270,
@@ -171,13 +175,29 @@ class DetailsInfo extends StatelessWidget {
                     borderRadius: BorderRadius.circular(28),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (_) => BlocProvider(
+                      create: (_) => BookingCubit()
+                        ..loadBookings(
+                           int.parse(apartment.id!),
+                        ),
+                      child: BookingBottomSheet(
+                        apartmentId: int.parse(apartment.id!),
+                        pricePerNight: apartment.price,
+                      ),
+                    ),
+                  );
+                },
                 child: const Text('BOOK', style: TextStyle(fontSize: 20,
                 )),
               ),
             ),
           ),
-        ],
+
      ] ),
     );
   }
