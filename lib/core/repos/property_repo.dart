@@ -28,7 +28,7 @@ class PropertyRepo {
   }
 
 
-// ---------------- NEW METHODS FOR PROPERTY BOOKING ----------------
+//  NEW METHODS FOR PROPERTY BOOKING
 
   Future<List<PropertiesBookingModel>> getPendingBookings(String propertyId) async {
     var response = await propertyApi.getPropertyPendingBookings(propertyId,token);

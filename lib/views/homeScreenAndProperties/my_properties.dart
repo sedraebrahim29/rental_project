@@ -18,30 +18,6 @@ class MyPropertiesScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => PropertiesCubit()..getProperties(),
       child: Scaffold(
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.only(bottom: 20, right: 10),
-          child: FloatingActionButton.extended(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const MyPropertiesBookingScreen(),
-                ),
-              );
-            },
-            backgroundColor: MyColor.deepBlue,
-            label: const Text(
-              'My Properties Booking',
-              style: TextStyle(
-                color: MyColor.offWhite,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-
         body: SizedBox.expand(
           child: Container(
             decoration: const BoxDecoration(
@@ -146,6 +122,26 @@ class MyPropertiesScreen extends StatelessWidget {
                                         .getProperties();
                                   });
                                 },
+
+                                // 2. Logic for Booking Button (Navigate with Property ID)
+                                onBooking: () {
+                                  // Ensure ID is not null or handle error
+                                  if (prop.id != null) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => BlocProvider.value(
+                                          value: context
+                                              .read<PropertiesCubit>(),
+                                          child: MyPropertiesBookingScreen(
+                                            propertyId: prop.id!,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+
                                 onTap: () {
                                   // الانتقال لصفحة التفاصيل
                                 },

@@ -22,11 +22,16 @@ class AddPropertyScreen extends StatelessWidget {
             Navigator.pop(context); // Close screen
           } else if (state is AddPropertyError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: Colors.red),
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red,
+              ),
             );
           }
         },
         child: Scaffold(
+          // ResizeToAvoidBottomInset so keyboard doesn't break layout
+          resizeToAvoidBottomInset: true,
           body: Stack(
             children: [
               Container(
@@ -37,7 +42,7 @@ class AddPropertyScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Container(color: Colors.black.withAlpha(120)),
+              Container(color: Colors.black.withOpacity(0.5)),
 
               SafeArea(
                 child: BlocBuilder<AddPropertyCubit, AddPropertyState>(
@@ -45,8 +50,11 @@ class AddPropertyScreen extends StatelessWidget {
                     final cubit = context.read<AddPropertyCubit>();
 
                     // Show loader if data is fetching initially
-                    if (state is AddPropertyLoading && cubit.governorates.isEmpty) {
-                      return const Center(child: CircularProgressIndicator(color: Colors.white));
+                    if (state is AddPropertyLoading &&
+                        cubit.governorates.isEmpty) {
+                      return const Center(
+                        child: CircularProgressIndicator(color: Colors.white),
+                      );
                     }
 
                     return Column(
@@ -71,30 +79,39 @@ class AddPropertyScreen extends StatelessWidget {
                                 scrollDirection: Axis.horizontal,
                                 child: Row(
                                   children: [
-                                    ...cubit.images.map((file) => Stack(
-                                      children: [
-                                        Container(
-                                          margin: const EdgeInsets.only(right: 10),
-                                          width: 80,
-                                          height: 80,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(10),
-                                            image: DecorationImage(
-                                              image: FileImage(file),
-                                              fit: BoxFit.cover,
+                                    ...cubit.images.map(
+                                      (file) => Stack(
+                                        children: [
+                                          Container(
+                                            margin: const EdgeInsets.only(
+                                              right: 10,
+                                            ),
+                                            width: 80,
+                                            height: 80,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              image: DecorationImage(
+                                                image: FileImage(file),
+                                                fit: BoxFit.cover,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        Positioned(
-                                          right: 5,
-                                          top: -5,
-                                          child: IconButton(
-                                            icon: const Icon(Icons.cancel, color: Colors.red),
-                                            onPressed: () => cubit.removeImage(file),
+                                          Positioned(
+                                            right: 5,
+                                            top: -5,
+                                            child: IconButton(
+                                              icon: const Icon(
+                                                Icons.cancel,
+                                                color: Colors.red,
+                                              ),
+                                              onPressed: () =>
+                                                  cubit.removeImage(file),
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    )),
+                                        ],
+                                      ),
+                                    ),
                                     if (cubit.images.length < 6)
                                       GestureDetector(
                                         onTap: cubit.pickImage,
@@ -103,9 +120,14 @@ class AddPropertyScreen extends StatelessWidget {
                                           height: 80,
                                           decoration: BoxDecoration(
                                             color: Colors.white24,
-                                            borderRadius: BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
                                           ),
-                                          child: const Icon(Icons.add_a_photo, color: Colors.white),
+                                          child: const Icon(
+                                            Icons.add_a_photo,
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
                                   ],
@@ -135,25 +157,31 @@ class AddPropertyScreen extends StatelessWidget {
                                       'Governorate',
                                       cubit.selectedGovId,
                                       cubit.governorates, // Pass the List<Map>
-                                          (v) => cubit.changeGovernorate(v),
+                                      (v) => cubit.changeGovernorate(v),
                                     ),
                                     _Dropdown(
                                       'City',
                                       cubit.selectedCityId,
                                       cubit.cities, // Pass the List<Map>
-                                          (v) => cubit.selectedCityId = v,
+                                      (v) => cubit.selectedCityId = v,
                                     ),
                                   ),
                                   _Dropdown(
                                     'Category',
                                     cubit.selectedCatId,
                                     cubit.categories, // Pass the List<Map>
-                                        (v) => cubit.selectedCatId = v,
+                                    (v) => cubit.selectedCatId = v,
                                   ),
                                   const SizedBox(height: 15),
 
                                   // AMENITIES CHIPS
-                                  const Text("Amenities", style: TextStyle(fontWeight: FontWeight.bold, color: MyColor.deepBlue)),
+                                  const Text(
+                                    "Amenities",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: MyColor.deepBlue,
+                                    ),
+                                  ),
                                   const SizedBox(height: 8),
                                   Wrap(
                                     spacing: 8.0,
@@ -161,7 +189,9 @@ class AddPropertyScreen extends StatelessWidget {
                                     children: cubit.amenitiesList.map((item) {
                                       final id = item['id'];
                                       final name = item['name'];
-                                      final isSelected = cubit.selectedAmenitiesIds.contains(id);
+                                      final isSelected = cubit
+                                          .selectedAmenitiesIds
+                                          .contains(id);
 
                                       return FilterChip(
                                         label: Text(name),
@@ -169,8 +199,12 @@ class AddPropertyScreen extends StatelessWidget {
                                         selectedColor: MyColor.skyBlue,
                                         checkmarkColor: MyColor.deepBlue,
                                         labelStyle: TextStyle(
-                                            color: isSelected ? MyColor.deepBlue : Colors.black,
-                                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal
+                                          color: isSelected
+                                              ? MyColor.deepBlue
+                                              : Colors.black,
+                                          fontWeight: isSelected
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
                                         ),
                                         onSelected: (bool selected) {
                                           cubit.toggleAmenity(id);
@@ -199,14 +233,26 @@ class AddPropertyScreen extends StatelessWidget {
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: MyColor.deepBlue,
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            15,
+                                          ),
+                                        ),
                                       ),
                                       onPressed: state is AddPropertySubmitting
                                           ? null
                                           : cubit.submitProperty,
                                       child: state is AddPropertySubmitting
-                                          ? const CircularProgressIndicator(color: Colors.white)
-                                          : const Text('Add Property', style: TextStyle(color: Colors.white, fontSize: 18)),
+                                          ? const CircularProgressIndicator(
+                                              color: Colors.white,
+                                            )
+                                          : const Text(
+                                              'Add Property',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 18,
+                                              ),
+                                            ),
                                     ),
                                   ),
                                 ],
@@ -245,14 +291,12 @@ Widget _row(Widget a, Widget b) {
 class _Input extends StatelessWidget {
   final String label;
   final TextEditingController controller;
+
   const _Input(this.label, this.controller);
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      decoration: _decoration(label),
-    );
+    return TextField(controller: controller, decoration: _decoration(label));
   }
 }
 
@@ -268,12 +312,21 @@ class _Dropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<int>(
+      isExpanded: true,
       value: value,
       // Map the List<Map> to DropdownMenuItem<int>
-      items: items.map((e) => DropdownMenuItem(
-          value: e['id'] as int,
-          child: Text(e['name'].toString())
-      )).toList(),
+      items: items
+          .map(
+            (e) => DropdownMenuItem(
+              value: e['id'] as int,
+              child: Text(
+                e['name'].toString(),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+            ),
+          )
+          .toList(),
       onChanged: onChanged,
       decoration: _decoration(label),
       menuMaxHeight: 300,
@@ -286,15 +339,9 @@ InputDecoration _decoration(String label) {
     labelText: label,
     filled: true,
     fillColor: MyColor.offWhite,
-    border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(15),
+      borderSide: BorderSide.none,
+    ),
   );
 }
-
-
-
-
-
-
-
-
-

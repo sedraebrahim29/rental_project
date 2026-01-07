@@ -30,14 +30,14 @@ class PropertiesBookingModel {
   factory PropertiesBookingModel.fromJson(Map<String, dynamic> json, BookingStatus forcedStatus) {
     return PropertiesBookingModel(
       id: json['id']?.toString() ?? '',
-      guestName: json['tenant'] ?? 'Unknown', // Mapped from 'tenant'
+      guestName: json['tenant'] ?? 'Unknown',
       startDate: json['start_date'] ?? '',
       endDate: json['end_date'] ?? '',
       pricePerNight: double.tryParse(json['price_per_night']?.toString() ?? '0') ?? 0.0,
       totalPrice: double.tryParse(json['total_price']?.toString() ?? '0') ?? 0.0,
-      status: forcedStatus, // We assign status based on which API endpoint we called
+      status: forcedStatus,
 
-      // These will be null for standard bookings until the Update Request API is ready
+      // Update Request fields (nullable)
       newStartDate: json['new_start_date'],
       newEndDate: json['new_end_date'],
       newTotalPrice: json['new_total_price'] != null

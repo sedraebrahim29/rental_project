@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import '../core/constant.dart';
+
 class PropertyModel {
   final String? id; //  اختياري لأنه عند الإضافة لا يكون لدينا ID بعد
   final String ownerName;
@@ -66,19 +68,36 @@ class PropertyModel {
   factory PropertyModel.fromJson(Map<String, dynamic> json) {
     return PropertyModel(
       id: json['id']?.toString(),
-      ownerName: json['owner']?['name'] ?? 'Unknown', // Nested in 'owner' object
+      ownerName: json['owner']?['name'] ?? 'Unknown',
+      // Nested in 'owner' object
       city: json['city'] ?? '',
       governorate: json['governorate'] ?? '',
+
       category: json['category'] ?? '',
-      amenities: json['amenities'] != null ? List<String>.from(json['amenities']) : [],
+      amenities: json['amenities'] != null
+          ? List<String>.from(json['amenities'])
+          : [],
       area: json['area']?.toString() ?? '',
       price: json['price']?.toString() ?? '',
-      beds: json['bedrooms']?.toString() ?? '',   // Match API key 'bedrooms'
-      baths: json['bathrooms']?.toString() ?? '', // Match API key 'bathrooms'
+      beds: json['bedrooms']?.toString() ?? '',
+      // Match API key 'bedrooms'
+      baths: json['bathrooms']?.toString() ?? '',
+      // Match API key 'bathrooms'
       address: json['address'] ?? '',
       rating: (json['rating'] ?? 0.0).toDouble(),
       imageUrls: json['images'] != null
-          ? (json['images'] as List).map((i) => i['url'].toString()).toList() // Extract 'url'
+          ? (json['images'] as List)
+                .map((i) {
+        String url = i['url'].toString();
+        // Check if the URL is already complete (starts with http)
+        if (url.startsWith('http')) {
+          return url;
+        } else {
+          // If relative, append the Base URL
+          // Ensure baseUrl doesn't end with / if url starts with /
+          return "$baseUrl$url";
+        }
+      }).toList()
           : const [],
     );
   }
@@ -95,6 +114,8 @@ class PropertyModel {
       'beds': beds,
       'baths': baths,
       'address': address,
+      // added this on 7/1/2026
+      'images' : localImages,
     };
   }
 }

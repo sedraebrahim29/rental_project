@@ -1,12 +1,38 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import '../../models/property_model.dart';
 import '../constant.dart';
 
 class EditPropertyApi {
+
+  // 1. GET Property (To show current data)
+  Future<PropertyModel> getPropertyById(String id, String token) async {
+    try {
+      var response = await http.get(
+        Uri.parse("$baseUrl/properties/$id"),
+        headers: {
+          "authorization": "Bearer $token",
+          "accept": "application/json",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+        return PropertyModel.fromJson(data['data']);
+      } else {
+        throw Exception("Get Error: ${response.statusCode}");
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+
   // Update property
   Future<String> updateProperty(
       String propertyId,
-      Map<String, String> body,
+      Map<String, dynamic> body,
       List<File> newImages,
        token
       ) async {
@@ -22,7 +48,18 @@ class EditPropertyApi {
 
     // force method to PUT while using POST for multipart
     request.fields['_method'] = 'PUT';
-    request.fields.addAll(body);
+    // --- FIX it : to handle Lists (Amenities)
+    body.forEach((key, value) {
+      if (value is List) {
+        // If it's a list (like amenities), we add them as array keys: amenities[0], amenities[1]
+        for (int i = 0; i < value.length; i++) {
+          request.fields['$key[$i]'] = value[i].toString();
+        }
+      } else {
+        // Standard string fields
+        request.fields[key] = value.toString();
+      }
+    });
 
     for (var file in newImages) {
       request.files.add(

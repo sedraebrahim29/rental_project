@@ -6,12 +6,15 @@ class PropertyCard extends StatelessWidget {
   final PropertyModel property;
   final VoidCallback? onEdit;
   final VoidCallback onTap;
+  // New callback for the booking button
+  final VoidCallback? onBooking;
 
   const PropertyCard({
     super.key,
     required this.property,
     required this.onTap,
     this.onEdit,
+    this.onBooking
   });
 
   @override
@@ -45,15 +48,23 @@ class PropertyCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(
-                        child: Text(
-                          property.ownerName, // اسم صاحب الشقة فوق
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                      // Booking Button (Replaces Owner Name)
+                      GestureDetector(
+                        onTap: onBooking,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
                             color: MyColor.deepBlue,
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          overflow: TextOverflow.ellipsis,
+                          child: const Text(
+                            'Booking',
+                            style: TextStyle(
+                                color: MyColor.offWhite,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold
+                            ),
+                          ),
                         ),
                       ),
                       if (onEdit != null)
