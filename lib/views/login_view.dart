@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rent/cubit/login_cubit/login_cubit.dart';
 import 'package:rent/cubit/login_cubit/login_state.dart';
+import 'package:rent/cubit/property_cubit.dart';
 import 'package:rent/models/textfield_model.dart';
 import 'package:rent/views/homeScreenAndProperties/home_screen.dart';
 import 'package:rent/views/signup_view.dart';
-
 import 'package:rent/widgets/login_signup_widgets/textfieldwidget.dart';
 
 class LoginView extends StatefulWidget {
@@ -64,6 +64,7 @@ class _LoginViewState extends State<LoginView> {
                 child: BlocConsumer<LoginCubit, LoginState>(
                   listener: (context, state) async {
                     if (state is LoginSuccess) {
+                      context.read<PropertyCubit>().getAllProperties();
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (_) => const HomeScreen()),
@@ -71,9 +72,9 @@ class _LoginViewState extends State<LoginView> {
                     }
 
                     if (state is LoginError) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(state.message)),
-                      );
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(state.message)));
                     }
                   },
                   builder: (context, state) {
@@ -90,7 +91,6 @@ class _LoginViewState extends State<LoginView> {
                           phone: phoneController.text,
                           password: passwordController.text,
                         );
-
                       },
                       child: const Text(
                         'Login',

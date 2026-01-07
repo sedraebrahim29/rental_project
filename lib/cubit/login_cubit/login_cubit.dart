@@ -11,15 +11,14 @@ class LoginCubit extends Cubit<LoginState> {
     emit(LoginLoading());
 
     try {
-     final token =  await LoginService().loginService(
+      final token = await LoginService().loginService(
         phone: phone,
         password: password,
       );
-      await SecureStorage.storeToken(token);
+      await secureStorage.write(key: 'token', value: token);
       emit(LoginSuccess());
     } catch (e) {
       emit(LoginError(e.toString()));
     }
   }
-
 }

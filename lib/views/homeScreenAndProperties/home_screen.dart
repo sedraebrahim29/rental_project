@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rent/categories/details_category.dart';
+import 'package:rent/cubit/details_cubit/details_cubit.dart';
 import '../../cubit/property_cubit.dart';
 import '../../cubit/property_state.dart';
 import '../../data/colors.dart';
@@ -31,12 +33,19 @@ class HomeScreen extends StatelessWidget {
                 builder: (context, state) {
                   // 1. Loading State
                   if (state is PropertyLoading) {
-                    return const Center(child: CircularProgressIndicator(color: MyColor.deepBlue));
+                    return const Center(
+                      child: CircularProgressIndicator(color: MyColor.deepBlue),
+                    );
                   }
 
                   // 2. Error State
                   if (state is PropertyError) {
-                    return Center(child: Text(state.message, style: const TextStyle(color: Colors.red)));
+                    return Center(
+                      child: Text(
+                        state.message,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    );
                   }
 
                   // 3. Success State
@@ -47,7 +56,10 @@ class HomeScreen extends StatelessWidget {
                       return const Center(
                         child: Text(
                           "No Properties Available",
-                          style: TextStyle(color: MyColor.deepBlue, fontSize: 18),
+                          style: TextStyle(
+                            color: MyColor.deepBlue,
+                            fontSize: 18,
+                          ),
                         ),
                       );
                     }
@@ -63,8 +75,16 @@ class HomeScreen extends StatelessWidget {
                           // Only onTap is provided.
                           // onEdit is NOT provided, so the edit button remains hidden.
                           onTap: () {
-                            //  Navigate to Detail Screen
-
+                            final int id = int.parse(allProperties[index].id!);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => BlocProvider(
+                                  create: (_) => DetailsCubit(),
+                                  child: DetailsCategory(apartmentId: (id)),
+                                ),
+                              ),
+                            );
                           },
                         );
                       },

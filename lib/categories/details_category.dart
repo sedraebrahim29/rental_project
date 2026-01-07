@@ -7,8 +7,7 @@ import 'package:rent/widgets/details_widgets/details_image.dart';
 import 'package:rent/widgets/details_widgets/details_info.dart';
 
 class DetailsCategory extends StatefulWidget {
-  const DetailsCategory({super.key,required this.apartmentId,});
-
+  const DetailsCategory({super.key, required this.apartmentId});
 
   final int apartmentId;
   @override
@@ -20,9 +19,8 @@ class _DetailsCategoryState extends State<DetailsCategory> {
   void initState() {
     super.initState();
 
-    context.read<DetailsCubit>().getDetails(widget.apartmentId);}
-
-
+    context.read<DetailsCubit>().getDetails(widget.apartmentId);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,23 +28,19 @@ class _DetailsCategoryState extends State<DetailsCategory> {
       body: BlocBuilder<DetailsCubit, DetailsState>(
         builder: (context, state) {
           if (state is DetailsLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (state is DetailsError) {
             return Center(
               child: ElevatedButton.icon(
-                onPressed: () => context
-                    .read<DetailsCubit>()
-                    .getDetails(widget.apartmentId),
+                onPressed: () =>
+                    context.read<DetailsCubit>().getDetails(widget.apartmentId),
                 icon: const Icon(Icons.refresh),
                 label: const Text('Retry'),
               ),
             );
           }
-
 
           if (state is DetailsSuccess) {
             final apartment = state.apartment;
@@ -69,11 +63,11 @@ class _DetailsCategoryState extends State<DetailsCategory> {
                             images: apartment.imageUrls.isNotEmpty
                                 ? apartment.imageUrls
                                 : const [
-                              'assets/Screenshot 2025-11-01 234119.png',
-                              'assets/Screenshot 2025-11-01 234119.png',
-                              'assets/Screenshot 2025-11-01 234119.png',
-                              'assets/Screenshot 2025-11-01 234119.png',
-                            ],
+                                    'assets/Screenshot 2025-11-01 234119.png',
+                                    'assets/Screenshot 2025-11-01 234119.png',
+                                    'assets/Screenshot 2025-11-01 234119.png',
+                                    'assets/Screenshot 2025-11-01 234119.png',
+                                  ],
                           ),
                           const SizedBox(height: 100),
                           DetailsInfo(apartment: apartment),

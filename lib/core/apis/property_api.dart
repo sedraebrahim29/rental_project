@@ -3,14 +3,14 @@ import 'package:rent/core/constant.dart';
 
 class PropertyApi {
   // 1. Fetch User's Properties for MyProperties Screen
-  Future<String> getProperties( token) async {
+  Future<String> getProperties(token) async {
     try {
+      print('Token user =>$token');
       var response = await http.get(
         Uri.parse("$baseUrl/properties/myProperties"),
         headers: {
-          "authorization": "Bearer $token",
-          "accept":"application/json",
-
+          "Authorization": "Bearer $token",
+          "Accept": "application/json",
         },
       );
       if (response.statusCode != 200) {
@@ -22,10 +22,10 @@ class PropertyApi {
     }
   }
 
-
   // 2. Fetch All Properties for Home Screen
-  Future<String> getAllProperties( token) async {
+  Future<String> getAllProperties(token) async {
     try {
+      print('Token user =>$token');
       var response = await http.get(
         Uri.parse("$baseUrl/properties"), //
         headers: {
@@ -43,7 +43,7 @@ class PropertyApi {
   }
 
   // 3. Fetch Pending Bookings
-  Future<String> getPropertyPendingBookings(String propertyId ,token) async {
+  Future<String> getPropertyPendingBookings(String propertyId, token) async {
     try {
       var response = await http.get(
         Uri.parse("$baseUrl/bookings/getPropertyPendingBookings/$propertyId"),

@@ -6,10 +6,12 @@ import 'package:rent/models/property_model.dart';
 
 import '../data/colors.dart';
 
-
 class HomeScreenItems extends StatelessWidget {
-  const HomeScreenItems({super.key, required this.apartment,
-    required this.apartmentId,});
+  const HomeScreenItems({
+    super.key,
+    required this.apartment,
+    required this.apartmentId,
+  });
 
   final PropertyModel apartment; //للعرض السريع بالـ Home
   final int apartmentId; //للربط مع صفحة التفاصيل
@@ -23,12 +25,7 @@ class HomeScreenItems extends StatelessWidget {
           MaterialPageRoute(
             builder: (_) => BlocProvider(
               create: (_) => DetailsCubit(),
-              child: DetailsCategory(
-
-                apartmentId: apartmentId,
-                
-                  
-              ),
+              child: DetailsCategory(apartmentId: apartmentId),
             ),
           ),
         );
@@ -51,17 +48,17 @@ class HomeScreenItems extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 child: apartment.imageUrls.isNotEmpty
                     ? Image.network(
-                  apartment.imageUrls.first,
-                  width: 90,
-                  height: 90,
-                  fit: BoxFit.cover,
-                )
+                        apartment.imageUrls.first,
+                        width: 90,
+                        height: 90,
+                        fit: BoxFit.cover,
+                      )
                     : Image.asset(
-                  'assets/apartment1.jpg',
-                  width: 90,
-                  height: 90,
-                  fit: BoxFit.cover,
-                ),
+                        'assets/apartment1.jpg',
+                        width: 90,
+                        height: 90,
+                        fit: BoxFit.cover,
+                      ),
               ),
 
               const SizedBox(width: 12),

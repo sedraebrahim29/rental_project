@@ -1,11 +1,8 @@
-
-
-
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../core/constant.dart';
 
-const secureStorage = FlutterSecureStorage();
+final secureStorage = const FlutterSecureStorage();
 
 class SecureStorage {
   static Future<void> removeAll() async {
@@ -38,7 +35,4 @@ class SecureStorage {
   static Future<void> removeRefreshToken() async {
     await secureStorage.delete(key: 'refreshToken');
   }
-
-
 }
-

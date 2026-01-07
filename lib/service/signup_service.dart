@@ -14,7 +14,7 @@ class SignupService {
     required File image,
     required File idImage,
   }) async {
-    final uri = Uri.parse('http://192.168.2.187:8000/api/register');
+    final uri = Uri.parse('http://127.0.0.1:8000/api/register');
     final request = http.MultipartRequest('POST', uri);
 
     request.fields.addAll({
@@ -27,14 +27,15 @@ class SignupService {
     });
 
     request.files.add(await http.MultipartFile.fromPath('image', image.path));
-    request.files.add(await http.MultipartFile.fromPath('ID_image', idImage.path));
-
+    request.files.add(
+      await http.MultipartFile.fromPath('ID_image', idImage.path),
+    );
+    request.headers.addAll({'Accept': 'application/json'});
     final response = await request.send();
     final responseBody = await response.stream.bytesToString();
 
-    if (response.statusCode != 200 && response.statusCode != 201) {
+    if (response.statusCode != 201) {
       throw Exception(responseBody);
     }
   }
 }
-
