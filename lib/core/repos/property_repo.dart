@@ -59,6 +59,17 @@ class PropertyRepo {
     return bookings;
   }
 
+  Future<void> approveBooking(String bookingId) async {
+    final String token = await SecureStorage.getToken();
+    await propertyApi.approveBooking(bookingId, token);
+
+  }
+
+  Future<void> rejectBooking(String bookingId) async {
+    final String token = await SecureStorage.getToken();
+    await propertyApi.rejectBooking(bookingId, token);
+  }
+
   //  for Update Request
   Future<List<PropertiesBookingModel>> getUpdateRequests(String propertyId) async {
 

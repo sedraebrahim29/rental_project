@@ -5,6 +5,7 @@ enum State { init, loading, success, error }
 class PropertiesState {
   final State state;
    String error = '';
+  final String successMessage;
   final List<PropertyModel> properties;
   final PropertyModel property;
 
@@ -16,6 +17,7 @@ class PropertiesState {
   PropertiesState({
     required this.state,
     this.error = '',
+    this.successMessage = '',
     required this.properties,
     required this.property,
     this.pendingBookings = const [],
@@ -68,6 +70,30 @@ class PropertiesState {
       error: error,
       properties: const [],
       property: PropertyModel.init(),
+    );
+  }
+
+  // --- NEW: COPYWITH ---
+  // Allows updating specific fields (like removing a booking) while keeping others
+  PropertiesState copyWith({
+    State? state,
+    String? error,
+    String? successMessage,
+    List<PropertyModel>? properties,
+    PropertyModel? property,
+    List<PropertiesBookingModel>? pendingBookings,
+    List<PropertiesBookingModel>? currentBookings,
+    List<PropertiesBookingModel>? updateRequests,
+  }) {
+    return PropertiesState(
+      state: state ?? this.state,
+      error: error ?? this.error,
+      successMessage: successMessage ?? '', // Reset message on new emit usually
+      properties: properties ?? this.properties,
+      property: property ?? this.property,
+      pendingBookings: pendingBookings ?? this.pendingBookings,
+      currentBookings: currentBookings ?? this.currentBookings,
+      updateRequests: updateRequests ?? this.updateRequests,
     );
   }
 
