@@ -1,4 +1,4 @@
-import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -114,7 +114,7 @@ class _EditPropertyView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<PropertyCubit, PropertyState>(
       listener: (context, state) {
-        if (state is PropertyUpdated || state is PropertySuccess) {
+        if ( state is PropertySuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Property Updated Successfully!")),
           );

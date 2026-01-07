@@ -10,11 +10,9 @@ import '../core/repos/edit_property_repo.dart'; // Update/Delete
 import 'property_state.dart';
 
 class PropertyCubit extends Cubit<PropertyState> {
-  PropertyCubit() : super(PropertyInitial()) {
-    getAllProperties();
-  }
+  PropertyCubit() : super(PropertyInitial());
 
-  // Use the Repo to talk to API
+  // Use the Repo to talk to APIdq
   final EditPropertyRepo editRepo = EditPropertyRepo();
   final PropertyRepo propertyRepo = PropertyRepo();
   final AddPropertyRepo repo = AddPropertyRepo();
@@ -129,7 +127,7 @@ class PropertyCubit extends Cubit<PropertyState> {
 
 
 
-      emit(PropertyUpdated(List.from(_properties)));
+      emit(PropertySuccess());
     } catch (e) {
       emit(PropertyError(e.toString()));
     }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' hide State;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rent/cubit/add_property_cubit.dart';
+import 'package:rent/cubit/property_cubit.dart';
 import 'package:rent/views/homeScreenAndProperties/add_property.dart';
 
 import '../../cubit/properties/properties_cubit.dart';
@@ -114,7 +115,10 @@ class MyPropertiesScreen extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          EditPropertyScreen(property: prop),
+                                          BlocProvider(
+  create: (context) => PropertyCubit()..getAllProperties(),
+  child: EditPropertyScreen(property: prop),
+),
                                     ),
                                   ).then((_) {
                                     context
