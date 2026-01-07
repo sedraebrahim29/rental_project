@@ -25,7 +25,6 @@ class PropertyApi {
   // 2. Fetch All Properties for Home Screen
   Future<String> getAllProperties(token) async {
     try {
-      print('Token user =>$token');
       var response = await http.get(
         Uri.parse("$baseUrl/properties"), //
         headers: {

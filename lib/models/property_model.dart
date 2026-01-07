@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import '../core/constant.dart';
+
 class PropertyModel {
   final String? id; //  اختياري لأنه عند الإضافة لا يكون لدينا ID بعد
   final String ownerName;
@@ -71,6 +73,7 @@ class PropertyModel {
       // Nested in 'owner' object
       city: json['city'] ?? '',
       governorate: json['governorate'] ?? '',
+
       category: json['category'] ?? '',
       amenities: json['amenities'] != null
           ? List<String>.from(json['amenities'])
@@ -81,7 +84,6 @@ class PropertyModel {
       beds: json['bedrooms']?.toString() ?? '',
       // Match API key 'bedrooms'
       baths: json['bathrooms']?.toString() ?? '',
-
       // Match API key 'bathrooms'
       address: json['address'] ?? '',
       rating: (json['rating'] ?? 0.0).toDouble(),
@@ -106,6 +108,8 @@ class PropertyModel {
       'beds': beds,
       'baths': baths,
       'address': address,
+      // added this on 7/1/2026
+      'images': localImages,
     };
   }
 }

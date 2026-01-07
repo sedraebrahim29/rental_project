@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rent/cubit/details_cubit/details_cubit.dart';
 import 'package:rent/cubit/details_cubit/details_state.dart';
-import 'package:rent/models/property_model.dart';
 import 'package:rent/widgets/details_widgets/details_image.dart';
 import 'package:rent/widgets/details_widgets/details_info.dart';
 

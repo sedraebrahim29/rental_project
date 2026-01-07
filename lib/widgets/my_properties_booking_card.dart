@@ -1,9 +1,6 @@
-
-
 import 'package:flutter/material.dart';
 import '../data/colors.dart';
 import '../models/my_properties_booking_model.dart';
-
 
 class BookingCard extends StatelessWidget {
   final PropertiesBookingModel booking;
@@ -23,11 +20,12 @@ class BookingCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: MyColor.offWhite, // Using your existing color palette
+        color: MyColor.offWhite,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            // Fixed deprecated withOpacity
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -48,7 +46,6 @@ class BookingCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
 
-          // Details Section (Dynamic based on type)
           if (booking.status == BookingStatus.updateRequest)
             _buildUpdateRequestInfo()
           else
@@ -70,7 +67,6 @@ class BookingCard extends StatelessWidget {
     );
   }
 
-  // Layout for Pending / Current
   Widget _buildStandardInfo() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -101,7 +97,6 @@ class BookingCard extends StatelessWidget {
     );
   }
 
-  // Layout for Update Request (With Arrows)
   Widget _buildUpdateRequestInfo() {
     return Column(
       children: [

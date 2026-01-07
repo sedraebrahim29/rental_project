@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import '../core/constant.dart';
 import '../core/repos/add_property_repo.dart';
 import 'add_property_state.dart';
 
@@ -35,16 +34,21 @@ class AddPropertyCubit extends Cubit<AddPropertyState> {
 
   /// 1. Fetch initial data (Govs, Cats, Amenities)
   Future<void> loadInitialData() async {
-    print("--- Fetching data from: $baseUrl ---");
     emit(AddPropertyLoading());
     try {
-      governorates = await repo.fetchData('governorate');
-      print("--- Success: ${governorates.length} Govs found ---");
-      categories = await repo.fetchData('category');
-      amenitiesList = await repo.fetchData('amenities');
+      final results = await Future.wait([
+        repo.getGovernorates(),
+        repo.getCategories(),
+        repo.getAmenities(),
+      ]);
+
+      governorates = results[0];
+      categories = results[1];
+      amenitiesList = results[2];
+
       emit(AddPropertyInitial());
     } catch (e) {
-      print("--- API ERROR: $e ---");
+
       emit(AddPropertyError("Failed to load data: $e"));
     }
   }
@@ -58,10 +62,10 @@ class AddPropertyCubit extends Cubit<AddPropertyState> {
 
     emit(AddPropertyLoading());
     try {
-      cities = await repo.fetchData('cities', id: govId);
+      cities = await repo.getCities(govId);
       emit(AddPropertyInitial());
     } catch (e) {
-      emit(AddPropertyError("Failed to load cities"));
+      emit(AddPropertyError("Failed to load cities $e"));
     }
   }
 

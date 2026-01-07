@@ -32,6 +32,7 @@ class PropertyRepo {
 
   // ---------------- NEW METHODS FOR PROPERTY BOOKING ----------------
 
+<<<<<<< HEAD
   Future<List<PropertiesBookingModel>> getPendingBookings(
     String propertyId,
   ) async {
@@ -39,6 +40,12 @@ class PropertyRepo {
       propertyId,
       token,
     );
+=======
+//  NEW METHODS FOR PROPERTY BOOKING
+
+  Future<List<PropertiesBookingModel>> getPendingBookings(String propertyId) async {
+    var response = await propertyApi.getPropertyPendingBookings(propertyId,token);
+>>>>>>> origin/ahmad
     var responseBody = json.decode(response);
 
     List<PropertiesBookingModel> bookings = [];
