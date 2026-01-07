@@ -14,11 +14,8 @@ class LoginService {
     );
     final decoded = jsonDecode(response.body);
     String message = decoded['message'];
-    String token = decoded['data'];
-    if (decoded['data'] == null) {
-      throw Exception('no token');
-    }
     if (response.statusCode == 200) {
+      String token = decoded['data'];
       print('Token from login=> $token');
       return token;
     } else if (response.statusCode == 500) {
