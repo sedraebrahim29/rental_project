@@ -44,7 +44,7 @@ class PropertyCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Edit الاسم وزر ال
+                  // Edit & Booking  الاسم وزر ال
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -72,7 +72,7 @@ class PropertyCard extends StatelessWidget {
                       // Show Owner Name (Home Screen view)
                         Expanded(
                           child: Text(
-                            property.ownerName ?? "Owner",
+                            property.ownerName ,
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -109,7 +109,7 @@ class PropertyCard extends StatelessWidget {
 
                   // السعر
                   Text(
-                    '\$${property.price} / per mon',
+                    '\$${property.price} / per night',
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
@@ -163,23 +163,41 @@ class PropertyCard extends StatelessWidget {
   }
 
   Widget _buildImage() {
-    // هون الأولوية للصور المحلية (عند الإضافة) ثم لروابط الـ API
+    // 1. Check for Local Images (Prioritize new uploads immediately)
     if (property.localImages != null && property.localImages!.isNotEmpty) {
       return Image.file(
         property.localImages!.first,
         width: 110, height: 130, fit: BoxFit.cover,
       );
-    } else if (property.imageUrls.isNotEmpty) {
+    }
+    // 2. Check for Remote API Images
+    else if (property.imageUrls.isNotEmpty) {
       return Image.network(
         property.imageUrls.first,
         width: 110, height: 130, fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
+        // Added error builder to catch broken links (404)
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            width: 110, height: 130,
+            color: Colors.grey[300],
+            child: const Icon(Icons.broken_image, color: Colors.grey),
+          );
+        },
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Container(
+            width: 110, height: 130,
+            color: Colors.grey[200],
+            child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+          );
+        },
       );
     }
+    // 3. Fallback if no images at all
     return Container(
       width: 110, height: 130,
-      color: MyColor.blueGray,
-      child: const Icon(Icons.image),
+      color: MyColor.blueGray.withOpacity(0.3),
+      child: const Icon(Icons.image_not_supported, color: Colors.white, size: 30),
     );
   }
 }

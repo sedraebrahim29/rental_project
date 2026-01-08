@@ -40,7 +40,7 @@ class HomeScreen extends StatelessWidget {
                   }
 
                   // 3. Success State
-                  if (state is PropertyUpdated) {
+                  if (state is PropertyLoaded) {
                     final allProperties = state.properties;
 
                     if (allProperties.isEmpty) {

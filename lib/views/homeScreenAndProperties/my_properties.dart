@@ -114,11 +114,13 @@ class MyPropertiesScreen extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          BlocProvider(
-  create: (context) => PropertyCubit()..getAllProperties(),
-  child: EditPropertyScreen(property: prop),
-),
+                                      builder: (context) => BlocProvider(
+                                        create: (context) =>
+                                            PropertyCubit()..getAllProperties(),
+                                        child: EditPropertyScreen(
+                                          property: prop,
+                                        ),
+                                      ),
                                     ),
                                   ).then((_) {
                                     context
