@@ -78,6 +78,47 @@ class PropertyApi {
       rethrow;
     }
   }
+
+  // 5. Approve Booking
+  Future<String> approveBooking(String bookingId, String token) async {
+    try {
+      var response = await http.get(
+        Uri.parse("$baseUrl/bookings/approve/$bookingId"),
+        headers: {
+          "authorization": "Bearer $token",
+          "accept": "application/json",
+        },
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception("Error ${response.statusCode}: ${response.body}");
+      }
+      return response.body;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // 6. Reject Booking
+  Future<String> rejectBooking(String bookingId, String token) async {
+    try {
+      var response = await http.get(
+        Uri.parse("$baseUrl/bookings/reject/$bookingId"),
+        headers: {
+          "authorization": "Bearer $token",
+          "accept": "application/json",
+        },
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception("Error ${response.statusCode}: ${response.body}");
+      }
+      return response.body;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
 }
 
 

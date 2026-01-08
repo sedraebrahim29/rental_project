@@ -45,6 +45,49 @@ class PropertiesCubit extends Cubit<PropertiesState> {
     }
   }
 
+// ---------------- APPROVE ----------------
+  Future<void> approveBooking(String bookingId) async {
+    try {
+      // 1. Call API
+      await propertyRepo.approveBooking(bookingId);
+
+      // 2. Filter the list to remove the approved item locally
+      List<PropertiesBookingModel> updatedPending = state.pendingBookings
+          .where((element) => element.id.toString() != bookingId)
+          .toList();
+
+      // 3. Emit new state with updated list and success message
+      emit(state.copyWith(
+        pendingBookings: updatedPending,
+        successMessage: "Booking Approved Successfully",
+      ));
+    } catch (e) {
+      // Keep the old list, just show error
+      emit(state.copyWith(error: e.toString()));
+    }
+  }
+
+  // ---------------- REJECT ----------------
+  Future<void> rejectBooking(String bookingId) async {
+    try {
+      // 1. Call API
+      await propertyRepo.rejectBooking(bookingId);
+
+      // 2. Filter the list to remove the rejected item locally
+      List<PropertiesBookingModel> updatedPending = state.pendingBookings
+          .where((element) => element.id.toString() != bookingId)
+          .toList();
+
+      // 3. Emit new state with updated list and success message
+      emit(state.copyWith(
+        pendingBookings: updatedPending,
+        successMessage: "Booking Rejected",
+      ));
+    } catch (e) {
+      emit(state.copyWith(error: e.toString()));
+    }
+  }
+
 
 }
 // Future<void> postProperty(var body) async{

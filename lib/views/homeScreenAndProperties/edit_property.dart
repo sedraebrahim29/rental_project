@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -52,7 +51,7 @@ class EditPropertyScreen extends StatelessWidget {
 
       // Match Governorate ID
       final govMap = cubit.governorates.firstWhere(
-            (g) => g['name'] == property.governorate,
+        (g) => g['name'] == property.governorate,
         orElse: () => {},
       );
       if (govMap.isNotEmpty) {
@@ -63,7 +62,7 @@ class EditPropertyScreen extends StatelessWidget {
 
         // Match City ID
         final cityMap = cubit.cities.firstWhere(
-              (c) => c['name'] == property.city,
+          (c) => c['name'] == property.city,
           orElse: () => {},
         );
         if (cityMap.isNotEmpty) {
@@ -73,7 +72,7 @@ class EditPropertyScreen extends StatelessWidget {
 
       // Match Category ID
       final catMap = cubit.categories.firstWhere(
-            (c) => c['name'] == property.category,
+        (c) => c['name'] == property.category,
         orElse: () => {},
       );
       if (catMap.isNotEmpty) {
@@ -84,7 +83,7 @@ class EditPropertyScreen extends StatelessWidget {
       if (property.amenities != null) {
         for (var amenityName in property.amenities!) {
           final amMap = cubit.amenitiesList.firstWhere(
-                (a) => a['name'] == amenityName,
+            (a) => a['name'] == amenityName,
             orElse: () => {},
           );
           if (amMap.isNotEmpty) {
@@ -114,7 +113,7 @@ class _EditPropertyView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<PropertyCubit, PropertyState>(
       listener: (context, state) {
-        if (state is PropertyUpdated || state is PropertySuccess) {
+        if (state is PropertySuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Property Updated Successfully!")),
           );
@@ -148,7 +147,9 @@ class _EditPropertyView extends StatelessWidget {
 
                   // Show loader if data hasn't arrived yet
                   if (cubit.governorates.isEmpty && state is PropertyLoading) {
-                    return const Center(child: CircularProgressIndicator(color: Colors.white));
+                    return const Center(
+                      child: CircularProgressIndicator(color: Colors.white),
+                    );
                   }
 
                   return Column(
@@ -160,7 +161,10 @@ class _EditPropertyView extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.arrow_back, color: Colors.white),
+                              icon: const Icon(
+                                Icons.arrow_back,
+                                color: Colors.white,
+                              ),
                               onPressed: () => Navigator.pop(context),
                             ),
                             const Text(
@@ -178,8 +182,12 @@ class _EditPropertyView extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: IconButton(
-                                onPressed: () => _showDeleteDialog(context, property.id!),
-                                icon: const Icon(Icons.delete, color: Colors.white),
+                                onPressed: () =>
+                                    _showDeleteDialog(context, property.id!),
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ],
@@ -197,24 +205,36 @@ class _EditPropertyView extends StatelessWidget {
                             children: [
                               // 1. Existing Remote Images
                               if (property.imageUrls != null)
-                                ...property.imageUrls!.map((url) => _ImageItem(
-                                  image: NetworkImage(url),
-                                  onRemove: () {
-                                    // Handle remote removal logic if needed
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(content: Text("Cannot remove existing images yet"))
-                                    );
-                                  },
-                                )),
+                                ...property.imageUrls!.map(
+                                  (url) => _ImageItem(
+                                    image: NetworkImage(url),
+                                    onRemove: () {
+                                      // Handle remote removal logic if needed
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            "Cannot remove existing images yet",
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
 
                               // 2. New Local Images
-                              ...cubit.images.map((file) => _ImageItem(
-                                image: FileImage(file),
-                                onRemove: () => cubit.removeImage(file),
-                              )),
+                              ...cubit.images.map(
+                                (file) => _ImageItem(
+                                  image: FileImage(file),
+                                  onRemove: () => cubit.removeImage(file),
+                                ),
+                              ),
 
                               // 3. Add Button
-                              if ((property.imageUrls?.length ?? 0) + cubit.images.length < 6)
+                              if ((property.imageUrls?.length ?? 0) +
+                                      cubit.images.length <
+                                  6)
                                 GestureDetector(
                                   onTap: cubit.pickImage,
                                   child: Container(
@@ -225,7 +245,10 @@ class _EditPropertyView extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(10),
                                       border: Border.all(color: Colors.white54),
                                     ),
-                                    child: const Icon(Icons.add_a_photo, color: Colors.white),
+                                    child: const Icon(
+                                      Icons.add_a_photo,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                             ],
@@ -250,49 +273,15 @@ class _EditPropertyView extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 // DROPDOWNS
-                                _row(
-                                  _Dropdown(
-                                    'Governorate',
-                                    cubit.selectedGovId,
-                                    cubit.governorates,
-                                        (val) async {
-                                      cubit.selectedGovId = val;
-                                      cubit.selectedCityId = null;
-                                      cubit.cities = [];
-                                      // Trigger refresh
-                                      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-                                      cubit.emit(PropertyImagesUpdated([]));
-
-                                      // Load cities manually since method might be missing in snippet
-                                      if(val != null) {
-                                        try {
-                                          cubit.cities = await cubit.repo.getCities(val);
-                                          // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-                                          cubit.emit(PropertyImagesUpdated([]));
-                                        } catch (_) {}
-                                      }
-                                    },
-                                  ),
-                                  _Dropdown(
-                                      'City',
-                                      cubit.selectedCityId,
-                                      cubit.cities,
-                                          (val) {
-                                        cubit.selectedCityId = val;
-                                        // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-                                        cubit.emit(PropertyImagesUpdated([]));
-                                      }
-                                  ),
-                                ),
                                 _Dropdown(
-                                    'Category',
-                                    cubit.selectedCatId,
-                                    cubit.categories,
-                                        (val) {
-                                      cubit.selectedCatId = val;
-                                      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-                                      cubit.emit(PropertyImagesUpdated([]));
-                                    }
+                                  'Category',
+                                  cubit.selectedCatId,
+                                  cubit.categories,
+                                  (val) {
+                                    cubit.selectedCatId = val;
+                                    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+                                    cubit.emit(PropertyImagesUpdated([]));
+                                  },
                                 ),
                                 const SizedBox(height: 15),
 
@@ -311,7 +300,9 @@ class _EditPropertyView extends StatelessWidget {
                                   children: cubit.amenitiesList.map((item) {
                                     final id = item['id'];
                                     final name = item['name'];
-                                    final isSelected = cubit.selectedAmenitiesIds.contains(id);
+                                    final isSelected = cubit
+                                        .selectedAmenitiesIds
+                                        .contains(id);
 
                                     return FilterChip(
                                       label: Text(name),
@@ -319,8 +310,12 @@ class _EditPropertyView extends StatelessWidget {
                                       selectedColor: MyColor.skyBlue,
                                       checkmarkColor: MyColor.deepBlue,
                                       labelStyle: TextStyle(
-                                        color: isSelected ? MyColor.deepBlue : Colors.black,
-                                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                        color: isSelected
+                                            ? MyColor.deepBlue
+                                            : Colors.black,
+                                        fontWeight: isSelected
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
                                       ),
                                       onSelected: (bool selected) {
                                         cubit.toggleAmenity(id);
@@ -333,7 +328,11 @@ class _EditPropertyView extends StatelessWidget {
                                 // TEXT INPUTS
                                 _row(
                                   _Input('Area', cubit.areaCtrl, suffix: 'm²'),
-                                  _Input('Price', cubit.priceCtrl, suffix: '\$'),
+                                  _Input(
+                                    'Price',
+                                    cubit.priceCtrl,
+                                    suffix: '\$',
+                                  ),
                                 ),
                                 _row(
                                   _Input('Beds', cubit.bedsCtrl),
@@ -357,15 +356,17 @@ class _EditPropertyView extends StatelessWidget {
                                         ? null
                                         : () => _onSave(context, cubit),
                                     child: state is PropertyLoading
-                                        ? const CircularProgressIndicator(color: Colors.white)
+                                        ? const CircularProgressIndicator(
+                                            color: Colors.white,
+                                          )
                                         : const Text(
-                                      'Save Changes',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
+                                            'Save Changes',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
                                   ),
                                 ),
                               ],
@@ -423,7 +424,10 @@ class _EditPropertyView extends StatelessWidget {
               Navigator.pop(ctx);
               context.read<PropertyCubit>().deleteProperty(id);
             },
-            child: const Text("Delete", style: TextStyle(color: MyColor.darkRed)),
+            child: const Text(
+              "Delete",
+              style: TextStyle(color: MyColor.darkRed),
+            ),
           ),
         ],
       ),
@@ -493,7 +497,9 @@ class _Input extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
-      keyboardType: label.contains('Address') ? TextInputType.text : TextInputType.number,
+      keyboardType: label.contains('Address')
+          ? TextInputType.text
+          : TextInputType.number,
       decoration: InputDecoration(
         labelText: label,
         suffixText: suffix,
@@ -521,10 +527,18 @@ class _Dropdown extends StatelessWidget {
     return DropdownButtonFormField<int>(
       isExpanded: true,
       value: value,
-      items: items.map((e) => DropdownMenuItem(
-        value: e['id'] as int,
-        child: Text(e['name'].toString(), maxLines: 1, overflow: TextOverflow.ellipsis),
-      )).toList(),
+      items: items
+          .map(
+            (e) => DropdownMenuItem(
+              value: e['id'] as int,
+              child: Text(
+                e['name'].toString(),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          )
+          .toList(),
       onChanged: onChanged,
       decoration: InputDecoration(
         labelText: label,

@@ -49,24 +49,38 @@ class PropertyCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       // Booking Button (Replaces Owner Name)
-                      GestureDetector(
-                        onTap: onBooking,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: MyColor.deepBlue,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Text(
-                            'Booking',
-                            style: TextStyle(
-                                color: MyColor.offWhite,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold
+                      if (onBooking != null)
+                        GestureDetector(
+                          onTap: onBooking,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: MyColor.deepBlue,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: const Text(
+                              'Booking',
+                              style: TextStyle(
+                                  color: MyColor.offWhite,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold
+                              ),
                             ),
                           ),
+                        )
+                      else
+                      // Show Owner Name (Home Screen view)
+                        Expanded(
+                          child: Text(
+                            property.ownerName ?? "Owner",
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: MyColor.deepBlue,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                      ),
                       if (onEdit != null)
                         GestureDetector(
                           onTap: onEdit,

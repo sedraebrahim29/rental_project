@@ -31,13 +31,17 @@ class PropertyRepo {
 
   // ---------------- NEW METHODS FOR PROPERTY BOOKING ----------------
 
+  //  NEW METHODS FOR PROPERTY BOOKING
+
   Future<List<PropertiesBookingModel>> getPendingBookings(
     String propertyId,
   ) async {
+    final String token = await SecureStorage.getToken();
     var response = await propertyApi.getPropertyPendingBookings(
       propertyId,
       token,
     );
+
     var responseBody = json.decode(response);
 
     List<PropertiesBookingModel> bookings = [];
@@ -55,6 +59,7 @@ class PropertyRepo {
   Future<List<PropertiesBookingModel>> getCurrentBookings(
     String propertyId,
   ) async {
+    final String token = await SecureStorage.getToken();
     var response = await propertyApi.getPropertyCurrentBookings(
       propertyId,
       token,
@@ -70,6 +75,16 @@ class PropertyRepo {
       }
     }
     return bookings;
+  }
+
+  Future<void> approveBooking(String bookingId) async {
+    final String token = await SecureStorage.getToken();
+    await propertyApi.approveBooking(bookingId, token);
+  }
+
+  Future<void> rejectBooking(String bookingId) async {
+    final String token = await SecureStorage.getToken();
+    await propertyApi.rejectBooking(bookingId, token);
   }
 
   //  for Update Request
