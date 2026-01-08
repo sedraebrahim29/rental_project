@@ -60,7 +60,9 @@ class AddPropertyCubit extends Cubit<AddPropertyState> {
     selectedCityId = null; // Reset city
     cities = []; // Clear old cities
 
-    emit(AddPropertyLoading());
+    //emit(AddPropertyLoading());
+    // ADD THIS LINE: 
+    emit(AddPropertyImagesUpdated(List.from(images)));
     try {
       cities = await repo.getCities(govId);
       emit(AddPropertyInitial());

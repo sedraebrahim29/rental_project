@@ -34,7 +34,7 @@ class _MyPropertiesBookingScreenState extends State<MyPropertiesBookingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // CHANGED: Use BlocConsumer to listen for Success/Error messages
+
       body: BlocConsumer<PropertiesCubit, PropertiesState>(
         listener: (context, state) {
           // 1. Show Success Message
@@ -143,7 +143,7 @@ class _MyPropertiesBookingScreenState extends State<MyPropertiesBookingScreen> {
                         return const Center(
                           child: Text(
                             "No bookings found",
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Colors.black45),
                           ),
                         );
                       }

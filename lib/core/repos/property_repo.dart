@@ -30,6 +30,8 @@ class PropertyRepo {
 
 //  NEW METHODS FOR PROPERTY BOOKING
 
+
+  // GET PENDING
   Future<List<PropertiesBookingModel>> getPendingBookings(String propertyId) async {
     final String token = await SecureStorage.getToken();
     var response = await propertyApi.getPropertyPendingBookings(propertyId,token);
@@ -45,6 +47,8 @@ class PropertyRepo {
     return bookings;
   }
 
+
+  // GET CURRENT
   Future<List<PropertiesBookingModel>> getCurrentBookings(String propertyId) async {
     final String token = await SecureStorage.getToken();
     var response = await propertyApi.getPropertyCurrentBookings(propertyId,token);
@@ -59,6 +63,23 @@ class PropertyRepo {
     return bookings;
   }
 
+  // GET UPDATES
+  Future<List<PropertiesBookingModel>> getUpdateRequests(String propertyId) async {
+    final String token = await SecureStorage.getToken();
+    var response = await propertyApi.getPropertyUpdatedBookings(propertyId, token);
+    var responseBody = json.decode(response);
+
+    List<PropertiesBookingModel> bookings = [];
+    if (responseBody['data'] != null) {
+      for (var item in responseBody['data']) {
+        bookings.add(PropertiesBookingModel.fromJson(item, BookingStatus.updateRequest));
+      }
+    }
+    return bookings;
+  }
+
+
+
   Future<void> approveBooking(String bookingId) async {
     final String token = await SecureStorage.getToken();
     await propertyApi.approveBooking(bookingId, token);
@@ -70,11 +91,6 @@ class PropertyRepo {
     await propertyApi.rejectBooking(bookingId, token);
   }
 
-  //  for Update Request
-  Future<List<PropertiesBookingModel>> getUpdateRequests(String propertyId) async {
-
-    return [];
-  }
 
 }
 

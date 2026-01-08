@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rent/views/my_booking.dart';
 
+import '../cubit/property_cubit.dart';
 import '../data/colors.dart';
 
 class MainDrawer extends StatelessWidget {
@@ -79,11 +81,44 @@ class MainDrawer extends StatelessWidget {
             onTap: () {},
           ),
           _DrawerItem(icon: Icons.help_outline, title: 'Help', onTap: () {}),
-          _DrawerItem(icon: Icons.logout, title: 'Log out', onTap: () {}),
+          _DrawerItem(
+            icon: Icons.logout,
+            title: 'Log out',
+            onTap: () {
+              _showLogoutDialog(context);
+            },
+          ),
         ],
       ),
     );
   }
+}
+
+void _showLogoutDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      title: const Text(
+        "Log Out",
+        style: TextStyle(color: MyColor.deepBlue, fontWeight: FontWeight.bold),
+      ),
+      content: const Text("Are you sure you want to log out?"),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(ctx), // Close dialog
+          child: const Text("Cancel"),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.pop(ctx);
+            context.read<PropertyCubit>().logout(context);
+          },
+          child: const Text("Log Out", style: TextStyle(color: Colors.red)),
+        ),
+      ],
+    ),
+  );
 }
 
 class _DrawerItem extends StatelessWidget {

@@ -79,8 +79,26 @@ class PropertyApi {
       rethrow;
     }
   }
+  // Fetch Updated Bookings
+  Future<String> getPropertyUpdatedBookings(String bookingId, String token) async {
+    try {
+      var response = await http.get(
+        Uri.parse("$baseUrl/bookings/getPropertyUpdatedBookings/$bookingId"),
+        headers: {
+          "authorization": "Bearer $token",
+          "accept": "application/json",
+        },
+      );
+      if (response.statusCode != 200) {
+        throw Exception("Error ${response.statusCode}: ${response.body}");
+      }
+      return response.body;
+    } catch (e) {
+      rethrow;
+    }
+  }
 
-  // 5. Approve Booking
+  // 5. Accept Booking
   Future<String> approveBooking(String bookingId, String token) async {
     try {
       var response = await http.get(
