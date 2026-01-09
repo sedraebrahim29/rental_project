@@ -21,3 +21,12 @@ class LogoutRepo {
     }
   }
 }
+
+class UserRepo {
+  final UserApi _api = UserApi();
+
+  Future<String> getUserName() async {
+    final String token = await SecureStorage.getToken();
+    return await _api.getUserName(token);
+  }
+}

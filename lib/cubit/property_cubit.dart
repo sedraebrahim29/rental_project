@@ -8,12 +8,17 @@ class PropertyCubit extends Cubit<PropertyState> {
   PropertyCubit() : super(PropertyInitial());
 
   final PropertyRepo propertyRepo = PropertyRepo();
+  final UserRepo userRepo = UserRepo();
   final LogoutRepo logoutRepo = LogoutRepo();
+  String userName = "Loading...";
 
   /// Fetch All Properties for Home Screen
   Future<void> getAllProperties() async {
     emit(PropertyLoading());
     try {
+      // 1. Fetch Name
+
+      _fetchUserName();
       // Fetch data from Repo
       final properties = await propertyRepo.getHomeProperties();
 
@@ -21,6 +26,17 @@ class PropertyCubit extends Cubit<PropertyState> {
       emit(PropertyLoaded(properties));
     } catch (e) {
       emit(PropertyError(e.toString()));
+    }
+  }
+
+  Future<void> _fetchUserName() async {
+    try {
+      final name = await userRepo.getUserName();
+      userName = name;
+      // We don't emit here to avoid conflicting with PropertyLoading state,
+      // but the next PropertyLoaded emit will carry this new userName value.
+    } catch (e) {
+      userName = "Guest";
     }
   }
 
@@ -34,7 +50,7 @@ class PropertyCubit extends Cubit<PropertyState> {
     if (context.mounted) {
       Navigator.of(context).pushNamedAndRemoveUntil(
         '/login', // Make sure this matches your route name in main.dart
-            (route) => false,
+        (route) => false,
       );
     }
   }

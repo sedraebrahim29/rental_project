@@ -107,9 +107,9 @@ class _MyPropertiesBookingScreenState extends State<MyPropertiesBookingScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _buildFilterTab("pending", BookingStatus.pending),
-                      _buildFilterTab("current", BookingStatus.current),
-                      _buildFilterTab("update-request", BookingStatus.updateRequest),
+                      _buildFilterTab("pending".toUpperCase() , BookingStatus.pending),
+                      _buildFilterTab("current".toUpperCase() , BookingStatus.current),
+                      _buildFilterTab("update-request".toUpperCase() , BookingStatus.updateRequest),
                     ],
                   ),
                 ),
