@@ -25,8 +25,10 @@ class MainDrawer extends StatelessWidget {
                 begin: Alignment.bottomLeft,
                 end: Alignment.topRight,
               ),
-              borderRadius: BorderRadius.only(bottomRight: Radius.circular(40),
-                  bottomLeft: Radius.circular(40)),
+              borderRadius: BorderRadius.only(
+                bottomRight: Radius.circular(40),
+                bottomLeft: Radius.circular(40),
+              ),
             ),
             child: Column(
               children: [
@@ -53,39 +55,51 @@ class MainDrawer extends StatelessWidget {
           const SizedBox(height: 20),
 
           // MENU ITEMS
-          _DrawerItem(icon: Icons.person_outline,
+          _DrawerItem(
+            icon: Icons.person_outline,
             title: 'My profile',
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) =>
-                      Profile(
-                        apart: PropertyModel(
-                          ownerName: 'Test Owner',
-                          category: 'Apartment',
-                          amenities: [],
-                          area: '120',
-                          price: '500',
-                          beds: '3',
-                          baths: '2',
-                          address: 'Test Address',
-                        ),
-                      ),
+                  builder: (_) => Profile(
+                    apart: PropertyModel(
+                      ownerName: 'Test Owner',
+                      category: 'Apartment',
+                      amenities: [],
+                      area: '120',
+                      price: '500',
+                      beds: '3',
+                      baths: '2',
+                      address: 'Test Address',
+                    ),
+                  ),
                 ),
               );
-            },),
+            },
+          ),
           _DrawerItem(
-            icon: Icons.favorite_border, title: 'My favorite', onTap: () {},),
+            icon: Icons.favorite_border,
+            title: 'My favorite',
+            onTap: () {},
+          ),
           _DrawerItem(
-            icon: Icons.archive_outlined, title: 'My Booking', onTap: () {
-            // Navigator.push(
-            //     context, MaterialPageRoute(builder: (_) => MyBooking()));
-          },),
+            icon: Icons.archive_outlined,
+            title: 'My Booking',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => MyBooking()),
+              );
+            },
+          ),
           _DrawerItem(
-            icon: Icons.settings_outlined, title: 'Setting', onTap: () {},),
-          _DrawerItem(icon: Icons.help_outline, title: 'Help', onTap: () {},),
-          _DrawerItem(icon: Icons.logout, title: 'Log out', onTap: () {},),
+            icon: Icons.settings_outlined,
+            title: 'Setting',
+            onTap: () {},
+          ),
+          _DrawerItem(icon: Icons.help_outline, title: 'Help', onTap: () {}),
+          _DrawerItem(icon: Icons.logout, title: 'Log out', onTap: () {}),
         ],
       ),
     );
@@ -97,8 +111,11 @@ class _DrawerItem extends StatelessWidget {
   final String title;
   final Function() onTap;
 
-  const _DrawerItem(
-      {required this.icon, required this.title, required this.onTap});
+  const _DrawerItem({
+    required this.icon,
+    required this.title,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {

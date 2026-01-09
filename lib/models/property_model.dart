@@ -88,12 +88,44 @@ class PropertyModel {
       address: json['address'] ?? '',
       rating: (json['rating'] ?? 0.0).toDouble(),
 
-      imageUrls: json['images'] != null
-          ? (json['images'] as List)
-                .map((i) => i['url'].toString())
-                .toList() // Extract 'url'
-          : const [],
+      // --- FIX STARTS HERE ---
+      imageUrls: _parseImages(json),
     );
+  }
+
+  // FUNCTION TO FIX THE BUG IN IMAGES ---
+  static List<String> _parseImages(Map<String, dynamic> json) {
+    List<String> rawUrls = [];
+
+    // Case 1: API sends 'images' (List of objects or strings)
+    if (json['images'] != null && json['images'] is List) {
+      for (var item in json['images']) {
+        if (item is String) {
+          rawUrls.add(item);
+        } else if (item is Map && item.containsKey('url')) {
+          rawUrls.add(item['url'].toString());
+        }
+      }
+    }
+    // Case 2: API sends 'image' (Singular String) - AS SEEN IN YOUR SCREENSHOT
+    else if (json['image'] != null && json['image'] is String) {
+      String singleImage = json['image'];
+      if (singleImage.isNotEmpty) {
+        rawUrls.add(singleImage);
+      }
+    }
+
+    // Process URLs: Add Base URL if needed
+    return rawUrls
+        .map((url) {
+          if (url.isEmpty) return "";
+          if (url.startsWith('http')) return url;
+
+          // Handle slash logic cleanly
+          return "$baseUrl${url.startsWith('/') ? '' : '/'}$url";
+        })
+        .where((u) => u.isNotEmpty)
+        .toList();
   }
 
   //  إرسال البيانات للـ API
@@ -108,8 +140,6 @@ class PropertyModel {
       'beds': beds,
       'baths': baths,
       'address': address,
-      // added this on 7/1/2026
-      'images': localImages,
     };
   }
 }
