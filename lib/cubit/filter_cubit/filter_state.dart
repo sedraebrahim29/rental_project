@@ -1,4 +1,4 @@
-import 'package:rent/models/property_model.dart';
+import 'package:rent/models/filter_model.dart';
 
 abstract class FilterState {}
 class FilterInitial extends FilterState {}
@@ -6,7 +6,7 @@ class FilterInitial extends FilterState {}
 class FilterLoading extends FilterState {}
 
 class FilterLoaded extends FilterState {
-  final List<PropertyModel> properties;
+  final List<FilteredPropertyModel> properties;
   FilterLoaded(this.properties);
 }
 

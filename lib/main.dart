@@ -3,7 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rent/cubit/add_property_cubit.dart';
 import 'package:rent/cubit/details_cubit/details_cubit.dart';
+import 'package:rent/cubit/filter_cubit/filter_cubit.dart';
+import 'package:rent/cubit/filter_cubit/filter_meta_cubit.dart';
 import 'package:rent/cubit/login_cubit/login_cubit.dart';
+import 'package:rent/cubit/profile_cubit/profile_cubit.dart';
 import 'package:rent/cubit/properties/properties_cubit.dart';
 import 'package:rent/cubit/signup_cubit/signup_cubit.dart';
 
@@ -28,10 +31,14 @@ class Rent extends StatelessWidget {
         BlocProvider(create: (context) => DetailsCubit()),
         BlocProvider(create: (context) => AddPropertyCubit()),
         BlocProvider(create: (context) => PropertiesCubit()..getProperties()),
+        BlocProvider(create: (context) => FilterCubit()),
+        BlocProvider(create: (context) => FilterMetaCubit()..loadInitialData()),
+        BlocProvider(create: (context) => ProfileCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: LoginView(),
+
         // home:
         // Scaffold(
         //
@@ -42,24 +49,6 @@ class Rent extends StatelessWidget {
         //     ],
         //   ),
         // )
-
-        // home: Profile( apart: PropertyModel(
-        //   id: '1',
-        //   ownerName: 'Test Owner',
-        //   city: 'Damascus',
-        //   governorate: 'Damascus',
-        //   category: 'Apartment',
-        //   amenities: ['WiFi', 'AC', 'Pool'],
-        //   area: '120',
-        //   price: '500',
-        //   beds: '3',
-        //   baths: '2',
-        //   address: 'Mazzeh, Damascus',
-        //   rating: 4.5,
-        //   imageUrls: [
-        //     'https://via.placeholder.com/300',
-        //   ],
-        // ), ),
 
         // home: DetailsCategory(
         //   apartment: PropertyModel(
@@ -76,9 +65,8 @@ class Rent extends StatelessWidget {
         //     amenities: ['wifi','ac','pool','wifi','ac','pool','wifi','ac','pool'],
         //     rating: 4.8,
         //
-        //   )
+        //   ), apartmentId: 1,
         // ),
-        //
 
         // initialRoute: '/login',
         // routes: {

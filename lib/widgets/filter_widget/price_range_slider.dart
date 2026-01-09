@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:rent/data/colors.dart';
 
 class PriceRangeSlider extends StatefulWidget {
-  const PriceRangeSlider({super.key});
+  final Function(int min, int max) onChanged;
+
+  const PriceRangeSlider({super.key, required this.onChanged});
 
   @override
   State<PriceRangeSlider> createState() => _PriceRangeSliderState();
@@ -11,7 +13,7 @@ class PriceRangeSlider extends StatefulWidget {
 class _PriceRangeSliderState extends State<PriceRangeSlider> {
   RangeValues priceRange = const RangeValues(10, 90);
 
-  final double min = 10;
+  final double min = 1;
   final double max = 90;
 
   @override
@@ -22,18 +24,15 @@ class _PriceRangeSliderState extends State<PriceRangeSlider> {
         builder: (context, constraints) {
           final sliderWidth = constraints.maxWidth;
 
-          // حساب موقع كل دائرة
           double startX =
               ((priceRange.start - min) / (max - min)) * sliderWidth;
-          double endX =
-              ((priceRange.end - min) / (max - min)) * sliderWidth;
+          double endX = ((priceRange.end - min) / (max - min)) * sliderWidth;
 
           return Column(
             children: [
               Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  //  Slider
                   SliderTheme(
                     data: SliderTheme.of(context).copyWith(
                       trackHeight: 1,
@@ -53,11 +52,12 @@ class _PriceRangeSliderState extends State<PriceRangeSlider> {
                         setState(() {
                           priceRange = v;
                         });
+
+                        widget.onChanged(v.start.toInt(), v.end.toInt());
                       },
                     ),
                   ),
 
-                  //  الرقم تحت thumb اليسار
                   Positioned(
                     left: startX - 10,
                     top: 24,
@@ -66,12 +66,11 @@ class _PriceRangeSliderState extends State<PriceRangeSlider> {
                       style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
-                        color: MyColor.deepBlue
+                        color: MyColor.deepBlue,
                       ),
                     ),
                   ),
 
-                  //  الرقم تحت thumb اليمين
                   Positioned(
                     left: endX - 10,
                     top: 24,
@@ -80,7 +79,7 @@ class _PriceRangeSliderState extends State<PriceRangeSlider> {
                       style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
-                          color: MyColor.deepBlue
+                        color: MyColor.deepBlue,
                       ),
                     ),
                   ),

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rent/models/property_model.dart';
 import 'package:rent/views/homeScreenAndProperties/profile.dart';
 
 import 'package:rent/views/my_booking.dart';
@@ -73,20 +71,7 @@ class MainDrawer extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (_) => Profile(
-                    apart: PropertyModel(
-                      ownerName: 'Test Owner',
-                      category: 'Apartment',
-                      amenities: [],
-                      area: '120',
-                      price: '500',
-                      beds: '3',
-                      baths: '2',
-                      address: 'Test Address',
-                    ),
-                  ),
-                ),
+                MaterialPageRoute(builder: (_) => Profile()),
               );
             },
           ),

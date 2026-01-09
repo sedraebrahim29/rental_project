@@ -10,23 +10,19 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences: ^2.2.2
 
-  cupertino_icons: ^1.0.8
-  image_picker: ^1.0.4
-
-  # state management
   flutter_bloc: ^9.1.1
+  bloc: ^9.0.0   # ← أضف هذا السطر (مهم)
 
-  # networking (شغل زميلك)
   http: ^1.6.0
   dio: ^5.9.0
-
-  # utils
+  shared_preferences: ^2.2.2
+  image_picker: ^1.0.4
   uuid: ^4.5.2
   flutter_riverpod: ^3.1.0
   intl: ^0.20.2
   flutter_secure_storage: ^10.0.0
+
 
 
 dev_dependencies:
