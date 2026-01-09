@@ -45,10 +45,7 @@ class EditPropertyScreen extends StatelessWidget {
           // 2. Loaded State (Show Form)
           if (state is EditPropertyLoaded || state is EditPropertyUpdating) {
             final cubit = context.read<EditPropertyCubit>();
-            final loadedState = state is EditPropertyLoaded
-                ? state
-                : (context.read<EditPropertyCubit>().state
-                      as EditPropertyLoaded);
+
             // ^ Handling state access carefully during updating
 
             return Scaffold(
@@ -87,7 +84,7 @@ class EditPropertyScreen extends StatelessWidget {
                         // If we have new images, show the first one, else show add icon
                         child: GestureDetector(
                           onTap: cubit.pickImage,
-                          child: loadedState.newImages.isNotEmpty
+                          child: cubit.newImages.isNotEmpty // Changed from loadedState to cubit
                               ? Stack(
                                   children: [
                                     Container(
@@ -97,7 +94,7 @@ class EditPropertyScreen extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(20),
                                         image: DecorationImage(
                                           image: FileImage(
-                                            loadedState.newImages.last,
+                                            cubit.newImages.last, // Changed from loadedState to cubit
                                           ),
                                           fit: BoxFit.cover,
                                         ),
@@ -140,8 +137,8 @@ class EditPropertyScreen extends StatelessWidget {
                         children: [
                           // Category Dropdown
                           _buildDropdown(
-                            loadedState.selectedCategoryId,
-                            loadedState.allCategories,
+                            cubit.selectedCategoryId, // Changed from loadedState to cubit
+                            cubit.allCategories,  // Changed from loadedState to cubit
                             (val) => cubit.changeCategory(val),
                           ),
                           const SizedBox(height: 15),
@@ -191,10 +188,10 @@ class EditPropertyScreen extends StatelessWidget {
                           Wrap(
                             spacing: 10,
                             runSpacing: 10,
-                            children: loadedState.allAmenities.map((item) {
+                            children: cubit.allAmenities.map((item) { // Changed from loadedState
                               final id = item['id'];
                               final name = item['name'];
-                              final isSelected = loadedState.selectedAmenityIds
+                              final isSelected = cubit.selectedAmenityIds  // Changed from loadedState
                                   .contains(id);
 
                               return GestureDetector(

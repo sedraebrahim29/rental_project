@@ -49,22 +49,28 @@ class MyBooking extends ConsumerWidget {
                 child: Row(
                   children: BookingStatus.values.map((status) {
                     final isSelected = selectedStatus == status;
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: ChoiceChip(
-                        label: Text(status.name.toUpperCase()),
-                        selected: isSelected,
-                        onSelected: (selected) {
-                          if (selected) {
-                            // Update the provider state -> triggers API fetch
-                            ref.read(selectedBookingStatusProvider.notifier).state = status;
-                          }
-                        },
-                        selectedColor: MyColor.deepBlue,
-                        backgroundColor: MyColor.offWhite.withOpacity(0.8),
-                        labelStyle: TextStyle(
-                          color: isSelected ? Colors.white : MyColor.deepBlue,
-                          fontWeight: FontWeight.bold,
+                    return GestureDetector(
+                      onTap: () {
+                        // Update the provider state -> triggers API fetch
+                        ref.read(selectedBookingStatusProvider.notifier).state = status;
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: isSelected ? MyColor.deepBlue : Colors.white.withOpacity(0.9),
+                          borderRadius: BorderRadius.circular(20),
+                          border: isSelected
+                              ? Border.all(color: Colors.white, width: 1.5)
+                              : null,
+                        ),
+                        child: Text(
+                          status.name.toUpperCase() ,
+                          style: TextStyle(
+                            color: isSelected ? Colors.white : MyColor.deepBlue,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                          ),
                         ),
                       ),
                     );
@@ -132,94 +138,3 @@ class MyBooking extends ConsumerWidget {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-// import 'package:flutter/material.dart';
-// import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import '../providers/booking_provider.dart';
-// import '../models/booking_model.dart';
-// import '../widgets/booking_card.dart';
-// import '../data/colors.dart';
-//
-// class MyBooking extends ConsumerWidget {
-//   const MyBooking({super.key});
-//
-//   @override
-//   Widget build(BuildContext context, WidgetRef ref) {
-//     final selectedStatus = ref.watch(bookingTabProvider);
-//     final bookings = ref.watch(filteredBookingsProvider);
-//
-//     return Scaffold(
-//       body: Container(
-//         width: double.infinity,
-//         height: double.infinity,
-//         decoration: const BoxDecoration(
-//           image: DecorationImage(
-//             image: AssetImage('assets/HomeBackground.png'),
-//             fit: BoxFit.fill,
-//           ),
-//         ),
-//         child: SafeArea( // Ensures content stays below the status bar
-//           child: Column(
-//             children: [
-//               const Padding(
-//                 padding: EdgeInsets.symmetric(vertical: 15),
-//                 child: Text(
-//                   "My Bookings",
-//                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: MyColor.offWhite),
-//                 ),
-//               ),
-//               // 5 Selection Buttons [cite: 1, 2, 3, 4, 14, 22]
-//               SingleChildScrollView(
-//                 scrollDirection: Axis.horizontal,
-//                 padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-//                 child: Row(
-//                   children: BookingStatus.values.map((status) {
-//                     final isSelected = selectedStatus == status;
-//                     return Padding(
-//                       padding: const EdgeInsets.symmetric(horizontal: 4),
-//                       child: ChoiceChip(
-//                         label: Text(status.name.toUpperCase()),
-//                         selected: isSelected,
-//                         onSelected: (_) => ref.read(bookingTabProvider.notifier).state = status,
-//                         selectedColor: MyColor.deepBlue,
-//                         backgroundColor: MyColor.offWhite.withOpacity(0.7),
-//                         labelStyle: TextStyle(
-//                             color: isSelected ? Colors.white : MyColor.deepBlue,
-//                             fontWeight: FontWeight.bold
-//                         ),
-//                       ),
-//                     );
-//                   }).toList(),
-//                 ),
-//               ),
-//               // List of Booking Cards
-//               Expanded(
-//                 child: bookings.isEmpty
-//                     ? const Center(child: Text("No bookings for this status"))
-//                     : ListView.builder(
-//                   itemCount: bookings.length,
-//                   padding: const EdgeInsets.only(bottom: 20),
-//                   itemBuilder: (context, index) => BookingCard(
-//                     booking: bookings[index],
-//                     onAction: () {
-//                       // API call logic will go here
-//                     },
-//                   ),
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
