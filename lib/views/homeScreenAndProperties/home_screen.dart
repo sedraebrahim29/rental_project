@@ -15,7 +15,10 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const MainDrawer(),
+      drawer:  BlocProvider(
+  create: (context) => PropertyCubit(),
+  child: MainDrawer(),
+),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(

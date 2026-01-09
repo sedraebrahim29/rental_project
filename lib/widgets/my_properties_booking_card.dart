@@ -54,12 +54,13 @@ class BookingCard extends StatelessWidget {
           const SizedBox(height: 16),
 
           // Buttons Row
+          if (booking.status != BookingStatus.current)
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _buildActionButton('accept', MyColor.deepBlue, onAccept),
               const SizedBox(width: 16),
-              _buildActionButton('rejected', Colors.red.shade900, onReject),
+              _buildActionButton('reject', MyColor.darkRed, onReject),
             ],
           ),
         ],

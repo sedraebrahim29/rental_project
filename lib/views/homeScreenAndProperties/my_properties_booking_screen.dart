@@ -11,13 +11,11 @@ import '../../widgets/my_properties_booking_card.dart';
 class MyPropertiesBookingScreen extends StatefulWidget {
   final String propertyId;
 
-  const MyPropertiesBookingScreen({
-    super.key,
-    required this.propertyId,
-  });
+  const MyPropertiesBookingScreen({super.key, required this.propertyId});
 
   @override
-  State<MyPropertiesBookingScreen> createState() => _MyPropertiesBookingScreenState();
+  State<MyPropertiesBookingScreen> createState() =>
+      _MyPropertiesBookingScreenState();
 }
 
 class _MyPropertiesBookingScreenState extends State<MyPropertiesBookingScreen> {
@@ -34,7 +32,6 @@ class _MyPropertiesBookingScreenState extends State<MyPropertiesBookingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // CHANGED: Use BlocConsumer to listen for Success/Error messages
       body: BlocConsumer<PropertiesCubit, PropertiesState>(
         listener: (context, state) {
           // 1. Show Success Message
@@ -48,12 +45,10 @@ class _MyPropertiesBookingScreenState extends State<MyPropertiesBookingScreen> {
             );
           }
           // 2. Show Error Message (if any new error occurs)
-          if (state.state == cubit_state.State.error && state.error.isNotEmpty) {
+          if (state.state == cubit_state.State.error &&
+              state.error.isNotEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.error),
-                backgroundColor: Colors.red,
-              ),
+              SnackBar(content: Text(state.error), backgroundColor: Colors.red),
             );
           }
         },
@@ -107,9 +102,18 @@ class _MyPropertiesBookingScreenState extends State<MyPropertiesBookingScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _buildFilterTab("pending", BookingStatus.pending),
-                      _buildFilterTab("current", BookingStatus.current),
-                      _buildFilterTab("update-request", BookingStatus.updateRequest),
+                      _buildFilterTab(
+                        "pending".toUpperCase(),
+                        BookingStatus.pending,
+                      ),
+                      _buildFilterTab(
+                        "current".toUpperCase(),
+                        BookingStatus.current,
+                      ),
+                      _buildFilterTab(
+                        "update-request".toUpperCase(),
+                        BookingStatus.updateRequest,
+                      ),
                     ],
                   ),
                 ),
@@ -122,7 +126,9 @@ class _MyPropertiesBookingScreenState extends State<MyPropertiesBookingScreen> {
                     builder: (context) {
                       // Handle Loading State (Only for initial load)
                       if (state.state == cubit_state.State.loading) {
-                        return const Center(child: CircularProgressIndicator(color: Colors.white));
+                        return const Center(
+                          child: CircularProgressIndicator(color: Colors.white),
+                        );
                       }
 
                       // Pick the correct list based on selection
@@ -143,7 +149,7 @@ class _MyPropertiesBookingScreenState extends State<MyPropertiesBookingScreen> {
                         return const Center(
                           child: Text(
                             "No bookings found",
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Colors.black45),
                           ),
                         );
                       }
@@ -157,10 +163,14 @@ class _MyPropertiesBookingScreenState extends State<MyPropertiesBookingScreen> {
                             booking: booking,
                             // --- IMPLEMENTED ACTIONS ---
                             onAccept: () {
-                              context.read<PropertiesCubit>().approveBooking(booking.id.toString());
+                              context.read<PropertiesCubit>().approveBooking(
+                                booking.id.toString(),
+                              );
                             },
                             onReject: () {
-                              context.read<PropertiesCubit>().rejectBooking(booking.id.toString());
+                              context.read<PropertiesCubit>().rejectBooking(
+                                booking.id.toString(),
+                              );
                             },
                           );
                         },
@@ -187,7 +197,9 @@ class _MyPropertiesBookingScreenState extends State<MyPropertiesBookingScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? MyColor.deepBlue : Colors.white.withValues(alpha: 0.9),
+          color: isSelected
+              ? MyColor.deepBlue
+              : Colors.white.withValues(alpha: 0.9),
           borderRadius: BorderRadius.circular(20),
           border: isSelected ? Border.all(color: Colors.white, width: 1) : null,
         ),

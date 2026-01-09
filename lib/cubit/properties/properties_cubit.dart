@@ -30,7 +30,7 @@ class PropertiesCubit extends Cubit<PropertiesState> {
       // 2. Fetch Current
       var current = await propertyRepo.getCurrentBookings(propertyId);
 
-      // 3. Fetch Updates (Mocked/Empty for now)
+      // 3. Fetch Updates
       var updates = await propertyRepo.getUpdateRequests(propertyId);
 
       // 4. Emit Success with all lists
