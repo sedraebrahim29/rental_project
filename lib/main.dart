@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'package:rent/categories/details_category.dart';
+import 'package:rent/cubit/add_property_cubit.dart';
 import 'package:rent/cubit/details_cubit/details_cubit.dart';
 import 'package:rent/cubit/login_cubit/login_cubit.dart';
+import 'package:rent/cubit/properties/properties_cubit.dart';
 import 'package:rent/cubit/signup_cubit/signup_cubit.dart';
-import 'package:rent/models/property_model.dart';
-import 'package:rent/views/homeScreenAndProperties/home_screen.dart';
-import 'package:rent/views/homeScreenAndProperties/profile.dart';
-import 'package:rent/views/homeScreenAndProperties/search_screen.dart';
+
 import 'package:rent/views/login_view.dart';
-import 'package:rent/views/signup_view.dart';
-import 'package:rent/widgets/details_widgets/booking_bottom_sheet.dart';
 
 import 'cubit/property_cubit.dart';
 
@@ -28,23 +23,25 @@ class Rent extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => PropertyCubit()), // شغل زميلك
-        BlocProvider(create: (context) => LoginCubit()),    // شغلك
-        BlocProvider(create: (context) => SignupCubit()),   // شغلك
+        BlocProvider(create: (context) => LoginCubit()), // شغلك
+        BlocProvider(create: (context) => SignupCubit()), // شغلك
         BlocProvider(create: (context) => DetailsCubit()),
+        BlocProvider(create: (context) => AddPropertyCubit()),
+        BlocProvider(create: (context) => PropertiesCubit()..getProperties()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-home:  LoginView()
-// home:
-// Scaffold(
-//
-//   body: Column(
-//     children: [
-//       SizedBox(height: 80,),
-//       BookingBottomSheet(),
-//     ],
-//   ),
-// )
+        home: LoginView(),
+        // home:
+        // Scaffold(
+        //
+        //   body: Column(
+        //     children: [
+        //       SizedBox(height: 80,),
+        //       BookingBottomSheet(),
+        //     ],
+        //   ),
+        // )
 
         // home: Profile( apart: PropertyModel(
         //   id: '1',
@@ -63,7 +60,6 @@ home:  LoginView()
         //     'https://via.placeholder.com/300',
         //   ],
         // ), ),
-
 
         // home: DetailsCategory(
         //   apartment: PropertyModel(
