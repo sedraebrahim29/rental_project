@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rent/models/property_model.dart';
 import 'package:rent/views/homeScreenAndProperties/profile.dart';
 
+=======
+import 'package:rent/models/property_model.dart';
+import 'package:rent/views/homeScreenAndProperties/profile.dart';
+>>>>>>> c115fbc9f2d0a50bd2b57d4bf291c152d385e952
 import 'package:rent/views/my_booking.dart';
 
-import '../cubit/property_cubit.dart';
-import '../cubit/property_state.dart';
 import '../data/colors.dart';
 
 class MainDrawer extends StatelessWidget {
@@ -45,20 +48,13 @@ class MainDrawer extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 // USER NAME
-                BlocBuilder<PropertyCubit, PropertyState>(
-                  builder: (context, state) {
-                    // Read the userName variable directly from the Cubit
-                    final name = context.read<PropertyCubit>().userName;
-
-                    return Text(
-                      name,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: MyColor.deepBlue,
-                      ),
-                    );
-                  },
+                const Text(
+                  'Ahmad Rahal',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: MyColor.deepBlue,
+                  ),
                 ),
               ],
             ),
@@ -111,18 +107,13 @@ class MainDrawer extends StatelessWidget {
             onTap: () {},
           ),
           _DrawerItem(icon: Icons.help_outline, title: 'Help', onTap: () {}),
-          _DrawerItem(
-            icon: Icons.logout,
-            title: 'Log out',
-            onTap: () {
-              _showLogoutDialog(context);
-            },
-          ),
+          _DrawerItem(icon: Icons.logout, title: 'Log out', onTap: () {}),
         ],
       ),
     );
   }
 }
+<<<<<<< HEAD
 
 // HELPERS
 void _showLogoutDialog(BuildContext context) {
@@ -151,6 +142,8 @@ void _showLogoutDialog(BuildContext context) {
     ),
   );
 }
+=======
+>>>>>>> c115fbc9f2d0a50bd2b57d4bf291c152d385e952
 
 class _DrawerItem extends StatelessWidget {
   final IconData icon;
