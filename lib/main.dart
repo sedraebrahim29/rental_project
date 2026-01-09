@@ -4,8 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:rent/categories/details_category.dart';
 import 'package:rent/cubit/details_cubit/details_cubit.dart';
+import 'package:rent/cubit/filter_cubit/filter_cubit.dart';
+import 'package:rent/cubit/filter_cubit/filter_meta_cubit.dart';
 import 'package:rent/cubit/login_cubit/login_cubit.dart';
+import 'package:rent/cubit/profile_cubit/profile_cubit.dart';
 import 'package:rent/cubit/signup_cubit/signup_cubit.dart';
+import 'package:rent/models/profile_model.dart';
 import 'package:rent/models/property_model.dart';
 import 'package:rent/views/homeScreenAndProperties/home_screen.dart';
 import 'package:rent/views/homeScreenAndProperties/profile.dart';
@@ -27,43 +31,36 @@ class Rent extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => PropertyCubit()), // شغل زميلك
-        BlocProvider(create: (context) => LoginCubit()),    // شغلك
-        BlocProvider(create: (context) => SignupCubit()),   // شغلك
+        BlocProvider(create: (context) => PropertyCubit()),
         BlocProvider(create: (context) => DetailsCubit()),
+        BlocProvider(create: (context) => FilterCubit()),
+        BlocProvider(create: (context) => FilterMetaCubit()..loadInitialData()),
+        BlocProvider(create: (context) => ProfileCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-home:  LoginView()
-// home:
-// Scaffold(
-//
-//   body: Column(
-//     children: [
-//       SizedBox(height: 80,),
-//       BookingBottomSheet(),
-//     ],
-//   ),
-// )
+        home: LoginView(),
 
-        // home: Profile( apart: PropertyModel(
-        //   id: '1',
-        //   ownerName: 'Test Owner',
-        //   city: 'Damascus',
-        //   governorate: 'Damascus',
-        //   category: 'Apartment',
-        //   amenities: ['WiFi', 'AC', 'Pool'],
-        //   area: '120',
-        //   price: '500',
-        //   beds: '3',
-        //   baths: '2',
-        //   address: 'Mazzeh, Damascus',
-        //   rating: 4.5,
-        //   imageUrls: [
-        //     'https://via.placeholder.com/300',
-        //   ],
-        // ), ),
+        //home:  SearchScreen()
+        // home:
+        // Scaffold(
+        //
+        //   body: Column(
+        //     children: [
+        //       SizedBox(height: 80,),
+        //       BookingBottomSheet(),
+        //     ],
+        //   ),
+        // )
 
+        // home: Profile( prof: ProfileModel(
+        //  firstName: 'sedra',
+        //   lastName: 'ebrahem',
+        //   phoneNumber: '0987654321',
+        //   birthDate: '2/12/2005',
+        //   properties: 3,
+        //   balance: 12,
+        //     image: 'http://127.0.0.1:8000/api/avatar/2'), ),
 
         // home: DetailsCategory(
         //   apartment: PropertyModel(
@@ -80,9 +77,8 @@ home:  LoginView()
         //     amenities: ['wifi','ac','pool','wifi','ac','pool','wifi','ac','pool'],
         //     rating: 4.8,
         //
-        //   )
+        //   ), apartmentId: 1,
         // ),
-        //
 
         // initialRoute: '/login',
         // routes: {

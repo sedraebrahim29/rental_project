@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rent/cubit/filter_cubit/filter_cubit.dart';
+import 'package:rent/cubit/filter_cubit/filter_meta_cubit.dart';
 import 'package:rent/views/homeScreenAndProperties/my_properties.dart';
 
 import '../data/colors.dart';
@@ -33,12 +36,20 @@ class HomeHeader extends StatelessWidget {
                     InkWell(
                       borderRadius: BorderRadius.circular(30),
                       onTap: () {
+                        // provide cubit
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const SearchScreen(),
+                            builder: (_) => MultiBlocProvider(
+                              providers: [
+                                BlocProvider(create: (_) => FilterMetaCubit()..loadInitialData()),
+                                BlocProvider(create: (_) => FilterCubit()),
+                              ],
+                              child: const SearchScreen(),
+                            ),
                           ),
                         );
+
                       },
                       child: Container(
                         height: 35,

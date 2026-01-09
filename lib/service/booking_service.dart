@@ -1,12 +1,14 @@
 import 'dart:convert';
 
 import 'package:rent/helper/api.dart';
+import 'package:rent/models/city_model.dart';
 
 import 'package:rent/models/conflict_booking_model.dart';
+import 'package:rent/models/governorate_model.dart';
 
 class BookingService {
   static const baseUrl = 'http://127.0.0.1:8000/api';
-
+// get date
   Future<List<BookingDateModel>> getPropertyBookings({
     required int propertyId,
     required String token,
@@ -25,7 +27,35 @@ class BookingService {
       throw Exception('Failed to load bookings');
     }
   }
+//get governorates
+  Future<List<GovernorateModel>> getAllGovernorates(String token) async {
+    final response = await Api().get(
+      url: '$baseUrl/properties/allGovernorates',
+      token: token,
+    );
 
+    final decoded = jsonDecode(response.body);
+    return (decoded['data'] as List)
+        .map((e) => GovernorateModel.fromJson(e))
+        .toList();
+  }
+//get cities
+  Future<List<CityModel>> getCitiesByGovernorate({
+    required int governorateId,
+    required String token,
+  }) async {
+    final response = await Api().get(
+      url: '$baseUrl/properties/allCities/$governorateId',
+      token: token,
+    );
+
+    final decoded = jsonDecode(response.body);
+    return (decoded['data'] as List)
+        .map((e) => CityModel.fromJson(e))
+        .toList();
+  }
+
+// post
   Future<void> createBooking({
     required String startDate,
     required String endDate,
@@ -45,8 +75,8 @@ class BookingService {
         'price_per_night': pricePerNight,
         'total_price': totalPrice,
         'property_id': propertyId,
-        'governorate_id': governorateId,
-        'city_id': cityId,
+        'user_governorate_id': governorateId,
+        'user_city_id': cityId,
       },
     );
 

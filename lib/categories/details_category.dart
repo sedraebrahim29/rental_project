@@ -7,7 +7,8 @@ import 'package:rent/widgets/details_widgets/details_image.dart';
 import 'package:rent/widgets/details_widgets/details_info.dart';
 
 class DetailsCategory extends StatefulWidget {
-  const DetailsCategory({super.key,required this.apartmentId,});
+  const DetailsCategory({super.key,required this.apartmentId,
+    });
 
 
   final int apartmentId;
@@ -20,7 +21,8 @@ class _DetailsCategoryState extends State<DetailsCategory> {
   void initState() {
     super.initState();
 
-    context.read<DetailsCubit>().getDetails(widget.apartmentId);}
+    context.read<DetailsCubit>().getDetails(widget.apartmentId);
+  }
 
 
 

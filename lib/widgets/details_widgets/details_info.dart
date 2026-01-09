@@ -58,16 +58,32 @@ class DetailsInfo extends StatelessWidget {
           //location
           Row(
             children: [
-              Icon(Icons.location_on, size: 18, color: MyColor.deepBlue),
+              const Icon(Icons.location_on, size: 20, color: MyColor.deepBlue),
               const SizedBox(width: 4),
               Text(
-                apartment.address,
-                style: TextStyle(color: MyColor.deepBlue,fontSize: 15),
+                '${apartment.city ?? ''} - ${apartment.governorate ?? ''}',
+                style: const TextStyle(
+                  color: MyColor.deepBlue,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ],
           ),
 
-          const SizedBox(height: 15),
+          const SizedBox(height: 5),
+
+// ADDRESS DETAILS
+          Text(
+            'Address details : ${apartment.address}',
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: MyColor.deepBlue,
+            ),
+          ),
+
+          const SizedBox(height: 11),
 
           //price
           Text(
@@ -79,7 +95,7 @@ class DetailsInfo extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: 11),
 
           //bed + bath + area
 
@@ -113,7 +129,7 @@ class DetailsInfo extends StatelessWidget {
 
           const SizedBox(height: 15),
 
-    //ameninties
+    //amenities
     Row(
       children: [
         Padding(
@@ -161,7 +177,7 @@ class DetailsInfo extends StatelessWidget {
     ),
 
 
-    const SizedBox(height: 30),
+    const SizedBox(height: 18),
 
           // BOOK BUTTON
           Center(
@@ -180,9 +196,11 @@ class DetailsInfo extends StatelessWidget {
                     context: context,
                     isScrollControlled: true,
                     backgroundColor: Colors.transparent,
+
+                    // provide cubit & trigger cubit
                     builder: (_) => BlocProvider(
                       create: (_) => BookingCubit()
-                        ..loadBookings(
+                        ..loadInitialData(
                            int.parse(apartment.id!),
                         ),
                       child: BookingBottomSheet(

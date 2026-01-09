@@ -6,22 +6,46 @@ import 'package:rent/service/booking_service.dart';
 
 class BookingCubit extends Cubit<BookingState> {
   BookingCubit() : super(BookingInitial());
-// get
-  Future<void> loadBookings(int propertyId) async {
-    final String token = await SecureStorage.getToken();
+// get هي دالة للتاريخ المحجوز والمحافظات
+  Future<void> loadInitialData(int propertyId) async {
+
     emit(BookingLoading());
     try {
-
+      final String token = await SecureStorage.getToken();
       final bookings = await BookingService().getPropertyBookings(
         propertyId: propertyId,
         token: token,
       );
 
-      emit(BookingLoaded(bookings));
+      final governorates =
+      await BookingService().getAllGovernorates(token);
+
+      emit(BookingLoaded( bookedDates: bookings,
+        governorates: governorates,
+        cities: [],));
     } catch (e) {
       emit(BookingError(e.toString()));
     }
   }
+  // get هي دالة للمدن لحال بجبلي ياهن بعد ما اختار المحافظة
+  Future<void> loadCities(int governorateId) async {
+    if (state is! BookingLoaded) return;
+
+    final current = state as BookingLoaded;
+    final token = await SecureStorage.getToken();
+
+    final cities = await BookingService().getCitiesByGovernorate(
+      governorateId: governorateId,
+      token: token,
+    );
+
+    emit(BookingLoaded(
+      bookedDates: current.bookedDates,
+      governorates: current.governorates,
+      cities: cities,
+    ));
+  }
+
 // post
   Future<void> submitBooking({
     required String startDate,

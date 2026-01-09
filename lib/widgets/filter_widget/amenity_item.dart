@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:rent/data/colors.dart';
 
-class TypeCategoryp extends StatelessWidget {
+class AmenityItem extends StatelessWidget {
   final String title;
   final bool isSelected;
   final VoidCallback onTap;
 
-  const TypeCategoryp({
+  const AmenityItem({
     super.key,
     required this.title,
     required this.isSelected,
@@ -19,23 +19,22 @@ class TypeCategoryp extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: 40,
-        width: 105,
-        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(horizontal: 14),
         decoration: BoxDecoration(
           color: isSelected ? MyColor.deepBlue.withOpacity(0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(15),
           border: Border.all(
-            color: isSelected ? MyColor.deepBlue : MyColor.deepBlue,
-            width: isSelected ? 2 : 1.5,
+            color: MyColor.deepBlue,
+            width: 1.5,
           ),
         ),
-        child: Text(
-          title,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.bold,
-            color: MyColor.deepBlue,
+        child: Center(
+          child: Text(
+            title,
+            style: TextStyle(
+              color: MyColor.deepBlue,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),
