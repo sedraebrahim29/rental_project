@@ -3,7 +3,7 @@ import '../constant.dart';
 
 class BookingApi {
 
-  // Helper method to handle requests
+
   Future<String> _fetchData(String endpoint, String token) async {
     try {
       final uri = Uri.parse("$baseUrl/$endpoint");
@@ -24,7 +24,7 @@ class BookingApi {
     }
   }
 
-  // Define the specific calls based on your routes
+
   Future<String> getPendingBookings(String token) async =>
       _fetchData('bookings/getUserPendingBookings', token);
 
@@ -44,14 +44,14 @@ class BookingApi {
       _fetchData('bookings/getUserRejectedBookings', token);
 
 
-  // --- NEW METHODS (Actions) ---
+  //  Actions
 
-  // 1. Cancel Booking (GET based on your screenshot)
+  // 1. Cancel Booking
   Future<String> cancelBooking(String bookingId, String token) async {
     return _fetchData('bookings/cancel/$bookingId', token);
   }
 
-  // 2. Edit/Update Booking (POST based on your screenshot)
+  // 2. Edit Booking
   Future<String> updateBooking(String bookingId, String startDate, String endDate, String token) async {
     try {
       var response = await http.post(
@@ -61,8 +61,8 @@ class BookingApi {
           "accept": "application/json",
         },
         body: {
-          "new_start_date": startDate,
-          "new_end_date": endDate,
+          "start_date": startDate,
+          "end_date": endDate,
         },
       );
 
@@ -75,19 +75,18 @@ class BookingApi {
     }
   }
 
-  // 3. Rate Booking (Assuming POST based on pattern)
-  Future<String> rateBooking(String bookingId, double rating, String token) async {
+  // 3. Rate Booking
+  Future<String> rateBooking(String bookingId, int rating, String token) async {
     try {
       var response = await http.post(
-        Uri.parse("$baseUrl/properties/rating"), // Updated endpoint based on your screenshot image_431671.png
+        Uri.parse("$baseUrl/properties/rating"),
         headers: {
           "authorization": "Bearer $token",
           "accept": "application/json",
         },
         body: {
           "rating": rating.toString(),
-          // You might need to send bookingId or propertyId depending on backend requirement for this endpoint
-          // "booking_id": bookingId
+           "booking_id": bookingId
         },
       );
 

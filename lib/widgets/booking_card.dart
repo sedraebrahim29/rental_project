@@ -16,7 +16,7 @@ class BookingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dateFormat = DateFormat('dd-MM-yyyy');
+    final dateFormat = DateFormat('yyyy-MM-dd');
 
     final bool isUpdate = booking.status == BookingStatus.update;
 
@@ -63,12 +63,12 @@ class BookingCard extends StatelessWidget {
                   width: 120,
                   height: double.infinity,
                   fit: BoxFit.cover,
-                  // errorBuilder: (c, o, s) => Container(
-                  //   width: 120,
-                  //   height: double.infinity,
-                  //   color: Colors.grey,
-                  //   child: const Icon(Icons.home, color: Colors.white),
-                  // ),
+                  errorBuilder: (c, e, s) => Container(
+                    width: 120,
+                    height: double.infinity,
+                    color: Colors.grey,
+                    child: const Icon(Icons.home, color: Colors.white),
+                  ),
                 ),
               ),
 
@@ -127,21 +127,20 @@ class BookingCard extends StatelessWidget {
     );
   }
   Widget _buildTopActionSection() {
-    // PENDING OR CURRENT: Show Edit & Cancel
+    // 1. PENDING OR CURRENT -> Show Edit & Cancel
     if (booking.status == BookingStatus.pending || booking.status == BookingStatus.current) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           _smallButton("edit", MyColor.deepBlue, onEdit),
           const SizedBox(width: 8),
-          _smallButton("cancel",  MyColor.darkRed, onCancel),
+          _smallButton("cancel", MyColor.darkRed, onCancel),
         ],
       );
     }
 
-    // ENDED: Show Rate
+    // 2. ENDED -> Show Rate
     if (booking.status == BookingStatus.ended) {
-
       return Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -150,18 +149,14 @@ class BookingCard extends StatelessWidget {
       );
     }
 
-    // REJECTED / CANCELED: Show Red Text
-    if (booking.status == BookingStatus.rejected || booking.status == BookingStatus.canceled) {
-      String text = booking.status == BookingStatus.rejected
-          ? "the booking rejected"
-          : "the booking canceled at:\n${DateFormat('dd-MM-yyyy').format(DateTime.now())}"; // Or use booking.statusDate if you have it
-
-      return Align(
+    // 3. REJECTED -> Show Message
+    if (booking.status == BookingStatus.rejected) {
+      return const Align(
         alignment: Alignment.centerRight,
         child: Text(
-          text,
+          "the booking rejected",
           textAlign: TextAlign.right,
-          style: const TextStyle(
+          style: TextStyle(
             color: MyColor.darkRed,
             fontWeight: FontWeight.bold,
             fontSize: 12,
@@ -170,7 +165,23 @@ class BookingCard extends StatelessWidget {
       );
     }
 
-    // CURRENT / UPDATE: Show nothing at top (or spacing)
+    // 4. CANCELED -> Show Message
+    if (booking.status == BookingStatus.canceled) {
+      return  Align(
+        alignment: Alignment.centerRight,
+        child: Text(
+          "the booking canceled at:\n${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
+          textAlign: TextAlign.right,
+          style: TextStyle(
+            color: MyColor.darkRed,
+            fontWeight: FontWeight.bold,
+            fontSize: 12,
+          ),
+        ),
+      );
+    }
+
+    // 5. UPDATE  -> Show nothing
     return const SizedBox(height: 20);
   }
 

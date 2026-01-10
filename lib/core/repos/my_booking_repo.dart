@@ -60,7 +60,7 @@ class BookingRepo {
   }
 
   // 3. Rate
-  Future<void> rateBooking(String bookingId, double rating) async {
+  Future<void> rateBooking(String bookingId, int rating) async {
     final String token = await SecureStorage.getToken();
     await _api.rateBooking(bookingId, rating, token);
   }
