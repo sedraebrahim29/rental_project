@@ -42,14 +42,15 @@ class HomeHeader extends StatelessWidget {
                           MaterialPageRoute(
                             builder: (_) => MultiBlocProvider(
                               providers: [
-                                BlocProvider(create: (_) => FilterMetaCubit()..loadInitialData()),
-                                BlocProvider(create: (_) => FilterCubit()),
+                                BlocProvider(
+                                  create: (_) =>
+                                      FilterMetaCubit()..loadInitialData(),
+                                ),
                               ],
                               child: const SearchScreen(),
                             ),
                           ),
                         );
-
                       },
                       child: Container(
                         height: 35,

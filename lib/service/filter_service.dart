@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:rent/helper/api.dart';
 import 'package:rent/models/amenity_model.dart';
 import 'package:rent/models/category_model.dart';
@@ -43,13 +44,15 @@ class FilterService {
     required Map<String, dynamic> body,
     required String token,
   }) async {
+    log(body.toString());
     final res = await Api().post(
       url: '$baseUrl/filter',
       body: body,
       token: token,
     );
-
     final decoded = jsonDecode(res.body);
+    int id = decoded['data'][0]['id'];
+    log('id = $id');
     return FilteredPropertyModel.fromList(decoded['data']);
   }
 }

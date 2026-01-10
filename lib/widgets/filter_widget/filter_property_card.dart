@@ -50,7 +50,10 @@ class FilteredPropertyCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   _buildInfoItem(Icons.home, property.category),
                   const SizedBox(height: 2),
-                  _buildInfoItem(Icons.square_foot_sharp, "${property.area} m²"),
+                  _buildInfoItem(
+                    Icons.square_foot_sharp,
+                    "${property.area} m²",
+                  ),
 
                   const SizedBox(height: 6),
 
@@ -66,7 +69,9 @@ class FilteredPropertyCard extends StatelessWidget {
                   Text(
                     "${property.city} - ${property.governorate}",
                     style: const TextStyle(
-                        color: MyColor.blueGray, fontSize: 12),
+                      color: MyColor.blueGray,
+                      fontSize: 12,
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
 
@@ -74,8 +79,7 @@ class FilteredPropertyCard extends StatelessWidget {
 
                   Row(
                     children: [
-                      const Icon(Icons.star,
-                          color: MyColor.warmGold, size: 18),
+                      const Icon(Icons.star, color: MyColor.warmGold, size: 18),
                       const SizedBox(width: 4),
                       Text(
                         property.rating.toString(),

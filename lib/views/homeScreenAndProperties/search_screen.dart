@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rent/categories/filter_category/type_category.dart';
@@ -29,7 +31,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final filterCubit = context.read<FilterCubit>();
+    //final filterCubit = context.read<FilterCubit>();
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -265,6 +267,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             amenities: selectedAmenities,
                           );
 
+                          log('2');
                           Navigator.push(
                             context,
                             MaterialPageRoute(

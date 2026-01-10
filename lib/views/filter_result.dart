@@ -1,3 +1,4 @@
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,7 +28,6 @@ class _FilterResultScreenState extends State<FilterResultScreen> {
           child: Column(
             children: [
               const SizedBox(height: 50),
-
               const Text(
                 'Filter Results',
                 style: TextStyle(
@@ -40,14 +40,15 @@ class _FilterResultScreenState extends State<FilterResultScreen> {
               const SizedBox(height: 40),
 
               Expanded(
-                child: BlocBuilder<FilterCubit,FilterState>(
+                child: BlocBuilder<FilterCubit, FilterState>(
                   builder: (context, state) {
                     if (state is FilterLoading) {
-                      return const Center(
-                          child: CircularProgressIndicator());
+                      log('4');
+                      return const Center(child: CircularProgressIndicator());
                     }
 
                     if (state is FilterError) {
+                      log('5');
                       return Center(
                         child: Text(
                           state.message,
@@ -55,8 +56,9 @@ class _FilterResultScreenState extends State<FilterResultScreen> {
                         ),
                       );
                     }
-
+                    log('3');
                     if (state is FilterEmpty) {
+                      log('6');
                       return const Center(
                         child: Text(
                           'No results found',
@@ -66,10 +68,12 @@ class _FilterResultScreenState extends State<FilterResultScreen> {
                     }
 
                     if (state is FilterLoaded) {
+                      log('7');
                       return ListView.builder(
                         itemCount: state.properties.length,
                         itemBuilder: (context, index) {
                           final prop = state.properties[index];
+                          log('blabla');
                           return FilteredPropertyCard(
                             property: prop,
                             onTap: () {
