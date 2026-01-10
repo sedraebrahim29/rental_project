@@ -51,7 +51,7 @@ class _LoginViewState extends State<LoginView> {
             Textfieldwidget(passwordField),
             const Spacer(flex: 3),
 
-            /// LOGIN BUTTON (Bloc + Service محفوظين)
+
             Container(
               height: 60,
               width: 250,

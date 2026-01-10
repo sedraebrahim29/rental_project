@@ -31,27 +31,28 @@ class Rent extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => PropertyCubit()),
+        BlocProvider(create: (context) => PropertyCubit()), // شغل زميلك
+        BlocProvider(create: (context) => LoginCubit()),    // شغلك
+        BlocProvider(create: (context) => SignupCubit()),   // شغلك
         BlocProvider(create: (context) => DetailsCubit()),
         BlocProvider(create: (context) => FilterCubit()),
         BlocProvider(create: (context) => FilterMetaCubit()..loadInitialData()),
-        BlocProvider(create: (context) => ProfileCubit()),
+        BlocProvider(create: (context) => ProfileCubit()..getProfile()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: LoginView(),
-
-        //home:  SearchScreen()
-        // home:
-        // Scaffold(
-        //
-        //   body: Column(
-        //     children: [
-        //       SizedBox(height: 80,),
-        //       BookingBottomSheet(),
-        //     ],
-        //   ),
-        // )
+home: LoginView(),
+//home:  SearchScreen()
+// home:
+// Scaffold(
+//
+//   body: Column(
+//     children: [
+//       SizedBox(height: 80,),
+//       BookingBottomSheet(),
+//     ],
+//   ),
+// )
 
         // home: Profile( prof: ProfileModel(
         //  firstName: 'sedra',
@@ -61,6 +62,7 @@ class Rent extends StatelessWidget {
         //   properties: 3,
         //   balance: 12,
         //     image: 'http://127.0.0.1:8000/api/avatar/2'), ),
+
 
         // home: DetailsCategory(
         //   apartment: PropertyModel(
@@ -79,6 +81,7 @@ class Rent extends StatelessWidget {
         //
         //   ), apartmentId: 1,
         // ),
+
 
         // initialRoute: '/login',
         // routes: {

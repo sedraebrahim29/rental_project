@@ -73,7 +73,7 @@ class _FilterResultScreenState extends State<FilterResultScreen> {
                           return FilteredPropertyCard(
                             property: prop,
                             onTap: () {
-                              // لاحقًا: الانتقال لتفاصيل العقار
+
                             },
                           );
                         },
