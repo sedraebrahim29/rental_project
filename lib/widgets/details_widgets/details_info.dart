@@ -198,8 +198,9 @@ class DetailsInfo extends StatelessWidget {
                     backgroundColor: Colors.transparent,
 
                     // provide cubit & trigger cubit
-                    builder: (_) => BlocProvider.value(
-                      value: context.read<BookingCubit>(),
+                    builder: (context) => BlocProvider(
+                      create: (context) => BookingCubit()
+                        ..loadInitialData(int.parse(apartment.id!)),
                       child: BookingBottomSheet(
                         apartmentId: int.parse(apartment.id!),
                         pricePerNight: apartment.price,
