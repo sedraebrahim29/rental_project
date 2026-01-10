@@ -1,17 +1,22 @@
 import 'property_model.dart';
 
-// Enum to represent the 5 buttons
-enum BookingStatus { pending, current, canceled, rejected, ended }
+// Enum to represent the statuses
+enum BookingStatus { pending, current, update, canceled, rejected, ended }
 
 class BookingModel {
   final String id;
-  final PropertyModel property; // We need this for the Image & Owner Name
+  final PropertyModel property;
   final DateTime fromDate;
   final DateTime toDate;
   final double pricePerNight;
   final double totalPrice;
   final BookingStatus status;
-  final String? statusMessage; // For specific messages like "rejected on..."
+  final String? statusMessage;
+
+  // Update  Fields
+  final DateTime? newFromDate;
+  final DateTime? newToDate;
+  final double? newTotalPrice;
 
   BookingModel({
     required this.id,
@@ -22,27 +27,39 @@ class BookingModel {
     required this.totalPrice,
     required this.status,
     this.statusMessage,
+    this.newFromDate,
+    this.newToDate,
+    this.newTotalPrice,
   });
 
   factory BookingModel.fromJson(Map<String, dynamic> json) {
+    final updateData = json['update_request'];
+
     return BookingModel(
       id: json['id'].toString(),
-      // Assumes 'property' object exists inside the booking JSON to get the image/owner
+
       property: PropertyModel.fromJson(json['property'] ?? {}),
 
-      // Parse dates from API (e.g., "2025-01-01")
       fromDate: DateTime.parse(json['start_date']),
       toDate: DateTime.parse(json['end_date']),
 
-      // Parse numbers safely
       pricePerNight: double.tryParse(json['price_per_night'].toString()) ?? 0.0,
       totalPrice: double.tryParse(json['total_price'].toString()) ?? 0.0,
 
-      // Map string status from API to Enum
       status: _mapStatus(json['status']),
-
-      // Optional message field
       statusMessage: json['message'],
+
+      // 2. Parse Update Fields
+      newFromDate: (updateData != null && updateData['new_start_date'] != null)
+          ? DateTime.parse(updateData['new_start_date'])
+          : null,
+      newToDate: (updateData != null && updateData['new_end_date'] != null)
+          ? DateTime.parse(updateData['new_end_date'])
+          : null,
+      newTotalPrice:
+          (updateData != null && updateData['new_total_price'] != null)
+          ? double.tryParse(updateData['new_total_price'].toString())
+          : null,
     );
   }
 
@@ -50,8 +67,12 @@ class BookingModel {
     switch (status?.toLowerCase()) {
       case 'pending':
         return BookingStatus.pending;
+      case 'approved':
+        return BookingStatus.current;
       case 'current':
         return BookingStatus.current;
+      case 'update':
+        return BookingStatus.update;
       case 'canceled':
         return BookingStatus.canceled;
       case 'rejected':
