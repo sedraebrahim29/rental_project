@@ -95,16 +95,10 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
                     Center(
                       child: SizedBox(
                         height: 60,
-                        child: ListView.builder(
-                          itemCount: state.bookedDates.length,
-                          itemBuilder: (context, index) {
-                            final b = state.bookedDates[index];
-                            return BookedDateDisplay(
-                              from: b.startDate,
-                              to: b.endDate,
-                            );
-                          },
+                        child: BookedDateDisplay(
+                          bookedDates: state.bookedDates,
                         ),
+
                       ),
                     ),
 
@@ -224,6 +218,7 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
                   ),
                 ),
                 onPressed: () async {
+                  print("BOOK BUTTON CLICKED");///////////
                   if (selectedGovernorateId == null ||
                       selectedCityId == null) {
                     ScaffoldMessenger.of(context).showSnackBar(

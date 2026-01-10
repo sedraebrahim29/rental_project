@@ -66,6 +66,7 @@ class BookingService {
     required int cityId,
     required String token,
   }) async {
+    print("API CREATE BOOKING CALLED");///////////////////
     final response = await Api().post(
       url: '$baseUrl/bookings/create',
       token: token,
@@ -79,6 +80,9 @@ class BookingService {
         'user_city_id': cityId,
       },
     );
+    print(response.statusCode);
+    print(response.body);
+
 
     if (response.statusCode != 200 && response.statusCode != 201) {
       throw Exception('Booking failed');

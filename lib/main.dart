@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rent/cubit/add_property_cubit.dart';
+import 'package:rent/cubit/booking_cubit/booking_cubit.dart';
 import 'package:rent/cubit/details_cubit/details_cubit.dart';
 import 'package:rent/cubit/filter_cubit/filter_cubit.dart';
 import 'package:rent/cubit/filter_cubit/filter_meta_cubit.dart';
@@ -26,17 +27,20 @@ class Rent extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => PropertyCubit()), // شغل زميلك
+
         BlocProvider(create: (context) => LoginCubit()), // شغلك
         BlocProvider(create: (context) => SignupCubit()), // شغلك
+        //BlocProvider(create: (context) => BookingCubit()),
         BlocProvider(create: (context) => DetailsCubit()),
         BlocProvider(create: (context) => AddPropertyCubit()),
         BlocProvider(create: (context) => PropertiesCubit()..getProperties()),
         BlocProvider(create: (context) => FilterCubit()),
         BlocProvider(create: (context) => FilterMetaCubit()..loadInitialData()),
-        BlocProvider(create: (context) => ProfileCubit()),
+        BlocProvider(create: (context) => ProfileCubit()..getProfile()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+
         home: LoginView(),
 
         // home:

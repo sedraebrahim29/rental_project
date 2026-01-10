@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rent/cubit/booking_cubit/booking_state.dart';
 import 'package:rent/helper/secure_storage_service.dart';
-import 'package:rent/helper/token_storage.dart';
+
 import 'package:rent/service/booking_service.dart';
 
 class BookingCubit extends Cubit<BookingState> {
@@ -56,10 +56,10 @@ class BookingCubit extends Cubit<BookingState> {
     required int governorateId,
     required int cityId,
   }) async {
+    print("SUBMIT BOOKING CALLED");////////////////
     emit(BookingLoading());
     try {
-      final token = await TokenStorage.getToken();
-      if (token == null) throw Exception('No token');
+      final token = await SecureStorage.getToken();
 
       await BookingService().createBooking(
         startDate: startDate,
