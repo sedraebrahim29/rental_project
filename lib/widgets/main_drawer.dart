@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rent/core/constant.dart';
+import 'package:rent/cubit/user_cubit.dart';
+import 'package:rent/cubit/user_state.dart';
 import 'package:rent/views/homeScreenAndProperties/profile.dart';
 
 import 'package:rent/views/my_booking.dart';
@@ -33,32 +36,34 @@ class MainDrawer extends StatelessWidget {
                 bottomLeft: Radius.circular(40),
               ),
             ),
-            child: Column(
-              children: [
-                // AVATAR
-                CircleAvatar(
-                  radius: 40,
-                  backgroundColor: MyColor.offWhite,
-                  child: Icon(Icons.person, size: 45, color: MyColor.deepBlue),
-                ),
-                const SizedBox(height: 12),
-                // USER NAME
-                BlocBuilder<PropertyCubit, PropertyState>(
-                  builder: (context, state) {
-                    // Read the userName variable directly from the Cubit
-                    final name = context.read<PropertyCubit>().userName;
-
-                    return Text(
-                      name,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: MyColor.deepBlue,
+            child: BlocBuilder<AuthCubit, AuthState>(
+              builder: (context, state) {
+                if (state is AuthAuthenticated) {
+                  return Column(
+                    children: [
+                      // AVATAR
+                      CircleAvatar(
+                        radius: 40,
+                        backgroundImage: NetworkImage(state.user.image),
                       ),
-                    );
-                  },
-                ),
-              ],
+                      const SizedBox(height: 12),
+
+                      // USER NAME
+
+                      // Read the userName variable directly from the Cubi
+                      Text(
+                        state.user.name,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: MyColor.deepBlue,
+                        ),
+                      ),
+                    ],
+                  );
+                }
+                return const SizedBox();
+              },
             ),
           ),
 

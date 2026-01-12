@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:rent/helper/api.dart';
-import 'package:rent/models/login_model.dart';
+import 'package:rent/models/user_model.dart';
 
 class LoginService {
-  Future<String> loginService({
+  Future<UserModel> loginService({
     required String phone,
     required String password,
   }) async {
@@ -15,9 +16,10 @@ class LoginService {
     final decoded = jsonDecode(response.body);
     String message = decoded['message'];
     if (response.statusCode == 200) {
-      String token = decoded['data'];
-      print('Token from login=> $token');
-      return token;
+      //String token = decoded['data'];
+      //print('Token from login=> $token');
+      log(decoded['data'][0]['name']);
+      return UserModel.fromJson(decoded['data']);
     } else if (response.statusCode == 500) {
       throw Exception('Server error');
     } else {

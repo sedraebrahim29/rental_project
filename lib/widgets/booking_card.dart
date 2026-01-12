@@ -7,7 +7,7 @@ class BookingCard extends StatelessWidget {
   final BookingModel booking;
   final VoidCallback? onEdit;
   final VoidCallback? onCancel;
-  final VoidCallback? onRate;
+  final VoidCallback? onRate; // For "Edit", "Cancel", or "Rate"
 
   const BookingCard({
     super.key,
@@ -33,6 +33,7 @@ class BookingCard extends StatelessWidget {
         ? (booking.newTotalPrice ?? booking.totalPrice)
         : booking.totalPrice;
 
+    // Determine Labels
     final String labelFrom = isUpdate ? "new start date" : "from";
     final String labelTo = isUpdate ? "new end date" : "to";
     final String labelTotal = isUpdate ? "new total price" : "total price";
@@ -59,44 +60,46 @@ class BookingCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Image
+              // --- Left: Image ---
               ClipRRect(
                 borderRadius: BorderRadius.circular(15),
                 child: Image.network(
                   booking.property.imageUrls.isNotEmpty
                       ? booking.property.imageUrls.first
-                      : 'https://via.placeholder.com/120x100',
+                      : '',
                   width: 120,
-                  height: 100,
+                  height: 120,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => Container(
-                    width: 120,
-                    height: 100,
-                    color: Colors.grey.shade300,
-                    child: const Icon(Icons.home, color: Colors.white),
-                  ),
+                  // errorBuilder: (c, o, s) => Container(
+                  //   width: 120,
+                  //   height: double.infinity,
+                  //   color: Colors.grey,
+                  //   child: const Icon(Icons.home, color: Colors.white),
+                  // ),
                 ),
               ),
 
               const SizedBox(width: 12),
 
-              // Details
+              // --- Right: Details & Buttons ---
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // 1. Buttons or Status Text
                     _buildTopActionSection(),
 
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 8),
 
+                    // 2. DATES
                     _buildDetailRow(labelFrom, dateFormat.format(displayFrom)),
                     _buildDetailRow(
                       labelTo,
                       " : ${dateFormat.format(displayTo)}",
-                    ),
+                    ), // Formatting to match photo "to :"
 
                     const SizedBox(height: 8),
-
+                    // 3. PRICE
                     Row(
                       children: [
                         Text(
@@ -135,6 +138,7 @@ class BookingCard extends StatelessWidget {
   }
 
   Widget _buildTopActionSection() {
+    // PENDING OR CURRENT: Show Edit & Cancel
     if (booking.status == BookingStatus.pending ||
         booking.status == BookingStatus.current) {
       return Row(
@@ -147,6 +151,7 @@ class BookingCard extends StatelessWidget {
       );
     }
 
+    // ENDED: Show Rate
     if (booking.status == BookingStatus.ended) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -154,11 +159,12 @@ class BookingCard extends StatelessWidget {
       );
     }
 
+    // REJECTED / CANCELED: Show Red Text
     if (booking.status == BookingStatus.rejected ||
         booking.status == BookingStatus.canceled) {
-      final text = booking.status == BookingStatus.rejected
+      String text = booking.status == BookingStatus.rejected
           ? "the booking rejected"
-          : "the booking canceled at:\n${DateFormat('dd-MM-yyyy').format(DateTime.now())}";
+          : "the booking canceled at:\n${DateFormat('dd-MM-yyyy').format(DateTime.now())}"; // Or use booking.statusDate if you have it
 
       return Align(
         alignment: Alignment.centerRight,
@@ -174,6 +180,7 @@ class BookingCard extends StatelessWidget {
       );
     }
 
+    // CURRENT / UPDATE: Show nothing at top (or spacing)
     return const SizedBox(height: 20);
   }
 
@@ -214,7 +221,11 @@ class BookingCard extends StatelessWidget {
         ),
         child: Text(
           text,
-          style: const TextStyle(color: Colors.white, fontSize: 12),
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 12,
+            fontWeight: FontWeight.normal,
+          ),
         ),
       ),
     );

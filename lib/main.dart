@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rent/cubit/add_property_cubit.dart';
-import 'package:rent/cubit/booking_cubit/booking_cubit.dart';
 import 'package:rent/cubit/details_cubit/details_cubit.dart';
 import 'package:rent/cubit/filter_cubit/filter_cubit.dart';
 import 'package:rent/cubit/filter_cubit/filter_meta_cubit.dart';
@@ -10,8 +9,11 @@ import 'package:rent/cubit/login_cubit/login_cubit.dart';
 import 'package:rent/cubit/profile_cubit/profile_cubit.dart';
 import 'package:rent/cubit/properties/properties_cubit.dart';
 import 'package:rent/cubit/signup_cubit/signup_cubit.dart';
+import 'package:rent/cubit/user_cubit.dart';
+import 'package:rent/views/homeScreenAndProperties/home_screen.dart';
 
 import 'package:rent/views/login_view.dart';
+import 'package:rent/views/signup_view.dart';
 
 import 'cubit/property_cubit.dart';
 
@@ -27,10 +29,11 @@ class Rent extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => PropertyCubit()), // شغل زميلك
-
-        BlocProvider(create: (context) => LoginCubit()), // شغلك
+        BlocProvider(create: (context) => AuthCubit()),
+        BlocProvider(
+          create: (context) => LoginCubit(context.read<AuthCubit>()),
+        ), // شغلك
         BlocProvider(create: (context) => SignupCubit()), // شغلك
-        //BlocProvider(create: (context) => BookingCubit()),
         BlocProvider(create: (context) => DetailsCubit()),
         BlocProvider(create: (context) => AddPropertyCubit()),
         BlocProvider(create: (context) => PropertiesCubit()..getProperties()),
@@ -71,14 +74,12 @@ class Rent extends StatelessWidget {
         //
         //   ), apartmentId: 1,
         // ),
-
-        // initialRoute: '/login',
-        // routes: {
-        //   '/login': (context) => LoginView(),
-        //   '/signup': (context) => const SignupView(),
-        //   '/home': (context) => const HomeScreen(),
-        //   '/admin': (context) => const AdminDashboard(),
-        // },
+        initialRoute: '/login',
+        routes: {
+          '/login': (context) => LoginView(),
+          '/signup': (context) => const SignupView(),
+          '/home': (context) => const HomeScreen(),
+        },
       ),
     );
   }
