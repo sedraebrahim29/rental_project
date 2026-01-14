@@ -48,7 +48,6 @@ class AddPropertyCubit extends Cubit<AddPropertyState> {
 
       emit(AddPropertyInitial());
     } catch (e) {
-
       emit(AddPropertyError("Failed to load data: $e"));
     }
   }
@@ -59,16 +58,28 @@ class AddPropertyCubit extends Cubit<AddPropertyState> {
     selectedGovId = govId;
     selectedCityId = null; // Reset city
     cities = []; // Clear old cities
+    // ADD THIS LINE:
+    emit(AddPropertyUpdated());
 
-    //emit(AddPropertyLoading());
-    // ADD THIS LINE: 
-    emit(AddPropertyImagesUpdated(List.from(images)));
+    // emit(AddPropertyImagesUpdated(List.from(images)));
     try {
       cities = await repo.getCities(govId);
-      emit(AddPropertyInitial());
+      emit(AddPropertyUpdated());
     } catch (e) {
       emit(AddPropertyError("Failed to load cities $e"));
     }
+  }
+
+  //Select City (NEW)
+  void selectCity(int? cityId) {
+    selectedCityId = cityId;
+    emit(AddPropertyUpdated()); // Forces UI Rebuild
+  }
+
+  //Select Category (NEW)
+  void selectCategory(int? catId) {
+    selectedCatId = catId;
+    emit(AddPropertyUpdated()); // Forces UI Rebuild
   }
 
   /// 3. Toggle Amenities
@@ -78,7 +89,8 @@ class AddPropertyCubit extends Cubit<AddPropertyState> {
     } else {
       selectedAmenitiesIds.add(id);
     }
-    emit(AddPropertyImagesUpdated(List.from(images))); // Refresh UI
+    emit(AddPropertyUpdated());
+    //emit(AddPropertyImagesUpdated(List.from(images)));
   }
 
   /// 4. Images

@@ -4,8 +4,11 @@ abstract class AddPropertyState {}
 
 class AddPropertyInitial extends AddPropertyState {}
 
-// VERIFY THIS LINE CAREFULLY:
+
 class AddPropertyLoading extends AddPropertyState {}
+
+//  refresh UI when dropdowns change
+class AddPropertyUpdated extends AddPropertyState {}
 
 class AddPropertyImagesUpdated extends AddPropertyState {
   final List<File> images;

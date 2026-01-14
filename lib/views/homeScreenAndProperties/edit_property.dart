@@ -83,46 +83,64 @@ class EditPropertyScreen extends StatelessWidget {
                       child: Center(
                         // If we have new images, show the first one, else show add icon
                         child: GestureDetector(
-                          onTap: cubit.pickImage,
-                          child: cubit.newImages.isNotEmpty // Changed from loadedState to cubit
-                              ? Stack(
-                                  children: [
-                                    Container(
-                                      height: 120,
-                                      width: 120,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        image: DecorationImage(
-                                          image: FileImage(
-                                            cubit.newImages.last, // Changed from loadedState to cubit
-                                          ),
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                    const Positioned(
-                                      bottom: 5,
-                                      right: 5,
-                                      child: Icon(
-                                        Icons.add_a_photo,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              : Container(
-                                  height: 100,
-                                  width: 100,
+                        onTap: cubit.pickImage,
+                        child: Builder(
+                          builder: (context) {
+                            //  which image to show
+                            ImageProvider? displayImage;
+                            bool hasImage = false;
+
+                            //  1: Show the last NEW image picked
+                            if (cubit.newImages.isNotEmpty) {
+                              displayImage = FileImage(cubit.newImages.last);
+                              hasImage = true;
+                            }
+                            // 2: Show the first EXISTING image from API
+                            else if (cubit.existingImages.isNotEmpty) {
+                              displayImage = NetworkImage(cubit.existingImages.first);
+                              hasImage = true;
+                            }
+
+                            return hasImage
+                                ? Stack(
+                              children: [
+                                Container(
+                                  height: 120,
+                                  width: 120,
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.2),
                                     borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: const Icon(
-                                    Icons.add_a_photo,
-                                    color: Colors.white,
-                                    size: 40,
+                                    image: DecorationImage(
+                                      image: displayImage!, // Use the logic above
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
+                                const Positioned(
+                                  bottom: 5,
+                                  right: 5,
+                                  child: Icon(
+                                    Icons.add_a_photo,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              ],
+                            )
+                            // Priority 3: Show Placeholder
+                                : Container(
+                              height: 100,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: const Icon(
+                                Icons.add_a_photo,
+                                color: Colors.white,
+                                size: 40,
+                              ),
+                            );
+                          },
+                        ),
                         ),
                       ),
                     ),
