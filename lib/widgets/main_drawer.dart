@@ -5,6 +5,7 @@ import 'package:rent/views/my_booking.dart';
 import '../cubit/property_cubit.dart';
 import '../cubit/property_state.dart';
 import '../data/colors.dart';
+import '../views/my_favorite.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({super.key});
@@ -70,13 +71,24 @@ class MainDrawer extends StatelessWidget {
           ),
           _DrawerItem(
             icon: Icons.favorite_border,
-            title: 'My favorite',
-            onTap: () {},
+            title: 'My favorites',
+            onTap: () {
+              // Close the drawer first
+              Navigator.pop(context);
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const MyFavoriteScreen()),
+              );
+            },
           ),
           _DrawerItem(
             icon: Icons.apartment_sharp,
             title: 'My booking',
             onTap: () {
+              // Close the drawer first
+              Navigator.pop(context);
+
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => MyBooking()),
