@@ -1,9 +1,8 @@
 import 'package:http/http.dart' as http;
 import '../constant.dart';
+import 'dart:convert';
 
 class BookingApi {
-
-  // Helper method to handle requests
   Future<String> _fetchData(String endpoint, String token) async {
     try {
       final uri = Uri.parse("$baseUrl/$endpoint");
@@ -24,7 +23,6 @@ class BookingApi {
     }
   }
 
-  // Define the specific calls based on your routes
   Future<String> getPendingBookings(String token) async =>
       _fetchData('bookings/getUserPendingBookings', token);
 
@@ -32,7 +30,7 @@ class BookingApi {
       _fetchData('bookings/getUserCurrentBookings', token);
 
   Future<String> getUpdateBookings(String token) async =>
-      _fetchData('bookings/getUserUpdateBookings', token);
+      _fetchData('bookings/getUserUpdatedBookings', token);
 
   Future<String> getEndedBookings(String token) async =>
       _fetchData('bookings/getUserEndedBookings', token);
@@ -43,16 +41,20 @@ class BookingApi {
   Future<String> getRejectedBookings(String token) async =>
       _fetchData('bookings/getUserRejectedBookings', token);
 
+  //  Actions
 
-  // --- NEW METHODS (Actions) ---
-
-  // 1. Cancel Booking (GET based on your screenshot)
+  // 1. Cancel Booking
   Future<String> cancelBooking(String bookingId, String token) async {
     return _fetchData('bookings/cancel/$bookingId', token);
   }
 
-  // 2. Edit/Update Booking (POST based on your screenshot)
-  Future<String> updateBooking(String bookingId, String startDate, String endDate, String token) async {
+  // 2. Edit Booking
+  Future<String> updateBooking(
+    String bookingId,
+    String startDate,
+    String endDate,
+    String token,
+  ) async {
     try {
       var response = await http.post(
         Uri.parse("$baseUrl/bookings/update/$bookingId"),
@@ -60,14 +62,13 @@ class BookingApi {
           "authorization": "Bearer $token",
           "accept": "application/json",
         },
-        body: {
-          "new_start_date": startDate,
-          "new_end_date": endDate,
-        },
+        body: {"start_date": startDate, "end_date": endDate},
       );
 
       if (response.statusCode != 200 && response.statusCode != 201) {
-        throw Exception("Update Error ${response.statusCode}: ${response.body}");
+        throw Exception(
+          "Update Error ${response.statusCode}: ${response.body}",
+        );
       }
       return response.body;
     } catch (e) {
@@ -75,20 +76,18 @@ class BookingApi {
     }
   }
 
-  // 3. Rate Booking (Assuming POST based on pattern)
-  Future<String> rateBooking(String bookingId, double rating, String token) async {
+  // 3. Rate Booking
+  Future<String> rateBooking(String prpId, int rating, String token) async {
     try {
+      // final property_id = int.parse(prpId);
       var response = await http.post(
-        Uri.parse("$baseUrl/properties/rating"), // Updated endpoint based on your screenshot image_431671.png
+        Uri.parse("$baseUrl/properties/rating"),
         headers: {
           "authorization": "Bearer $token",
           "accept": "application/json",
+          "Content-Type": "application/json",
         },
-        body: {
-          "rating": rating.toString(),
-          // You might need to send bookingId or propertyId depending on backend requirement for this endpoint
-          // "booking_id": bookingId
-        },
+        body: jsonEncode({"stars": rating, "property_id": int.parse(prpId)}),
       );
 
       if (response.statusCode != 200 && response.statusCode != 201) {

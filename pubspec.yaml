@@ -10,6 +10,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  firebase_core: ^2.24.2
+  firebase_messaging: ^14.7.10
+  flutter_local_notifications: ^17.0.0
 
   flutter_bloc: ^9.1.1
   bloc: ^9.0.0 # ← أضف هذا السطر (مهم)

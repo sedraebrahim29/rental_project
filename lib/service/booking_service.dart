@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:rent/helper/api.dart';
 import 'package:rent/models/city_model.dart';
@@ -8,7 +9,7 @@ import 'package:rent/models/governorate_model.dart';
 
 class BookingService {
   static const baseUrl = 'http://127.0.0.1:8000/api';
-// get date
+  // get date
   Future<List<BookingDateModel>> getPropertyBookings({
     required int propertyId,
     required String token,
@@ -17,7 +18,7 @@ class BookingService {
       url: '$baseUrl/bookings/getPropertyBookings/$propertyId',
       token: token,
     );
-
+    log('hh');
     if (response.statusCode == 200) {
       final decoded = jsonDecode(response.body);
       return (decoded['data'] as List)
@@ -27,7 +28,8 @@ class BookingService {
       throw Exception('Failed to load bookings');
     }
   }
-//get governorates
+
+  //get governorates
   Future<List<GovernorateModel>> getAllGovernorates(String token) async {
     final response = await Api().get(
       url: '$baseUrl/properties/allGovernorates',
@@ -39,7 +41,8 @@ class BookingService {
         .map((e) => GovernorateModel.fromJson(e))
         .toList();
   }
-//get cities
+
+  //get cities
   Future<List<CityModel>> getCitiesByGovernorate({
     required int governorateId,
     required String token,
@@ -50,12 +53,10 @@ class BookingService {
     );
 
     final decoded = jsonDecode(response.body);
-    return (decoded['data'] as List)
-        .map((e) => CityModel.fromJson(e))
-        .toList();
+    return (decoded['data'] as List).map((e) => CityModel.fromJson(e)).toList();
   }
 
-// post
+  // post
   Future<void> createBooking({
     required String startDate,
     required String endDate,
@@ -66,7 +67,7 @@ class BookingService {
     required int cityId,
     required String token,
   }) async {
-    print("API CREATE BOOKING CALLED");///////////////////
+    print("API CREATE BOOKING CALLED"); ///////////////////
     final response = await Api().post(
       url: '$baseUrl/bookings/create',
       token: token,
@@ -82,7 +83,6 @@ class BookingService {
     );
     print(response.statusCode);
     print(response.body);
-
 
     if (response.statusCode != 200 && response.statusCode != 201) {
       throw Exception('Booking failed');

@@ -43,7 +43,7 @@ class MyBooking extends ConsumerWidget {
                   ),
                 ),
 
-                // --- Main Content Area (Tabs + List) ---
+                //  Content Area
                 Expanded(
                   child: BlocConsumer<MyBookingCubit, MyBookingState>(
                     listener: (context, state) {
@@ -156,7 +156,7 @@ class MyBooking extends ConsumerWidget {
                                             _handleCancel(context, booking.id),
                                         onRate: () => _showRateDialog(
                                           context,
-                                          booking.id,
+                                          booking.property.id!,
                                         ),
                                       );
                                     },
@@ -332,7 +332,7 @@ class MyBooking extends ConsumerWidget {
                 initialRating: 3,
                 minRating: 1,
                 direction: Axis.horizontal,
-                allowHalfRating: true,
+                allowHalfRating: false,
                 itemCount: 5,
                 itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
                 itemBuilder: (context, _) =>
@@ -353,7 +353,7 @@ class MyBooking extends ConsumerWidget {
                 backgroundColor: MyColor.deepBlue,
               ),
               onPressed: () {
-                cubit.rateBooking(bookingId, rating);
+                cubit.rateBooking(bookingId, rating.toInt());
 
                 Navigator.pop(context);
               },

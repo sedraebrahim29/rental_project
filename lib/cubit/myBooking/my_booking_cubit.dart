@@ -37,7 +37,6 @@ class MyBookingCubit extends Cubit<MyBookingState> {
       // Refresh the list to remove the canceled cards
       getBookings(status: currentStatus);
     } catch (e) {
-
       emit(MyBookingError("Cancel failed: ${e.toString()}", currentStatus));
     }
   }
@@ -58,12 +57,10 @@ class MyBookingCubit extends Cubit<MyBookingState> {
   }
 
   // 5. Rate Booking
-  Future<void> rateBooking(String bookingId, double rating) async {
+  Future<void> rateBooking(String prpId, int rating) async {
     final currentStatus = _getCurrentStatus();
     try {
-      await _repo.rateBooking(bookingId, rating);
-      // We refresh the list. If the backend moves rated items or changes their status,
-      // the new list will reflect that.
+      await _repo.rateBooking(prpId, rating);
       getBookings(status: currentStatus);
     } catch (e) {
       emit(MyBookingError("Rating failed: ${e.toString()}", currentStatus));

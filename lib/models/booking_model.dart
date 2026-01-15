@@ -1,10 +1,7 @@
-
-
-
 import 'property_model.dart';
 
 // Enum to represent the statuses
-enum BookingStatus { pending, current, update, canceled, rejected, ended }
+enum BookingStatus { pending, current, update, cancelled, rejected, ended }
 
 class BookingModel {
   final String id;
@@ -35,7 +32,10 @@ class BookingModel {
     this.newTotalPrice,
   });
 
-  factory BookingModel.fromJson(Map<String, dynamic> json) {
+  factory BookingModel.fromJson(
+    Map<String, dynamic> json,
+    BookingStatus state,
+  ) {
     final updateData = json['update_request'];
 
     return BookingModel(
@@ -49,7 +49,7 @@ class BookingModel {
       pricePerNight: double.tryParse(json['price_per_night'].toString()) ?? 0.0,
       totalPrice: double.tryParse(json['total_price'].toString()) ?? 0.0,
 
-      status: _mapStatus(json['status']),
+      status: state,
       statusMessage: json['message'],
 
       // 2. Parse Update Fields
@@ -65,26 +65,4 @@ class BookingModel {
           : null,
     );
   }
-
-  static BookingStatus _mapStatus(String? status) {
-    switch (status?.toLowerCase()) {
-      case 'pending':
-        return BookingStatus.pending;
-      case 'approved':
-        return BookingStatus.current;
-      case 'current':
-        return BookingStatus.current;
-      case 'update':
-        return BookingStatus.update;
-      case 'canceled':
-        return BookingStatus.canceled;
-      case 'rejected':
-        return BookingStatus.rejected;
-      case 'ended':
-        return BookingStatus.ended;
-      default:
-        return BookingStatus.pending;
-    }
-  }
-
 }

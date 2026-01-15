@@ -21,7 +21,7 @@ class BookingRepo {
       case BookingStatus.ended:
         responseBody = await _api.getEndedBookings(token);
         break;
-      case BookingStatus.canceled:
+      case BookingStatus.cancelled:
         responseBody = await _api.getCanceledBookings(token);
         break;
       case BookingStatus.rejected:
@@ -37,8 +37,7 @@ class BookingRepo {
     // Parse the JSON
     final jsonMap = json.decode(responseBody);
     final List<dynamic> list = jsonMap['data'] ?? [];
-
-    return list.map((e) => BookingModel.fromJson(e)).toList();
+    return list.map((e) => BookingModel.fromJson(e, status)).toList();
   }
 
   // --- NEW ACTIONS ---
@@ -50,7 +49,11 @@ class BookingRepo {
   }
 
   // 2. Edit (Update Dates)
-  Future<void> updateBooking(String bookingId, DateTime newStart, DateTime newEnd) async {
+  Future<void> updateBooking(
+    String bookingId,
+    DateTime newStart,
+    DateTime newEnd,
+  ) async {
     final String token = await SecureStorage.getToken();
     // Format dates as string (YYYY-MM-DD) for the API
     String startStr = "${newStart.year}-${newStart.month}-${newStart.day}";
@@ -60,8 +63,8 @@ class BookingRepo {
   }
 
   // 3. Rate
-  Future<void> rateBooking(String bookingId, double rating) async {
+  Future<void> rateBooking(String prpId, int rating) async {
     final String token = await SecureStorage.getToken();
-    await _api.rateBooking(bookingId, rating, token);
+    await _api.rateBooking(prpId, rating, token);
   }
 }

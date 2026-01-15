@@ -10,14 +10,18 @@ import 'package:rent/cubit/profile_cubit/profile_cubit.dart';
 import 'package:rent/cubit/properties/properties_cubit.dart';
 import 'package:rent/cubit/signup_cubit/signup_cubit.dart';
 import 'package:rent/cubit/user_cubit.dart';
+import 'package:rent/service/notification_service.dart';
 import 'package:rent/views/homeScreenAndProperties/home_screen.dart';
 
 import 'package:rent/views/login_view.dart';
 import 'package:rent/views/signup_view.dart';
-
+import 'package:firebase_core/firebase_core.dart';
 import 'cubit/property_cubit.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await NotificationsService.init();
   runApp(ProviderScope(child: const Rent()));
 }
 
