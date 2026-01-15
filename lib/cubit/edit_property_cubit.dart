@@ -26,7 +26,7 @@ class EditPropertyCubit extends Cubit<EditPropertyState> {
   List<Map<String, dynamic>> allAmenities = [];
   List<File> newImages = [];         // Renamed from _newImages
   List<int> selectedAmenityIds = []; // Renamed from _selectedAmenityIds
-  int? selectedCategoryId;            // Renamed from _selectedCategoryId
+  int? selectedCategoryId;// Renamed from _selectedCategoryId
   List<String> existingImages = [];
   late PropertyModel _currentProperty;
 
@@ -60,7 +60,8 @@ class EditPropertyCubit extends Cubit<EditPropertyState> {
         final amIndex = allAmenities.indexWhere((e) => e['name'] == amenityName);
         if (amIndex != -1) selectedAmenityIds.add(allAmenities[amIndex]['id']);
       }
-      existingImages = _currentProperty.imageUrls;
+      // Load existing images
+      existingImages = List.from(_currentProperty.imageUrls);
       emit(EditPropertyLoaded());
     } catch (e) {
       emit(EditPropertyError("Failed to load: $e"));
@@ -92,6 +93,11 @@ class EditPropertyCubit extends Cubit<EditPropertyState> {
 
   void removeNewImage(File file) {
     newImages.remove(file);
+    emit(EditPropertyLoaded());
+  }
+  //to remove old images
+  void removeExistingImage(String url) {
+    existingImages.remove(url);
     emit(EditPropertyLoaded());
   }
 
