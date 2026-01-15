@@ -83,7 +83,7 @@ class MyPropertiesScreen extends StatelessWidget {
                       switch (state.state) {
                         case State.loading:
                           return const Center(
-                            child: CircularProgressIndicator(),
+                            child: CircularProgressIndicator(color: MyColor.deepBlue,),
                           );
 
                         case State.error:
@@ -96,63 +96,81 @@ class MyPropertiesScreen extends StatelessWidget {
 
                         case State.success:
                           if (state.properties.isEmpty) {
-                            return const Center(
-                              child: Text(
-                                'No properties yet',
-                                style: TextStyle(color: Colors.white),
+                            // empty state in RefreshIndicator so user can pull to check 
+                            return RefreshIndicator(
+                              onRefresh: () async {
+                                await context.read<PropertiesCubit>().getProperties();
+                              },
+                              child: SingleChildScrollView(
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                child: Container(
+                                  height: 500, 
+                                  alignment: Alignment.center,
+                                  child: const Text(
+                                    'No properties yet',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
                               ),
                             );
                           }
 
-                          return ListView.builder(
-                            itemCount: state.properties.length,
-                            itemBuilder: (context, index) {
-                              final prop = state.properties[index];
-                              return PropertyCard(
-                                property: prop,
-                                onEdit: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => BlocProvider(
-                                        create: (context) =>
-                                            PropertyCubit()..getAllProperties(),
-                                        child: EditPropertyScreen(
-                                          property: prop,
-                                        ),
-                                      ),
-                                    ),
-                                  ).then((_) {
-                                    context
-                                        .read<PropertiesCubit>()
-                                        .getProperties();
-                                  });
-                                },
-
-                                // 2. Logic for Booking Button (Navigate with Property ID)
-                                onBooking: () {
-                                  // Ensure ID is not null or handle error
-                                  if (prop.id != null) {
+                          return RefreshIndicator(
+                            color: MyColor.deepBlue,
+                            onRefresh: () async {
+                              await context.read<PropertiesCubit>().getProperties();
+                            },
+                            child: ListView.builder(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              itemCount: state.properties.length,
+                              itemBuilder: (context, index) {
+                                final prop = state.properties[index];
+                                return PropertyCard(
+                                  property: prop,
+                                  onEdit: () {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (_) => BlocProvider.value(
-                                          value: context
-                                              .read<PropertiesCubit>(),
-                                          child: MyPropertiesBookingScreen(
-                                            propertyId: prop.id!,
+                                        builder: (context) => BlocProvider(
+                                          create: (context) =>
+                                              PropertyCubit()..getAllProperties(),
+                                          child: EditPropertyScreen(
+                                            property: prop,
                                           ),
                                         ),
                                       ),
-                                    );
-                                  }
-                                },
-
-                                onTap: () {
-                                  // الانتقال لصفحة التفاصيل
-                                },
-                              );
-                            },
+                                    ).then((_) {
+                                      context
+                                          .read<PropertiesCubit>()
+                                          .getProperties();
+                                    });
+                                  },
+                            
+                                  // 2. Logic for Booking Button (Navigate with Property ID)
+                                  onBooking: () {
+                                    // Ensure ID is not null or handle error
+                                    if (prop.id != null) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => BlocProvider.value(
+                                            value: context
+                                                .read<PropertiesCubit>(),
+                                            child: MyPropertiesBookingScreen(
+                                              propertyId: prop.id!,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                            
+                                  onTap: () {
+                                    // الانتقال لصفحة التفاصيل
+                                  },
+                                );
+                              },
+                            ),
                           );
                         case State.init:
                           return const SizedBox.shrink();

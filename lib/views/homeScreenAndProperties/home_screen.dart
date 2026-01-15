@@ -13,10 +13,10 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer:  BlocProvider(
-  create: (context) => PropertyCubit(),
-  child: MainDrawer(),
-),
+      drawer: BlocProvider(
+        create: (context) => PropertyCubit(),
+        child: MainDrawer(),
+      ),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -32,14 +32,34 @@ class HomeScreen extends StatelessWidget {
             Expanded(
               child: BlocBuilder<PropertyCubit, PropertyState>(
                 builder: (context, state) {
+                  // Helper
+
+                  Future<void> refresh() async {
+                    await context.read<PropertyCubit>().getAllProperties();
+                  }
+
                   // 1. Loading State
                   if (state is PropertyLoading) {
-                    return const Center(child: CircularProgressIndicator(color: MyColor.deepBlue));
+                    return const Center(
+                      child: CircularProgressIndicator(color: MyColor.deepBlue),
+                    );
                   }
 
                   // 2. Error State
                   if (state is PropertyError) {
-                    return Center(child: Text(state.message, style: const TextStyle(color: Colors.red)));
+                    return RefreshIndicator(
+                      onRefresh: refresh,
+                      color: MyColor.deepBlue,
+                      child: SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: Center(
+                          child: Text(
+                            state.message,
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        ),
+                      ),
+                    );
                   }
 
                   // 3. Success State
@@ -47,30 +67,44 @@ class HomeScreen extends StatelessWidget {
                     final allProperties = state.properties;
 
                     if (allProperties.isEmpty) {
-                      return const Center(
-                        child: Text(
-                          "No Properties Available",
-                          style: TextStyle(color: MyColor.deepBlue, fontSize: 18),
+                      return RefreshIndicator(
+                        onRefresh: refresh,
+                        color: MyColor.deepBlue,
+                        child: SingleChildScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          child: const Center(
+                            child: Text(
+                              "No Properties Available",
+                              style: TextStyle(
+                                color: MyColor.deepBlue,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
                         ),
                       );
                     }
 
-                    return ListView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: allProperties.length,
-                      itemBuilder: (context, index) {
-                        final prop = allProperties[index];
+                    return RefreshIndicator(
+                      onRefresh: refresh,
+                      color: MyColor.deepBlue,
+                      child: ListView.builder(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        padding: EdgeInsets.zero,
+                        itemCount: allProperties.length,
+                        itemBuilder: (context, index) {
+                          final prop = allProperties[index];
 
-                        return PropertyCard(
-                          property: prop,
-                          // Only onTap is provided.
-                          // onEdit is NOT provided, so the edit button remains hidden.
-                          onTap: () {
-                            //  Navigate to Detail Screen
-
-                          },
-                        );
-                      },
+                          return PropertyCard(
+                            property: prop,
+                            // Only onTap is provided.
+                            // onEdit is NOT provided, so the edit button remains hidden.
+                            onTap: () {
+                              //  Navigate to Detail Screen
+                            },
+                          );
+                        },
+                      ),
                     );
                   }
 
