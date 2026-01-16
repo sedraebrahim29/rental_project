@@ -7,6 +7,7 @@ class PropertyCard extends StatelessWidget {
   final PropertyModel property;
   final VoidCallback? onEdit;
   final VoidCallback onTap;
+
   // New callback for the booking button
   final VoidCallback? onBooking;
 
@@ -20,7 +21,9 @@ class PropertyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context)!; //للترجمة
+    final t = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark; //للترجمة
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
@@ -28,7 +31,7 @@ class PropertyCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: MyColor.offWhite,
+          color: theme.colorScheme.onPrimary,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: MyColor.deepBlue, width: 1.2),
         ),
@@ -60,13 +63,13 @@ class PropertyCard extends StatelessWidget {
                               vertical: 6,
                             ),
                             decoration: BoxDecoration(
-                              color: MyColor.deepBlue,
+                              color: theme.colorScheme.onSecondary,
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: const Text(
+                            child: Text(
                               'Booking',
                               style: TextStyle(
-                                color: MyColor.offWhite,
+                                color: theme.colorScheme.onPrimary,
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -78,10 +81,10 @@ class PropertyCard extends StatelessWidget {
                         Expanded(
                           child: Text(
                             property.ownerName,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: MyColor.deepBlue,
+                              color: theme.colorScheme.onSecondary,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -95,13 +98,13 @@ class PropertyCard extends StatelessWidget {
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: MyColor.deepBlue,
+                              color: theme.colorScheme.onSecondary,
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
                               t.edit,
                               style: TextStyle(
-                                color: Colors.white,
+                                color: theme.colorScheme.onPrimary,
                                 fontSize: 12,
                               ),
                             ),
@@ -112,11 +115,12 @@ class PropertyCard extends StatelessWidget {
                   const SizedBox(height: 4),
 
                   // نوع الشقة والمساحة
-                  _buildInfoItem(Icons.home, property.category),
+                  _buildInfoItem(Icons.home, property.category, theme),
                   const SizedBox(height: 2),
                   _buildInfoItem(
                     Icons.square_foot_sharp,
                     "${property.area} m²",
+                    theme,
                   ),
 
                   const SizedBox(height: 6),
@@ -125,18 +129,18 @@ class PropertyCard extends StatelessWidget {
                   Text(
                     '\$${property.price} / ${t.per_mon}',
 
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: MyColor.deepBlue,
+                      color: theme.colorScheme.onSecondary,
                     ),
                   ),
 
                   // الموقع
                   Text(
                     "${property.city} - ${property.governorate}",
-                    style: const TextStyle(
-                      color: MyColor.blueGray,
+                    style: TextStyle(
+                      color: theme.colorScheme.onSecondary,
                       fontSize: 12,
                     ),
                     overflow: TextOverflow.ellipsis,
@@ -151,9 +155,9 @@ class PropertyCard extends StatelessWidget {
                       const SizedBox(width: 4),
                       Text(
                         property.rating.toString(),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: MyColor.deepBlue,
+                          color: theme.colorScheme.onSecondary,
                         ),
                       ),
                     ],
@@ -167,14 +171,14 @@ class PropertyCard extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoItem(IconData icon, String label) {
+  Widget _buildInfoItem(IconData icon, String label, dynamic theme) {
     return Row(
       children: [
         Icon(icon, size: 16, color: MyColor.blueGray),
         const SizedBox(width: 6),
         Text(
           label,
-          style: const TextStyle(color: MyColor.deepBlue, fontSize: 13),
+          style: TextStyle(color: theme.colorScheme.onSecondary, fontSize: 13),
         ),
       ],
     );

@@ -17,12 +17,15 @@ import 'package:rent/cubit/login_cubit/login_cubit.dart';
 import 'package:rent/cubit/profile_cubit/profile_cubit.dart';
 import 'package:rent/cubit/properties/properties_cubit.dart';
 import 'package:rent/cubit/signup_cubit/signup_cubit.dart';
+import 'package:rent/cubit/theme_cubit/theme_cubit.dart';
+import 'package:rent/cubit/theme_cubit/theme_state.dart';
 
 import 'package:rent/cubit/user_cubit.dart';
 import 'package:rent/service/favorite_sevice.dart';
 import 'package:rent/service/notification_service.dart';
 
 import 'package:rent/l10n/app_localizations.dart';
+import 'package:rent/theme/app_them.dart';
 
 import 'package:rent/views/homeScreenAndProperties/home_screen.dart';
 
@@ -39,7 +42,10 @@ Future<void> main() async {
 
   runApp(
     MultiBlocProvider(
-      providers: [BlocProvider(create: (_) => LanguageCubit())],
+      providers: [
+        BlocProvider(create: (_) => LanguageCubit()),
+        BlocProvider(create: (_) => ThemeCubit()),
+      ],
       child: const Rent(),
     ),
   );
@@ -69,25 +75,28 @@ class Rent extends StatelessWidget {
         BlocProvider(create: (context) => ProfileCubit()),
         BlocProvider(create: (context) => FavoriteCubit(FavoriteService())),
       ],
-      child: MaterialApp(
-        theme: ThemeData.light(),
-        darkTheme: ThemeData.dark(),
-        themeMode: ThemeMode.dark,
-        debugShowCheckedModeBanner: false,
-        locale: context
-            .watch<LanguageCubit>()
-            .state
-            .locale, //  يخلي اللغة حسب الجهاز
-        supportedLocales: AppLocalizations.supportedLocales,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+      child: BlocBuilder<ThemeCubit, ThemeState>(
+        builder: (context, state) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            locale: context
+                .watch<LanguageCubit>()
+                .state
+                .locale, //  يخلي اللغة حسب الجهاز
+            supportedLocales: AppLocalizations.supportedLocales,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: state.themeMode,
+            home: LoginView(),
 
-        home: LoginView(),
-
-        initialRoute: '/login',
-        routes: {
-          '/login': (context) => LoginView(),
-          '/signup': (context) => const SignupView(),
-          '/home': (context) => const HomeScreen(),
+            initialRoute: '/login',
+            routes: {
+              '/login': (context) => LoginView(),
+              '/signup': (context) => const SignupView(),
+              '/home': (context) => const HomeScreen(),
+            },
+          );
         },
       ),
     );

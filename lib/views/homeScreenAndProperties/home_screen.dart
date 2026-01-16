@@ -3,12 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:rent/categories/details_category.dart';
 import 'package:rent/cubit/details_cubit/details_cubit.dart';
-
 import 'package:rent/l10n/app_localizations.dart';
 
 import '../../cubit/property_cubit.dart';
 import '../../cubit/property_state.dart';
-import '../../data/colors.dart';
 import '../../widgets/home_header.dart';
 import '../../widgets/main_drawer.dart';
 import '../../widgets/property_card.dart';
@@ -18,24 +16,37 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context)!; //للترجمة
+    final t = AppLocalizations.of(context)!;
+
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    // Overlay حسب الثيم
+    final overlayColor = theme.brightness == Brightness.dark
+        ? Colors.black.withAlpha(210)
+        : Colors.white.withAlpha(0);
+
     return Scaffold(
       drawer: BlocProvider(
         create: (context) => PropertyCubit(),
-        child: MainDrawer(),
+        child: const MainDrawer(),
       ),
       body: Stack(
         children: [
-          // Background Image
+          // ===== Background Image =====
           Positioned.fill(
             child: Image.asset('assets/HomeBackground.png', fit: BoxFit.cover),
           ),
 
-          // Content
+          // ===== Overlay (Light / Dark) =====
+          Positioned.fill(child: Container(color: overlayColor)),
+
+          // ===== Content =====
           Column(
             children: [
               const HomeHeader(),
               const SizedBox(height: 70),
+
               Expanded(
                 child: BlocBuilder<PropertyCubit, PropertyState>(
                   builder: (context, state) {
@@ -43,45 +54,58 @@ class HomeScreen extends StatelessWidget {
                       await context.read<PropertyCubit>().getAllProperties();
                     }
 
+                    // Loading
                     if (state is PropertyLoading) {
-                      return const Center(
+                      return Center(
                         child: CircularProgressIndicator(
-                          color: MyColor.deepBlue,
+                          color: colorScheme.primary,
                         ),
                       );
                     }
 
+                    // Error
                     if (state is PropertyError) {
                       return RefreshIndicator(
                         onRefresh: refresh,
-                        color: MyColor.deepBlue,
+                        color: colorScheme.primary,
                         child: SingleChildScrollView(
                           physics: const AlwaysScrollableScrollPhysics(),
                           child: Center(
-                            child: Text(
-                              state.message,
-                              style: const TextStyle(color: Colors.red),
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 40),
+                              child: Text(
+                                state.message,
+                                style: TextStyle(
+                                  color: colorScheme.error,
+                                  fontSize: 16,
+                                ),
+                              ),
                             ),
                           ),
                         ),
                       );
                     }
 
+                    // Success
                     if (state is PropertyLoaded) {
-                      final allProperties = state.properties;
+                      final properties = state.properties;
 
-                      if (allProperties.isEmpty) {
+                      if (properties.isEmpty) {
                         return RefreshIndicator(
                           onRefresh: refresh,
-                          color: MyColor.deepBlue,
+                          color: colorScheme.primary,
                           child: SingleChildScrollView(
                             physics: const AlwaysScrollableScrollPhysics(),
-                            child: const Center(
-                              child: Text(
-                                "No Properties Available",
-                                style: TextStyle(
-                                  color: MyColor.deepBlue,
-                                  fontSize: 18,
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 40),
+                                child: Text(
+                                  'No Properties Avalibal',
+                                  style: TextStyle(
+                                    color: colorScheme.onSurface,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
                             ),
@@ -91,13 +115,13 @@ class HomeScreen extends StatelessWidget {
 
                       return RefreshIndicator(
                         onRefresh: refresh,
-                        color: MyColor.deepBlue,
+                        color: colorScheme.primary,
                         child: ListView.builder(
-                          physics: const AlwaysScrollableScrollPhysics(),
                           padding: EdgeInsets.zero,
-                          itemCount: allProperties.length,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          itemCount: properties.length,
                           itemBuilder: (context, index) {
-                            final prop = allProperties[index];
+                            final prop = properties[index];
 
                             return PropertyCard(
                               property: prop,

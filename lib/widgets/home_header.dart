@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rent/cubit/filter_cubit/filter_cubit.dart';
-import 'package:rent/cubit/filter_cubit/filter_meta_cubit.dart';
 import 'package:rent/l10n/app_localizations.dart';
 import 'package:rent/views/homeScreenAndProperties/my_properties.dart';
-
-import '../data/colors.dart';
-
 import '../views/homeScreenAndProperties/search_screen.dart';
 
 class HomeHeader extends StatelessWidget {
@@ -14,60 +9,64 @@ class HomeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context)!; //للترجمة
+    final t = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Stack(
       children: [
+        // ===== OVERLAY فوق صورة الخلفية =====
+        Container(
+          height: 140,
+          decoration: BoxDecoration(
+            color: isDark
+                ? Colors.black.withAlpha(0)
+                : Colors.white.withAlpha(0),
+          ),
+        ),
+
         SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                // TOP BAR
+                // ================= TOP BAR =================
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.menu, color: MyColor.offWhite),
+                      icon: Icon(
+                        Icons.menu,
+                        color: theme.colorScheme.onSurface,
+                      ),
                       onPressed: () {
-                        ScaffoldMessenger.of(context);
                         Scaffold.of(context).openDrawer();
                       },
                     ),
 
-                    // SEARCH BAR
+                    // ================= SEARCH BAR =================
                     InkWell(
                       borderRadius: BorderRadius.circular(30),
                       onTap: () {
-                        // provide cubit
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) {
-                              return const SearchScreen();
-                            },
+                            builder: (_) => const SearchScreen(),
                           ),
                         );
                       },
                       child: Container(
-                        height: 35,
+                        height: 36,
                         width: 250,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: MyColor.offWhite,
+                          color: theme.colorScheme.secondary,
                           borderRadius: BorderRadius.circular(30),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
+                          boxShadow: [],
                         ),
                         child: Text(
                           t.search,
-                          style: TextStyle(
-                            color: MyColor.deepBlue, //
-                            fontSize: 20,
+                          style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -75,9 +74,9 @@ class HomeHeader extends StatelessWidget {
                     ),
 
                     IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.notifications_none,
-                        color: MyColor.offWhite,
+                        color: theme.colorScheme.onSurface,
                         size: 30,
                       ),
                       onPressed: () {},
@@ -85,14 +84,13 @@ class HomeHeader extends StatelessWidget {
                   ],
                 ),
 
-                const SizedBox(height: 7),
+                const SizedBox(height: 10),
+
+                // ================= CATEGORY BUTTONS =================
                 Row(
                   children: [
-                    //MY PROPERTIES
                     _CategoryButtons(
                       title: t.my_properties,
-                      textColor: MyColor.deepBlue,
-                      color: MyColor.offWhite,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -101,22 +99,22 @@ class HomeHeader extends StatelessWidget {
                           ),
                         );
                       },
+                      backgroundColor: theme.colorScheme.secondary,
+                      textColor: theme.colorScheme.onSurface,
                     ),
-                    const SizedBox(width: 20),
-                    //RENT
+                    const SizedBox(width: 16),
                     _CategoryButtons(
                       title: t.rent,
-                      color: MyColor.skyBlue,
-                      textColor: MyColor.deepBlue,
                       onTap: () {},
+                      backgroundColor: theme.colorScheme.secondary,
+                      textColor: theme.colorScheme.onSecondary,
                     ),
-                    const SizedBox(width: 20),
-                    //MESSAGES
+                    const SizedBox(width: 16),
                     _CategoryButtons(
                       title: t.messages,
-                      color: MyColor.offWhite,
-                      textColor: MyColor.deepBlue,
                       onTap: () {},
+                      backgroundColor: theme.colorScheme.secondary,
+                      textColor: theme.colorScheme.onSurface,
                     ),
                   ],
                 ),
@@ -131,14 +129,14 @@ class HomeHeader extends StatelessWidget {
 
 class _CategoryButtons extends StatelessWidget {
   final String title;
-  final Function() onTap;
-  final Color color;
+  final VoidCallback onTap;
+  final Color backgroundColor;
   final Color textColor;
 
   const _CategoryButtons({
     required this.title,
     required this.onTap,
-    required this.color,
+    required this.backgroundColor,
     required this.textColor,
   });
 
@@ -149,7 +147,7 @@ class _CategoryButtons extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
         decoration: BoxDecoration(
-          color: color,
+          color: backgroundColor,
           borderRadius: BorderRadius.circular(25),
         ),
         child: Text(
