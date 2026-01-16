@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rent/cubit/filter_cubit/filter_cubit.dart';
 import 'package:rent/cubit/filter_cubit/filter_state.dart';
+import 'package:rent/l10n/app_localizations.dart';
 import 'package:rent/widgets/filter_widget/filter_property_card.dart';
 
 class FilterResultScreen extends StatefulWidget {
@@ -16,6 +17,7 @@ class FilterResultScreen extends StatefulWidget {
 class _FilterResultScreenState extends State<FilterResultScreen> {
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!; //للترجمة
     return Scaffold(
       body: SizedBox.expand(
         child: Container(
@@ -28,8 +30,10 @@ class _FilterResultScreenState extends State<FilterResultScreen> {
           child: Column(
             children: [
               const SizedBox(height: 50),
-              const Text(
-                'Filter Results',
+
+              Text(
+                t.filter_results,
+
                 style: TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
@@ -58,10 +62,9 @@ class _FilterResultScreenState extends State<FilterResultScreen> {
                     }
                     log('3');
                     if (state is FilterEmpty) {
-                      log('6');
-                      return const Center(
+                      return Center(
                         child: Text(
-                          'No results found',
+                          t.no_results,
                           style: TextStyle(color: Colors.white),
                         ),
                       );
@@ -76,9 +79,7 @@ class _FilterResultScreenState extends State<FilterResultScreen> {
                           log('blabla');
                           return FilteredPropertyCard(
                             property: prop,
-                            onTap: () {
-
-                            },
+                            onTap: () {},
                           );
                         },
                       );

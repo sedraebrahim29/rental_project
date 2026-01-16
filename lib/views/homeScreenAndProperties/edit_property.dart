@@ -3,6 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../cubit/edit_property_cubit.dart';
 import '../../cubit/edit_property_state.dart';
+
+import 'package:image_picker/image_picker.dart';
+import 'package:rent/l10n/app_localizations.dart';
+import '../../cubit/property_cubit.dart';
+import '../../cubit/property_state.dart';
+
 import '../../data/colors.dart';
 import '../../models/property_model.dart';
 
@@ -83,64 +89,70 @@ class EditPropertyScreen extends StatelessWidget {
                       child: Center(
                         // If we have new images, show the first one, else show add icon
                         child: GestureDetector(
-                        onTap: cubit.pickImage,
-                        child: Builder(
-                          builder: (context) {
-                            //  which image to show
-                            ImageProvider? displayImage;
-                            bool hasImage = false;
+                          onTap: cubit.pickImage,
+                          child: Builder(
+                            builder: (context) {
+                              //  which image to show
+                              ImageProvider? displayImage;
+                              bool hasImage = false;
 
-                            //  1: Show the last NEW image picked
-                            if (cubit.newImages.isNotEmpty) {
-                              displayImage = FileImage(cubit.newImages.last);
-                              hasImage = true;
-                            }
-                            // 2: Show the first EXISTING image from API
-                            else if (cubit.existingImages.isNotEmpty) {
-                              displayImage = NetworkImage(cubit.existingImages.first);
-                              hasImage = true;
-                            }
+                              //  1: Show the last NEW image picked
+                              if (cubit.newImages.isNotEmpty) {
+                                displayImage = FileImage(cubit.newImages.last);
+                                hasImage = true;
+                              }
+                              // 2: Show the first EXISTING image from API
+                              else if (cubit.existingImages.isNotEmpty) {
+                                displayImage = NetworkImage(
+                                  cubit.existingImages.first,
+                                );
+                                hasImage = true;
+                              }
 
-                            return hasImage
-                                ? Stack(
-                              children: [
-                                Container(
-                                  height: 120,
-                                  width: 120,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    image: DecorationImage(
-                                      image: displayImage!, // Use the logic above
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                const Positioned(
-                                  bottom: 5,
-                                  right: 5,
-                                  child: Icon(
-                                    Icons.add_a_photo,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              ],
-                            )
-                            // Priority 3: Show Placeholder
-                                : Container(
-                              height: 100,
-                              width: 100,
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: const Icon(
-                                Icons.add_a_photo,
-                                color: Colors.white,
-                                size: 40,
-                              ),
-                            );
-                          },
-                        ),
+                              return hasImage
+                                  ? Stack(
+                                      children: [
+                                        Container(
+                                          height: 120,
+                                          width: 120,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ),
+                                            image: DecorationImage(
+                                              image:
+                                                  displayImage!, // Use the logic above
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                        const Positioned(
+                                          bottom: 5,
+                                          right: 5,
+                                          child: Icon(
+                                            Icons.add_a_photo,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  // Priority 3: Show Placeholder
+                                  : Container(
+                                      height: 100,
+                                      width: 100,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.2),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: const Icon(
+                                        Icons.add_a_photo,
+
+                                        color: Colors.white,
+                                        size: 40,
+                                      ),
+                                    );
+                            },
+                          ),
                         ),
                       ),
                     ),
@@ -155,8 +167,10 @@ class EditPropertyScreen extends StatelessWidget {
                         children: [
                           // Category Dropdown
                           _buildDropdown(
-                            cubit.selectedCategoryId, // Changed from loadedState to cubit
-                            cubit.allCategories,  // Changed from loadedState to cubit
+                            cubit
+                                .selectedCategoryId, // Changed from loadedState to cubit
+                            cubit
+                                .allCategories, // Changed from loadedState to cubit
                             (val) => cubit.changeCategory(val),
                           ),
                           const SizedBox(height: 15),
@@ -206,10 +220,12 @@ class EditPropertyScreen extends StatelessWidget {
                           Wrap(
                             spacing: 10,
                             runSpacing: 10,
-                            children: cubit.allAmenities.map((item) { // Changed from loadedState
+                            children: cubit.allAmenities.map((item) {
+                              // Changed from loadedState
                               final id = item['id'];
                               final name = item['name'];
-                              final isSelected = cubit.selectedAmenityIds  // Changed from loadedState
+                              final isSelected = cubit
+                                  .selectedAmenityIds // Changed from loadedState
                                   .contains(id);
 
                               return GestureDetector(
@@ -338,25 +354,24 @@ class EditPropertyScreen extends StatelessWidget {
   }
 
   void _showDeleteDialog(BuildContext context, EditPropertyCubit cubit) {
+    late final t = AppLocalizations.of(context)!;
     showDialog(
       context: context,
+
       builder: (ctx) => AlertDialog(
-        title: const Text("Delete Property"),
-        content: const Text("Are you sure?"),
+        title: Text(t.delete_property),
+        content: Text(t.are_you_sure),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text("Cancel"),
+            child: Text(t.cancel),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(ctx); // Close dialog
               cubit.deleteProperty(); // Trigger delete
             },
-            child: const Text(
-              "Delete",
-              style: TextStyle(color: MyColor.darkRed),
-            ),
+            child: Text(t.delete, style: TextStyle(color: MyColor.darkRed)),
           ),
         ],
       ),

@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rent/core/constant.dart';
 import 'package:rent/cubit/user_cubit.dart';
 import 'package:rent/cubit/user_state.dart';
+
+import 'package:rent/l10n/app_localizations.dart';
+import 'package:rent/models/profile_model.dart';
+import 'package:rent/models/property_model.dart';
+
 import 'package:rent/views/homeScreenAndProperties/profile.dart';
 
 import 'package:rent/views/my_booking.dart';
+import 'package:rent/views/setting_screen.dart';
 
 import '../cubit/property_cubit.dart';
 import '../cubit/property_state.dart';
@@ -16,6 +23,7 @@ class MainDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!; //للترجمة
     return Drawer(
       backgroundColor: MyColor.offWhite,
       child: Column(
@@ -72,7 +80,7 @@ class MainDrawer extends StatelessWidget {
           // MENU ITEMS
           _DrawerItem(
             icon: Icons.person_outline,
-            title: 'My profile',
+            title: t.profile,
             onTap: () {
               Navigator.push(
                 context,
@@ -82,12 +90,12 @@ class MainDrawer extends StatelessWidget {
           ),
           _DrawerItem(
             icon: Icons.favorite_border,
-            title: 'My favorite',
+            title: t.my_favorite,
             onTap: () {},
           ),
           _DrawerItem(
             icon: Icons.archive_outlined,
-            title: 'My Booking',
+            title: t.my_booking,
             onTap: () {
               Navigator.push(
                 context,
@@ -97,8 +105,13 @@ class MainDrawer extends StatelessWidget {
           ),
           _DrawerItem(
             icon: Icons.settings_outlined,
-            title: 'Setting',
-            onTap: () {},
+            title: t.settings,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const SettingsScreen()),
+              );
+            },
           ),
           _DrawerItem(icon: Icons.help_outline, title: 'Help', onTap: () {}),
           _DrawerItem(

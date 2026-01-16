@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rent/l10n/app_localizations.dart';
 import '../data/colors.dart';
 import '../models/my_properties_booking_model.dart';
 
@@ -16,6 +17,7 @@ class BookingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!; //للترجمة
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(16),
@@ -55,14 +57,15 @@ class BookingCard extends StatelessWidget {
 
           // Buttons Row
           if (booking.status != BookingStatus.current)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _buildActionButton('accept', MyColor.deepBlue, onAccept),
-              const SizedBox(width: 16),
-              _buildActionButton('reject', MyColor.darkRed, onReject),
-            ],
-          ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildActionButton(t.accept, MyColor.deepBlue, onAccept),
+                const SizedBox(width: 16),
+
+                _buildActionButton(t.rejected, Colors.red.shade900, onReject),
+              ],
+            ),
         ],
       ),
     );
@@ -110,15 +113,23 @@ class BookingCard extends StatelessWidget {
           children: [
             Text(
               "total price : ${booking.totalPrice}\$",
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: MyColor.deepBlue),
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+                color: MyColor.deepBlue,
+              ),
             ),
             const Icon(Icons.arrow_forward, size: 16, color: MyColor.deepBlue),
             Text(
               "new total price : ${booking.newTotalPrice}\$",
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: MyColor.deepBlue),
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+                color: MyColor.deepBlue,
+              ),
             ),
           ],
-        )
+        ),
       ],
     );
   }
@@ -128,7 +139,10 @@ class BookingCard extends StatelessWidget {
       children: [
         Text(label, style: const TextStyle(color: Colors.grey, fontSize: 12)),
         const SizedBox(width: 4),
-        Text(value, style: const TextStyle(color: MyColor.deepBlue, fontSize: 12)),
+        Text(
+          value,
+          style: const TextStyle(color: MyColor.deepBlue, fontSize: 12),
+        ),
       ],
     );
   }
@@ -139,10 +153,12 @@ class BookingCard extends StatelessWidget {
       children: [
         Expanded(child: _textRow(label, oldVal)),
         const Icon(Icons.arrow_forward, size: 16, color: MyColor.deepBlue),
-        Expanded(child: Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: _textRow(label, newVal ?? "N/A"),
-        )),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: _textRow(label, newVal ?? "N/A"),
+          ),
+        ),
       ],
     );
   }

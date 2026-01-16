@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:rent/categories/details_category.dart';
 import 'package:rent/cubit/details_cubit/details_cubit.dart';
+
+import 'package:rent/l10n/app_localizations.dart';
+
 import '../../cubit/property_cubit.dart';
 import '../../cubit/property_state.dart';
 import '../../data/colors.dart';
@@ -14,11 +18,12 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!; //للترجمة
     return Scaffold(
-      drawer:  BlocProvider(
-  create: (context) => PropertyCubit(),
-  child: MainDrawer(),
-),
+      drawer: BlocProvider(
+        create: (context) => PropertyCubit(),
+        child: MainDrawer(),
+      ),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -56,9 +61,9 @@ class HomeScreen extends StatelessWidget {
                     final allProperties = state.properties;
 
                     if (allProperties.isEmpty) {
-                      return const Center(
+                      return Center(
                         child: Text(
-                          "No Properties Available",
+                          t.no_properties,
                           style: TextStyle(
                             color: MyColor.deepBlue,
                             fontSize: 18,

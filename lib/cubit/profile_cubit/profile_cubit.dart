@@ -6,12 +6,14 @@ import 'profile_state.dart';
 class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit() : super(ProfileInitial());
 
-  Future<void> getProfile() async {
+  Future<void> getProfile(String lang) async {
     emit(ProfileLoading());
     try {
       final token = await SecureStorage.getToken();
 
-      final profile = await ProfileService().getProfile(token: token);
+      final profile = await ProfileService().getProfile(
+          token: token,
+        lang: lang,);
 
       emit(ProfileLoaded(profile));
     } catch (e) {

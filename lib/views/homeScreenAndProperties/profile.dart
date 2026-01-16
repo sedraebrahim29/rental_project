@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rent/cubit/language_cubit/language_cubit.dart';
 import 'package:rent/data/colors.dart';
+import 'package:rent/l10n/app_localizations.dart';
 import 'package:rent/models/profile_model.dart';
 import 'package:rent/widgets/profile_widget/profile_bottom_sheet.dart';
 import 'package:rent/cubit/profile_cubit/profile_cubit.dart';
@@ -14,14 +16,23 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+
+  void _loadProfile() {
+    final lang = context.read<LanguageCubit>().state.languageCode;
+    context.read<ProfileCubit>().getProfile(lang);//trigger
+  }
+
   @override
   void initState() {
     super.initState();
-    context.read<ProfileCubit>().getProfile(); // trigger
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadProfile();
+    }); // trigger
   }
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;//للترجمة
     return Scaffold(
       resizeToAvoidBottomInset: false,
       //integrate cubit
@@ -78,8 +89,8 @@ class _ProfileState extends State<Profile> {
                           ),
                         ),
                         onPressed: () {},
-                        child: const Text(
-                          'Edit profile',
+                        child: Text(
+                          t.edit_profile,
                           style: TextStyle(
                             fontSize: 17,
                             color: MyColor.deepBlue,
@@ -97,7 +108,16 @@ class _ProfileState extends State<Profile> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Phone Number : ${prof.phone}',
+                    "${t.phone_number}: ${prof.phone}",
+                    style: const TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                            color: MyColor.deepBlue,
+                          ),
+                        ),
+                        const SizedBox(height: 25),
+                        Text(
+                          "${t.birth_date} : ${prof.birthDate}",
                           style: const TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.bold,
@@ -106,7 +126,7 @@ class _ProfileState extends State<Profile> {
                         ),
                         const SizedBox(height: 25),
                         Text(
-                          'Birth Date : ${prof.birthDate}',
+                          "${t.properties} : ${prof.propertiesCount}",
                           style: const TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.bold,
@@ -115,16 +135,7 @@ class _ProfileState extends State<Profile> {
                         ),
                         const SizedBox(height: 25),
                         Text(
-                          'Properties : ${prof.propertiesCount}',
-                          style: const TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            color: MyColor.deepBlue,
-                          ),
-                        ),
-                        const SizedBox(height: 25),
-                        Text(
-                          'Balance : ${prof.balance}',
+                          "${t.balance} : ${prof.balance}",
                           style: const TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.bold,
@@ -161,8 +172,8 @@ class _ProfileState extends State<Profile> {
                             builder: (_) => const ProfileBottomSheet(),
                           );
                         },
-                        child: const Text(
-                          'Top Up Balance',
+                        child:  Text(
+                          t.top_up_balance,
                           style: TextStyle(
                             fontSize: 17,
                             color: MyColor.deepBlue,

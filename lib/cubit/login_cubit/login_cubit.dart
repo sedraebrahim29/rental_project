@@ -8,13 +8,17 @@ class LoginCubit extends Cubit<LoginState> {
   final AuthCubit authCubit;
   LoginCubit(this.authCubit) : super(LoginInitial());
 
-  Future<void> login({required String phone, required String password}) async {
+  Future<void> login({
+    required String phone,
+    required String password,
+    required String lang,}) async {
     emit(LoginLoading());
 
     try {
       final result = await LoginService().loginService(
         phone: phone,
         password: password,
+       lang: lang,
       );
 
       final token = result.token;

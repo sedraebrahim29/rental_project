@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rent/cubit/details_cubit/details_cubit.dart';
 import 'package:rent/cubit/details_cubit/details_state.dart';
+
+import 'package:rent/cubit/language_cubit/language_cubit.dart';
+import 'package:rent/l10n/app_localizations.dart';
+import 'package:rent/models/property_model.dart';
+
 import 'package:rent/widgets/details_widgets/details_image.dart';
 import 'package:rent/widgets/details_widgets/details_info.dart';
 
@@ -9,20 +14,28 @@ class DetailsCategory extends StatefulWidget {
   const DetailsCategory({super.key, required this.apartmentId});
 
   final int apartmentId;
+
   @override
   State<DetailsCategory> createState() => _DetailsCategoryState();
 }
 
 class _DetailsCategoryState extends State<DetailsCategory> {
+  void _loadDetails() {
+    final lang = context.read<LanguageCubit>().state.languageCode;
+    context.read<DetailsCubit>().getDetails(widget.apartmentId, lang);
+  }
+
   @override
   void initState() {
     super.initState();
-
-    context.read<DetailsCubit>().getDetails(widget.apartmentId);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadDetails();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!; //للترجمة
     return Scaffold(
       body: BlocBuilder<DetailsCubit, DetailsState>(
         builder: (context, state) {
@@ -33,10 +46,9 @@ class _DetailsCategoryState extends State<DetailsCategory> {
           if (state is DetailsError) {
             return Center(
               child: ElevatedButton.icon(
-                onPressed: () =>
-                    context.read<DetailsCubit>().getDetails(widget.apartmentId),
+                onPressed: _loadDetails,
                 icon: const Icon(Icons.refresh),
-                label: const Text('Retry'),
+                label: Text(t.try_again),
               ),
             );
           }
@@ -79,7 +91,6 @@ class _DetailsCategoryState extends State<DetailsCategory> {
             );
           }
 
-          // fallback
           return const SizedBox();
         },
       ),

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart' hide State;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rent/cubit/add_property_cubit.dart';
+
 import 'package:rent/cubit/property_cubit.dart';
+
+import 'package:rent/l10n/app_localizations.dart';
+
 import 'package:rent/views/homeScreenAndProperties/add_property.dart';
 
 import '../../cubit/properties/properties_cubit.dart';

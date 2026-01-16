@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rent/data/colors.dart';
+import 'package:rent/l10n/app_localizations.dart';
 
 class BookedDateDisplay extends StatelessWidget {
    BookedDateDisplay({
@@ -8,6 +9,7 @@ class BookedDateDisplay extends StatelessWidget {
    final List bookedDates;
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;//للترجمة
     return Container(
 
       width: 320,
@@ -32,7 +34,7 @@ class BookedDateDisplay extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 child: Center(
                   child: Text(
-                    'from : ${b.startDate}      to : ${b.endDate}',
+                    '${t.from} : ${b.startDate}      ${t.to} : ${b.endDate}',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

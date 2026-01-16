@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../cubit/properties/properties_cubit.dart' hide State;
 import '../../cubit/properties/properties_cubit.dart' as cubit_state show State;
+
+import 'package:rent/l10n/app_localizations.dart';
 
 import '../../data/colors.dart';
 import '../../models/my_properties_booking_model.dart';
@@ -31,6 +34,10 @@ class _MyPropertiesBookingScreenState extends State<MyPropertiesBookingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!; //للترجمة
+    // Filter list based on selection
+    //final filteredList = _allBookings.where((b) => b.status == _selectedStatus).toList();
+
     return Scaffold(
       body: BlocConsumer<PropertiesCubit, PropertiesState>(
         listener: (context, state) {
@@ -73,10 +80,10 @@ class _MyPropertiesBookingScreenState extends State<MyPropertiesBookingScreen> {
                         icon: const Icon(Icons.arrow_back, color: Colors.white),
                         onPressed: () => Navigator.pop(context),
                       ),
-                      const Expanded(
+                      Expanded(
                         child: Center(
                           child: Text(
-                            'My Properties Booking',
+                            t.my_properties_booking,
                             style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
@@ -97,21 +104,16 @@ class _MyPropertiesBookingScreenState extends State<MyPropertiesBookingScreen> {
                   height: 45,
                   margin: const EdgeInsets.symmetric(horizontal: 20),
                   decoration: BoxDecoration(
+                    // color: Colors.white.withOpacity(0.2), // Optional background for tab bar
                     borderRadius: BorderRadius.circular(25),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      _buildFilterTab(t.pending, BookingStatus.pending),
+                      _buildFilterTab(t.current, BookingStatus.current),
                       _buildFilterTab(
-                        "pending".toUpperCase(),
-                        BookingStatus.pending,
-                      ),
-                      _buildFilterTab(
-                        "current".toUpperCase(),
-                        BookingStatus.current,
-                      ),
-                      _buildFilterTab(
-                        "update-request".toUpperCase(),
+                        t.update_request,
                         BookingStatus.updateRequest,
                       ),
                     ],

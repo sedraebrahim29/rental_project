@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rent/l10n/app_localizations.dart';
 
 import '../../cubit/add_property_cubit.dart';
 import '../../cubit/add_property_state.dart';
@@ -10,15 +11,16 @@ class AddPropertyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!; //للترجمة
     // 1. Initialize Cubit and Load Data
     return BlocProvider(
       create: (context) => AddPropertyCubit()..loadInitialData(),
       child: BlocListener<AddPropertyCubit, AddPropertyState>(
         listener: (context, state) {
           if (state is AddPropertySuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Property Added Successfully!")),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(t.property_added_success)));
             Navigator.pop(context); // Close screen
           } else if (state is AddPropertyError) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -59,7 +61,6 @@ class AddPropertyScreen extends StatelessWidget {
                   child: CircularProgressIndicator(color: MyColor.deepBlue),
                 );
               }
-
               return SingleChildScrollView(
                 child: Column(
                   children: [

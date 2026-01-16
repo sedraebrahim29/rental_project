@@ -38,6 +38,7 @@ class SignupCubit extends Cubit<SignupState> {
   Future<void> signup({
     required File image,
     required File idImage,
+    required String lang,
   }) async {
 
     if (firstName == null ||
@@ -60,6 +61,7 @@ class SignupCubit extends Cubit<SignupState> {
         passwordConfirmation: passwordConfirmation!,
         image: image,
         idImage: idImage,
+        lang: lang,
       );
       emit(SignupSuccess());
     } catch (e) {

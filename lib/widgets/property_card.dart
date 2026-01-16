@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rent/l10n/app_localizations.dart';
 import '../data/colors.dart';
 import '../models/property_model.dart';
 
@@ -14,11 +15,12 @@ class PropertyCard extends StatelessWidget {
     required this.property,
     required this.onTap,
     this.onEdit,
-    this.onBooking
+    this.onBooking,
   });
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!; //للترجمة
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
@@ -53,7 +55,10 @@ class PropertyCard extends StatelessWidget {
                         GestureDetector(
                           onTap: onBooking,
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
                             decoration: BoxDecoration(
                               color: MyColor.deepBlue,
                               borderRadius: BorderRadius.circular(12),
@@ -61,18 +66,18 @@ class PropertyCard extends StatelessWidget {
                             child: const Text(
                               'Booking',
                               style: TextStyle(
-                                  color: MyColor.offWhite,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold
+                                color: MyColor.offWhite,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
                         )
                       else
-                      // Show Owner Name (Home Screen view)
+                        // Show Owner Name (Home Screen view)
                         Expanded(
                           child: Text(
-                            property.ownerName ,
+                            property.ownerName,
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -85,14 +90,20 @@ class PropertyCard extends StatelessWidget {
                         GestureDetector(
                           onTap: onEdit,
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
                             decoration: BoxDecoration(
                               color: MyColor.deepBlue,
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: const Text(
-                              'edit',
-                              style: TextStyle(color: Colors.white, fontSize: 12),
+                            child: Text(
+                              t.edit,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
                             ),
                           ),
                         ),
@@ -103,13 +114,17 @@ class PropertyCard extends StatelessWidget {
                   // نوع الشقة والمساحة
                   _buildInfoItem(Icons.home, property.category),
                   const SizedBox(height: 2),
-                  _buildInfoItem(Icons.square_foot_sharp, "${property.area} m²"),
+                  _buildInfoItem(
+                    Icons.square_foot_sharp,
+                    "${property.area} m²",
+                  ),
 
                   const SizedBox(height: 6),
 
                   // السعر
                   Text(
-                    '\$${property.price} / per night',
+                    '\$${property.price} / ${t.per_mon}',
+
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
@@ -120,7 +135,10 @@ class PropertyCard extends StatelessWidget {
                   // الموقع
                   Text(
                     "${property.city} - ${property.governorate}",
-                    style: const TextStyle(color: MyColor.blueGray, fontSize: 12),
+                    style: const TextStyle(
+                      color: MyColor.blueGray,
+                      fontSize: 12,
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
 
@@ -167,18 +185,23 @@ class PropertyCard extends StatelessWidget {
     if (property.localImages != null && property.localImages!.isNotEmpty) {
       return Image.file(
         property.localImages!.first,
-        width: 110, height: 130, fit: BoxFit.cover,
+        width: 110,
+        height: 130,
+        fit: BoxFit.cover,
       );
     }
     // 2. Check for Remote API Images
     else if (property.imageUrls.isNotEmpty) {
       return Image.network(
         property.imageUrls.first,
-        width: 110, height: 130, fit: BoxFit.cover,
+        width: 110,
+        height: 130,
+        fit: BoxFit.cover,
         // Added error builder to catch broken links (404)
         errorBuilder: (context, error, stackTrace) {
           return Container(
-            width: 110, height: 130,
+            width: 110,
+            height: 130,
             color: Colors.grey[300],
             child: const Icon(Icons.broken_image, color: Colors.grey),
           );
@@ -186,18 +209,26 @@ class PropertyCard extends StatelessWidget {
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;
           return Container(
-            width: 110, height: 130,
+            width: 110,
+            height: 130,
             color: Colors.grey[200],
-            child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+            child: const Center(
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
           );
         },
       );
     }
     // 3. Fallback if no images at all
     return Container(
-      width: 110, height: 130,
+      width: 110,
+      height: 130,
       color: MyColor.blueGray.withOpacity(0.3),
-      child: const Icon(Icons.image_not_supported, color: Colors.white, size: 30),
+      child: const Icon(
+        Icons.image_not_supported,
+        color: Colors.white,
+        size: 30,
+      ),
     );
   }
 }

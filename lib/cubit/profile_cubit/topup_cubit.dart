@@ -7,7 +7,7 @@ import 'package:rent/service/topup_service.dart';
 class TopUpCubit extends Cubit<TopUpState> {
   TopUpCubit() : super(TopUpInitial());
 
-  Future<void> topUp(double amount) async {
+  Future<void> topUp(double amount,String lang) async {
     emit(TopUpLoading());
     try {
       final token = await SecureStorage.getToken();
@@ -15,6 +15,7 @@ class TopUpCubit extends Cubit<TopUpState> {
       await TopUpService().topUp(
         amount: amount,
         token: token,
+        lang: lang,
       );
 
       emit(TopUpSuccess());

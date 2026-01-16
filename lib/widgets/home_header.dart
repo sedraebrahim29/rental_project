@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rent/cubit/filter_cubit/filter_cubit.dart';
 import 'package:rent/cubit/filter_cubit/filter_meta_cubit.dart';
+import 'package:rent/l10n/app_localizations.dart';
 import 'package:rent/views/homeScreenAndProperties/my_properties.dart';
 
 import '../data/colors.dart';
@@ -13,6 +14,7 @@ class HomeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!; //للترجمة
     return Stack(
       children: [
         SafeArea(
@@ -40,15 +42,9 @@ class HomeHeader extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => MultiBlocProvider(
-                              providers: [
-                                BlocProvider(
-                                  create: (_) =>
-                                      FilterMetaCubit()..loadInitialData(),
-                                ),
-                              ],
-                              child: const SearchScreen(),
-                            ),
+                            builder: (_) {
+                              return const SearchScreen();
+                            },
                           ),
                         );
                       },
@@ -67,8 +63,8 @@ class HomeHeader extends StatelessWidget {
                             ),
                           ],
                         ),
-                        child: const Text(
-                          'Search',
+                        child: Text(
+                          t.search,
                           style: TextStyle(
                             color: MyColor.deepBlue, //
                             fontSize: 20,
@@ -94,7 +90,7 @@ class HomeHeader extends StatelessWidget {
                   children: [
                     //MY PROPERTIES
                     _CategoryButtons(
-                      title: "My Properties",
+                      title: t.my_properties,
                       textColor: MyColor.deepBlue,
                       color: MyColor.offWhite,
                       onTap: () {
@@ -109,7 +105,7 @@ class HomeHeader extends StatelessWidget {
                     const SizedBox(width: 20),
                     //RENT
                     _CategoryButtons(
-                      title: "Rent",
+                      title: t.rent,
                       color: MyColor.skyBlue,
                       textColor: MyColor.deepBlue,
                       onTap: () {},
@@ -117,7 +113,7 @@ class HomeHeader extends StatelessWidget {
                     const SizedBox(width: 20),
                     //MESSAGES
                     _CategoryButtons(
-                      title: "Messages",
+                      title: t.messages,
                       color: MyColor.offWhite,
                       textColor: MyColor.deepBlue,
                       onTap: () {},

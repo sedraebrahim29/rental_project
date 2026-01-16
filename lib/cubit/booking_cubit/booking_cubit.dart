@@ -7,7 +7,7 @@ import 'package:rent/service/booking_service.dart';
 class BookingCubit extends Cubit<BookingState> {
   BookingCubit() : super(BookingInitial());
 // get هي دالة للتاريخ المحجوز والمحافظات
-  Future<void> loadInitialData(int propertyId) async {
+  Future<void> loadInitialData(int propertyId,String lang) async {
 
     emit(BookingLoading());
     try {
@@ -15,10 +15,11 @@ class BookingCubit extends Cubit<BookingState> {
       final bookings = await BookingService().getPropertyBookings(
         propertyId: propertyId,
         token: token,
+        lang: lang,
       );
 
       final governorates =
-      await BookingService().getAllGovernorates(token);
+      await BookingService().getAllGovernorates(token,lang);
 
       emit(BookingLoaded( bookedDates: bookings,
         governorates: governorates,
@@ -28,7 +29,7 @@ class BookingCubit extends Cubit<BookingState> {
     }
   }
   // get هي دالة للمدن لحال بجبلي ياهن بعد ما اختار المحافظة
-  Future<void> loadCities(int governorateId) async {
+  Future<void> loadCities(int governorateId, String lang) async {
     if (state is! BookingLoaded) return;
 
     final current = state as BookingLoaded;
@@ -37,6 +38,7 @@ class BookingCubit extends Cubit<BookingState> {
     final cities = await BookingService().getCitiesByGovernorate(
       governorateId: governorateId,
       token: token,
+      lang: lang,
     );
 
     emit(BookingLoaded(
@@ -55,8 +57,8 @@ class BookingCubit extends Cubit<BookingState> {
     required int propertyId,
     required int governorateId,
     required int cityId,
+    required String lang,
   }) async {
-    print("SUBMIT BOOKING CALLED");////////////////
     emit(BookingLoading());
     try {
       final token = await SecureStorage.getToken();
@@ -70,6 +72,7 @@ class BookingCubit extends Cubit<BookingState> {
         governorateId: governorateId,
         cityId: cityId,
         token: token,
+        lang: lang,
       );
 
       emit(BookingSuccess());

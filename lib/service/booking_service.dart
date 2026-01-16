@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:rent/helper/api.dart';
 import 'package:rent/models/city_model.dart';
 
@@ -13,8 +14,9 @@ class BookingService {
   Future<List<BookingDateModel>> getPropertyBookings({
     required int propertyId,
     required String token,
+    required String lang,
   }) async {
-    final response = await Api().get(
+    final response = await Api(languageCode: lang).get(
       url: '$baseUrl/bookings/getPropertyBookings/$propertyId',
       token: token,
     );
@@ -29,12 +31,13 @@ class BookingService {
     }
   }
 
-  //get governorates
-  Future<List<GovernorateModel>> getAllGovernorates(String token) async {
-    final response = await Api().get(
-      url: '$baseUrl/properties/allGovernorates',
-      token: token,
-    );
+  Future<List<GovernorateModel>> getAllGovernorates(
+    String token,
+    String lang,
+  ) async {
+    final response = await Api(
+      languageCode: lang,
+    ).get(url: '$baseUrl/properties/allGovernorates', token: token);
 
     final decoded = jsonDecode(response.body);
     return (decoded['data'] as List)
@@ -46,11 +49,11 @@ class BookingService {
   Future<List<CityModel>> getCitiesByGovernorate({
     required int governorateId,
     required String token,
+    required String lang,
   }) async {
-    final response = await Api().get(
-      url: '$baseUrl/properties/allCities/$governorateId',
-      token: token,
-    );
+    final response = await Api(
+      languageCode: lang,
+    ).get(url: '$baseUrl/properties/allCities/$governorateId', token: token);
 
     final decoded = jsonDecode(response.body);
     return (decoded['data'] as List).map((e) => CityModel.fromJson(e)).toList();
@@ -66,9 +69,9 @@ class BookingService {
     required int governorateId,
     required int cityId,
     required String token,
+    required String lang,
   }) async {
-    print("API CREATE BOOKING CALLED"); ///////////////////
-    final response = await Api().post(
+    final response = await Api(languageCode: lang).post(
       url: '$baseUrl/bookings/create',
       token: token,
       body: {

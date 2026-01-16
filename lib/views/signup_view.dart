@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:rent/image_picker/image_picker_method.dart';
+import 'package:rent/l10n/app_localizations.dart';
 import 'package:rent/views/login_view.dart';
 import 'package:rent/widgets/login_signup_widgets/step_1.dart';
 import 'package:rent/widgets/login_signup_widgets/step_2.dart';
@@ -28,6 +29,7 @@ class _SignupViewState extends State<SignupView> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;//للترجمة
 
     return WillPopScope(onWillPop:() async {
       if (currentStep > 0) {
@@ -49,7 +51,7 @@ class _SignupViewState extends State<SignupView> {
                children: [
 
                  SizedBox(height: 70),
-                 Text('Creat a new account',
+                 Text(t.create_account,
                    style: TextStyle(
                      fontSize: 25,
                      fontFamily: 'DM Serif Display',
@@ -103,7 +105,7 @@ class _SignupViewState extends State<SignupView> {
                  Row(
                    mainAxisAlignment: MainAxisAlignment.center,
                    children: [
-                     const Text('Already have an account ? ',
+                     Text(t.already_have_account,
                        style: TextStyle(
                            color: Color(0xff5B7CA9),
                            fontFamily: 'DM Serif Display',
@@ -117,7 +119,7 @@ class _SignupViewState extends State<SignupView> {
                            return  LoginView();
                          }));
                        },
-                       child: const Text('Log in',
+                       child:  Text(t.login,
                          style: TextStyle(
                              fontSize: 23,
                              fontFamily: 'DM Serif Display',

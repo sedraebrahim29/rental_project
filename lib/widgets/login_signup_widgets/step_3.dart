@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rent/cubit/language_cubit/language_cubit.dart';
 import 'package:rent/cubit/signup_cubit/signup_cubit.dart';
 import 'package:rent/cubit/signup_cubit/signup_state.dart';
+import 'package:rent/l10n/app_localizations.dart';
 
 class Step3 extends StatelessWidget {
   final VoidCallback onPickProfile;
@@ -24,13 +26,14 @@ class Step3 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;//للترجمة
     return Column(
       children: [
         // PROFILE IMAGE
-        const Padding(
+         Padding(
           padding: EdgeInsets.only(right: 85, bottom: 4),
           child: Text(
-            'Your photo',
+            t.your_photo,
             style: TextStyle(
               color: Colors.white,
               fontSize: 17,
@@ -46,10 +49,10 @@ class Step3 extends StatelessWidget {
         const SizedBox(height: 25),
 
         //  ID IMAGE
-        const Padding(
+         Padding(
           padding: EdgeInsets.only(right: 70, bottom: 4),
           child: Text(
-            'Your ID photo',
+            t.your_id_photo,
             style: TextStyle(
               color: Colors.white,
               fontSize: 17,
@@ -94,18 +97,20 @@ class Step3 extends StatelessWidget {
                   onTap: () {
                     if (profileImage == null || idImage == null) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Please select images')),
+                         SnackBar(content: Text(t.select_image)),
                       );
                       return;
                     }
+                    final lang =  context.read<LanguageCubit>().state.languageCode;
                     //  trigger cubit
                     context.read<SignupCubit>().signup(
                       image: profileImage!,
                       idImage: idImage!,
+                      lang: lang,
                     );
                   },
-                  child: const Text(
-                    'Sign up',
+                  child:  Text(
+                    t.signup,
                     style: TextStyle(
                       fontSize: 25,
                       color: Colors.white,

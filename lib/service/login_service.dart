@@ -10,13 +10,15 @@ class LoginService {
   Future<UserModel> loginService({
     required String phone,
     required String password,
+    required String lang,
   }) async {
-    final response = await Api().post(
+    final response = await Api(languageCode: lang).post(
       url: 'http://127.0.0.1:8000/api/login',
       body: {'phone': phone, 'password': password},
     );
     final decoded = jsonDecode(response.body);
     String message = decoded['message'];
+
     if (response.statusCode == 200) {
       String token = decoded['data'][1];
       //print('Token from login=> $token');

@@ -1,19 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:rent/cubit/add_property_cubit.dart';
+
+import 'package:flutter_localizations/flutter_localizations.dart';
+
+import 'package:rent/categories/details_category.dart';
+
 import 'package:rent/cubit/details_cubit/details_cubit.dart';
+import 'package:rent/cubit/favorite_cubit.dart';
 import 'package:rent/cubit/filter_cubit/filter_cubit.dart';
 import 'package:rent/cubit/filter_cubit/filter_meta_cubit.dart';
+import 'package:rent/cubit/language_cubit/language_cubit.dart';
 import 'package:rent/cubit/login_cubit/login_cubit.dart';
 import 'package:rent/cubit/profile_cubit/profile_cubit.dart';
 import 'package:rent/cubit/properties/properties_cubit.dart';
 import 'package:rent/cubit/signup_cubit/signup_cubit.dart';
+
 import 'package:rent/cubit/user_cubit.dart';
+import 'package:rent/service/favorite_sevice.dart';
 import 'package:rent/service/notification_service.dart';
+
+import 'package:rent/l10n/app_localizations.dart';
+
 import 'package:rent/views/homeScreenAndProperties/home_screen.dart';
 
 import 'package:rent/views/login_view.dart';
+
 import 'package:rent/views/signup_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'cubit/property_cubit.dart';
@@ -22,7 +36,13 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await NotificationsService.init();
-  runApp(ProviderScope(child: const Rent()));
+
+  runApp(
+    MultiBlocProvider(
+      providers: [BlocProvider(create: (_) => LanguageCubit())],
+      child: const Rent(),
+    ),
+  );
 }
 
 class Rent extends StatelessWidget {
@@ -42,15 +62,25 @@ class Rent extends StatelessWidget {
         BlocProvider(create: (context) => AddPropertyCubit()),
         BlocProvider(create: (context) => PropertiesCubit()..getProperties()),
         BlocProvider(create: (context) => FilterCubit()),
-        BlocProvider(create: (context) => FilterMetaCubit()..loadInitialData()),
-        BlocProvider(create: (context) => ProfileCubit()..getProfile()),
+        BlocProvider(
+          create: (context) => FilterMetaCubit()
+            ..loadInitialData(context.read<LanguageCubit>().state.languageCode),
+        ),
+        BlocProvider(create: (context) => ProfileCubit()),
+        BlocProvider(create: (context) => FavoriteCubit(FavoriteService())),
       ],
       child: MaterialApp(
         theme: ThemeData(useMaterial3: false),
         debugShowCheckedModeBanner: false,
 
-        home: LoginView(),
+        locale: context
+            .watch<LanguageCubit>()
+            .state
+            .locale, //  يخلي اللغة حسب الجهاز
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
 
+        //home:  SearchScreen()
         // home:
         // Scaffold(
         //
@@ -61,24 +91,8 @@ class Rent extends StatelessWidget {
         //     ],
         //   ),
         // )
+        home: LoginView(),
 
-        // home: DetailsCategory(
-        //   apartment: PropertyModel(
-        //     imageUrls: [
-        //
-        //     ],
-        //     ownerName: 'Test Owner',
-        //     address: 'Test Location',
-        //     category: 'Apartment',
-        //     area: '1200 m2',
-        //     price: '120',
-        //     baths: '4',
-        //     beds: '4',
-        //     amenities: ['wifi','ac','pool','wifi','ac','pool','wifi','ac','pool'],
-        //     rating: 4.8,
-        //
-        //   ), apartmentId: 1,
-        // ),
         initialRoute: '/login',
         routes: {
           '/login': (context) => LoginView(),

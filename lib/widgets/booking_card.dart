@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:rent/l10n/app_localizations.dart';
 import '../data/colors.dart';
 import '../models/booking_model.dart';
 
@@ -37,6 +38,7 @@ class BookingCard extends StatelessWidget {
     final String labelFrom = isUpdate ? "new start date" : "from";
     final String labelTo = isUpdate ? "new end date" : "to";
     final String labelTotal = isUpdate ? "new total price" : "total price";
+    final t = AppLocalizations.of(context)!; //للترجمة
 
     return Container(
       height: 165,

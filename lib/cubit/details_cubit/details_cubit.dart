@@ -7,12 +7,17 @@ import '../../service/details_service.dart';
 class DetailsCubit extends Cubit<DetailsState> {
   DetailsCubit() : super(DetailsInitial());
 
-  Future<void> getDetails(int id) async {
+  Future<void> getDetails(int id, String lang) async {
     emit(DetailsLoading());
     try {
       final token = await SecureStorage.getToken();
 
-      final property = await DetailsService().getDetails(id: id, token: token);
+      final property = await DetailsService().getDetails(
+        id: id,
+        token: token,
+        lang: lang,
+      );
+
       emit(DetailsSuccess(property));
     } catch (e) {
       emit(DetailsError(e.toString()));

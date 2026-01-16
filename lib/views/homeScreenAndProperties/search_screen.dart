@@ -6,7 +6,9 @@ import 'package:rent/categories/filter_category/type_category.dart';
 import 'package:rent/cubit/filter_cubit/filter_cubit.dart';
 import 'package:rent/cubit/filter_cubit/filter_meta_cubit.dart';
 import 'package:rent/cubit/filter_cubit/filter_meta_state.dart';
+import 'package:rent/cubit/language_cubit/language_cubit.dart';
 import 'package:rent/data/colors.dart';
+import 'package:rent/l10n/app_localizations.dart';
 import 'package:rent/views/filter_result.dart';
 import 'package:rent/widgets/filter_widget/amenity_item.dart';
 import 'package:rent/widgets/filter_widget/drop_down.dart';
@@ -31,15 +33,16 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //final filterCubit = context.read<FilterCubit>();
+    final t = AppLocalizations.of(context)!; //للترجمة
+    final filterCubit = context.read<FilterCubit>();
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: const Text(
-          'filter ',
+        title: Text(
+          t.filter,
           style: TextStyle(
             fontSize: 26,
             fontWeight: FontWeight.bold,
@@ -81,8 +84,8 @@ class _SearchScreenState extends State<SearchScreen> {
                 padding: const EdgeInsets.only(top: 190, right: 20, left: 11),
                 children: [
                   /// CATEGORY
-                  const Text(
-                    'Category :',
+                  Text(
+                    t.category,
                     style: TextStyle(
                       fontSize: 19,
                       fontWeight: FontWeight.bold,
@@ -113,10 +116,10 @@ class _SearchScreenState extends State<SearchScreen> {
                   const SizedBox(height: 20),
 
                   /// PRICE
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.only(right: 240),
                     child: Text(
-                      'Pricing rang :',
+                      t.pricing_range,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -140,24 +143,29 @@ class _SearchScreenState extends State<SearchScreen> {
                     padding: const EdgeInsets.only(left: 20),
                     child: Column(
                       children: [
-                        FilterInfoRow(label: 'Bedrooms', field: Input()),
+                        FilterInfoRow(label: t.beds, field: Input()),
                         const SizedBox(height: 10),
-                        FilterInfoRow(label: 'Bathrooms', field: Input()),
+                        FilterInfoRow(label: t.baths, field: Input()),
                         const SizedBox(height: 10),
-                        FilterInfoRow(label: 'Area', field: Input()),
+                        FilterInfoRow(label: t.area, field: Input()),
                         const SizedBox(height: 10),
 
                         /// GOVERNORATE
                         FilterInfoRow(
-                          label: 'Governorate',
+                          label: t.governorate,
                           field: DropDown(
                             items: governorates.map((e) => e.name).toList(),
                             onSelected: (index) {
                               selectedGovernorateId = governorates[index].id;
                               selectedCityId = null;
 
+                              final lang = context
+                                  .read<LanguageCubit>()
+                                  .state
+                                  .languageCode;
                               context.read<FilterMetaCubit>().loadCities(
                                 selectedGovernorateId!,
+                                lang,
                               );
                             },
                           ),
@@ -167,7 +175,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
                         /// CITY
                         FilterInfoRow(
-                          label: 'City',
+                          label: t.city,
                           field: DropDown(
                             items: cities.map((e) => e.name).toList(),
                             onSelected: (index) {
@@ -184,8 +192,8 @@ class _SearchScreenState extends State<SearchScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                'Amenities :',
+                              Text(
+                                t.amenities,
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -243,7 +251,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
                   const SizedBox(height: 25),
 
-                  /// APPLY FILTER
+                  // APPLY FILTER
                   Center(
                     child: SizedBox(
                       width: 220,
@@ -257,6 +265,10 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                         onPressed: () {
                           final filterCubit = context.read<FilterCubit>();
+                          final lang = context
+                              .read<LanguageCubit>()
+                              .state
+                              .languageCode;
 
                           filterCubit.applyFilter(
                             categoryId: selectedCategoryId,
@@ -265,6 +277,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             governorateId: selectedGovernorateId,
                             cityId: selectedCityId,
                             amenities: selectedAmenities,
+                            lang: lang,
                           );
 
                           log('2');
@@ -275,8 +288,8 @@ class _SearchScreenState extends State<SearchScreen> {
                             ),
                           );
                         },
-                        child: const Text(
-                          'Apply filter',
+                        child: Text(
+                          t.apply_filter,
                           style: TextStyle(fontSize: 17, color: Colors.white),
                         ),
                       ),

@@ -9,12 +9,12 @@ class FilterMetaCubit extends Cubit<FilterMetaState> {
 
   final _service = FilterService();
 
-  Future<void> loadInitialData() async {
+  Future<void> loadInitialData(String lang) async {
     emit(FilterMetaLoading());
     try {
-      final categories = await _service.getCategories();
-      final amenities = await _service.getAmenities();
-      final governorates = await _service.getGovernorates();
+      final categories = await _service.getCategories(lang);
+      final amenities = await _service.getAmenities(lang);
+      final governorates = await _service.getGovernorates(lang);
 
       emit(
         FilterMetaLoaded(
@@ -29,11 +29,11 @@ class FilterMetaCubit extends Cubit<FilterMetaState> {
     }
   }
 
-  Future<void> loadCities(int governorateId) async {
+  Future<void> loadCities(int governorateId,String lang) async {
     if (state is! FilterMetaLoaded) return;
 
     try {
-      final cities = await _service.getCities(governorateId);
+      final cities = await _service.getCities(governorateId ,lang);
 
       emit((state as FilterMetaLoaded).copyWith(cities: cities));
     } catch (e) {

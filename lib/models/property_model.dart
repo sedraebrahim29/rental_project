@@ -15,6 +15,7 @@ class PropertyModel {
   final String baths;
   final String address;
   final double rating;
+  bool? isFavorite;
 
   // نوعين من الصور
   final List<String> imageUrls; // روابط صور (للقراءة من الـ API)
@@ -35,6 +36,7 @@ class PropertyModel {
     this.rating = 0.0,
     this.imageUrls = const [],
     this.localImages,
+    this.isFavorite,
   });
 
   factory PropertyModel.init() {
@@ -90,6 +92,7 @@ class PropertyModel {
 
       // --- FIX STARTS HERE ---
       imageUrls: _parseImages(json),
+      isFavorite: json['is_favorite'] ?? false,
     );
   }
 
