@@ -24,88 +24,109 @@ class HomeScreen extends StatelessWidget {
         create: (context) => PropertyCubit(),
         child: MainDrawer(),
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/HomeBackground.png'),
-            fit: BoxFit.fill,
+      body: Stack(
+        children: [
+          // Background Image
+          Positioned.fill(
+            child: Image.asset('assets/HomeBackground.png', fit: BoxFit.cover),
           ),
-        ),
-        child: Column(
-          children: [
-            const HomeHeader(),
-            const SizedBox(height: 55),
 
-            Expanded(
-              child: BlocBuilder<PropertyCubit, PropertyState>(
-                builder: (context, state) {
-                  // 1. Loading State
-                  if (state is PropertyLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(color: MyColor.deepBlue),
-                    );
-                  }
+          // Content
+          Column(
+            children: [
+              const HomeHeader(),
+              const SizedBox(height: 70),
+              Expanded(
+                child: BlocBuilder<PropertyCubit, PropertyState>(
+                  builder: (context, state) {
+                    Future<void> refresh() async {
+                      await context.read<PropertyCubit>().getAllProperties();
+                    }
 
-                  // 2. Error State
-                  if (state is PropertyError) {
-                    return Center(
-                      child: Text(
-                        state.message,
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                    );
-                  }
+                    if (state is PropertyLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: MyColor.deepBlue,
+                        ),
+                      );
+                    }
 
-                  // 3. Success State
-                  if (state is PropertyLoaded) {
-                    final allProperties = state.properties;
-
-                    if (allProperties.isEmpty) {
-                      return Center(
-                        child: Text(
-                          t.no_properties,
-                          style: TextStyle(
-                            color: MyColor.deepBlue,
-                            fontSize: 18,
+                    if (state is PropertyError) {
+                      return RefreshIndicator(
+                        onRefresh: refresh,
+                        color: MyColor.deepBlue,
+                        child: SingleChildScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          child: Center(
+                            child: Text(
+                              state.message,
+                              style: const TextStyle(color: Colors.red),
+                            ),
                           ),
                         ),
                       );
                     }
 
-                    return ListView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: allProperties.length,
-                      itemBuilder: (context, index) {
-                        final prop = allProperties[index];
+                    if (state is PropertyLoaded) {
+                      final allProperties = state.properties;
 
-                        return PropertyCard(
-                          property: prop,
-                          // Only onTap is provided.
-                          // onEdit is NOT provided, so the edit button remains hidden.
-                          onTap: () {
-                            final int id = int.parse(allProperties[index].id!);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => BlocProvider(
-                                  create: (_) => DetailsCubit(),
-                                  child: DetailsCategory(apartmentId: (id)),
+                      if (allProperties.isEmpty) {
+                        return RefreshIndicator(
+                          onRefresh: refresh,
+                          color: MyColor.deepBlue,
+                          child: SingleChildScrollView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            child: const Center(
+                              child: Text(
+                                "No Properties Available",
+                                style: TextStyle(
+                                  color: MyColor.deepBlue,
+                                  fontSize: 18,
                                 ),
                               ),
+                            ),
+                          ),
+                        );
+                      }
+
+                      return RefreshIndicator(
+                        onRefresh: refresh,
+                        color: MyColor.deepBlue,
+                        child: ListView.builder(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          padding: EdgeInsets.zero,
+                          itemCount: allProperties.length,
+                          itemBuilder: (context, index) {
+                            final prop = allProperties[index];
+
+                            return PropertyCard(
+                              property: prop,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => BlocProvider(
+                                      create: (_) => DetailsCubit(),
+                                      child: DetailsCategory(
+                                        apartmentId: int.parse(prop.id!),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
                             );
                           },
-                        );
-                      },
-                    );
-                  }
+                        ),
+                      );
+                    }
 
-                  // 4. Initial State
-                  return const SizedBox();
-                },
+                    return const SizedBox();
+                  },
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }

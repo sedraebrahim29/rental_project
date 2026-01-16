@@ -17,6 +17,7 @@ import 'package:rent/views/setting_screen.dart';
 import '../cubit/property_cubit.dart';
 import '../cubit/property_state.dart';
 import '../data/colors.dart';
+import '../views/my_favorite.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({super.key});
@@ -90,13 +91,25 @@ class MainDrawer extends StatelessWidget {
           ),
           _DrawerItem(
             icon: Icons.favorite_border,
-            title: t.my_favorite,
-            onTap: () {},
+
+            title: 'My favorites',
+            onTap: () {
+              // Close the drawer first
+              Navigator.pop(context);
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const MyFavoriteScreen()),
+              );
+            },
           ),
           _DrawerItem(
             icon: Icons.archive_outlined,
             title: t.my_booking,
             onTap: () {
+              // Close the drawer first
+              Navigator.pop(context);
+
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => MyBooking()),

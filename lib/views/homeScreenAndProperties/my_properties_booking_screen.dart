@@ -28,8 +28,12 @@ class _MyPropertiesBookingScreenState extends State<MyPropertiesBookingScreen> {
   @override
   void initState() {
     super.initState();
-    // Trigger API call when screen loads
     context.read<PropertiesCubit>().getBookings(widget.propertyId);
+  }
+
+  // Helper
+  Future<void> loadBookings() async {
+    await context.read<PropertiesCubit>().getBookings(widget.propertyId);
   }
 
   @override
@@ -120,7 +124,7 @@ class _MyPropertiesBookingScreenState extends State<MyPropertiesBookingScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 80),
+                const SizedBox(height: 120),
 
                 /// BOOKING LIST
                 Expanded(
@@ -148,34 +152,46 @@ class _MyPropertiesBookingScreenState extends State<MyPropertiesBookingScreen> {
                       }
 
                       if (filteredList.isEmpty) {
-                        return const Center(
-                          child: Text(
-                            "No bookings found",
-                            style: TextStyle(color: Colors.black45),
+                        return RefreshIndicator(
+                          onRefresh: loadBookings,
+                          color: MyColor.deepBlue,
+                          child: SingleChildScrollView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            child: const Center(
+                              child: Text(
+                                "No bookings found",
+                                style: TextStyle(color: Colors.black45),
+                              ),
+                            ),
                           ),
                         );
                       }
 
-                      return ListView.builder(
-                        padding: const EdgeInsets.only(top: 10, bottom: 80),
-                        itemCount: filteredList.length,
-                        itemBuilder: (context, index) {
-                          final booking = filteredList[index];
-                          return BookingCard(
-                            booking: booking,
-                            // --- IMPLEMENTED ACTIONS ---
-                            onAccept: () {
-                              context.read<PropertiesCubit>().approveBooking(
-                                booking.id.toString(),
-                              );
-                            },
-                            onReject: () {
-                              context.read<PropertiesCubit>().rejectBooking(
-                                booking.id.toString(),
-                              );
-                            },
-                          );
-                        },
+                      return RefreshIndicator(
+                        onRefresh: loadBookings,
+                        color: MyColor.deepBlue,
+                        child: ListView.builder(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          padding: const EdgeInsets.only(top: 10, bottom: 80),
+                          itemCount: filteredList.length,
+                          itemBuilder: (context, index) {
+                            final booking = filteredList[index];
+                            return BookingCard(
+                              booking: booking,
+                              // --- IMPLEMENTED ACTIONS ---
+                              onAccept: () {
+                                context.read<PropertiesCubit>().approveBooking(
+                                  booking.id.toString(),
+                                );
+                              },
+                              onReject: () {
+                                context.read<PropertiesCubit>().rejectBooking(
+                                  booking.id.toString(),
+                                );
+                              },
+                            );
+                          },
+                        ),
                       );
                     },
                   ),

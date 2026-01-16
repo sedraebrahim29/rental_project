@@ -87,71 +87,49 @@ class EditPropertyScreen extends StatelessWidget {
                         ),
                       ),
                       child: Center(
-                        // If we have new images, show the first one, else show add icon
-                        child: GestureDetector(
-                          onTap: cubit.pickImage,
-                          child: Builder(
-                            builder: (context) {
-                              //  which image to show
-                              ImageProvider? displayImage;
-                              bool hasImage = false;
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              const SizedBox(width: 20),
 
-                              //  1: Show the last NEW image picked
-                              if (cubit.newImages.isNotEmpty) {
-                                displayImage = FileImage(cubit.newImages.last);
-                                hasImage = true;
-                              }
-                              // 2: Show the first EXISTING image from API
-                              else if (cubit.existingImages.isNotEmpty) {
-                                displayImage = NetworkImage(
-                                  cubit.existingImages.first,
-                                );
-                                hasImage = true;
-                              }
+                              // 1. Existing Images (From API)
+                              ...cubit.existingImages.map(
+                                (url) => _buildImageThumbnail(
+                                  imageProvider: NetworkImage(url),
+                                  onDelete: () =>
+                                      cubit.removeExistingImage(url),
+                                ),
+                              ),
 
-                              return hasImage
-                                  ? Stack(
-                                      children: [
-                                        Container(
-                                          height: 120,
-                                          width: 120,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                              20,
-                                            ),
-                                            image: DecorationImage(
-                                              image:
-                                                  displayImage!, // Use the logic above
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        ),
-                                        const Positioned(
-                                          bottom: 5,
-                                          right: 5,
-                                          child: Icon(
-                                            Icons.add_a_photo,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  // Priority 3: Show Placeholder
-                                  : Container(
-                                      height: 100,
-                                      width: 100,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.2),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: const Icon(
-                                        Icons.add_a_photo,
+                              // 2. New Images (Local Files)
+                              ...cubit.newImages.map(
+                                (file) => _buildImageThumbnail(
+                                  imageProvider: FileImage(file),
+                                  onDelete: () => cubit.removeNewImage(file),
+                                ),
+                              ),
 
-                                        color: Colors.white,
-                                        size: 40,
-                                      ),
-                                    );
-                            },
+                              // 3. Add Button
+                              GestureDetector(
+                                onTap: cubit.pickImage,
+                                child: Container(
+                                  width: 100,
+                                  height: 100,
+                                  margin: const EdgeInsets.only(right: 10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: const Icon(
+                                    Icons.add_a_photo,
+                                    color: Colors.white,
+                                    size: 30,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 20),
+                            ],
                           ),
                         ),
                       ),
@@ -350,6 +328,34 @@ class EditPropertyScreen extends StatelessWidget {
           return Container(); // Fallback
         },
       ),
+    );
+  }
+
+  // Helper  for Images
+  Widget _buildImageThumbnail({
+    required ImageProvider imageProvider,
+    required VoidCallback onDelete,
+  }) {
+    return Stack(
+      children: [
+        Container(
+          height: 100,
+          width: 100,
+          margin: const EdgeInsets.only(right: 15),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+          ),
+        ),
+        Positioned(
+          top: -5,
+          right: 5,
+          child: IconButton(
+            icon: const Icon(Icons.cancel, color: Colors.red),
+            onPressed: onDelete,
+          ),
+        ),
+      ],
     );
   }
 

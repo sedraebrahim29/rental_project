@@ -41,7 +41,7 @@ class _FilterResultScreenState extends State<FilterResultScreen> {
                 ),
               ),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 170),
 
               Expanded(
                 child: BlocBuilder<FilterCubit, FilterState>(

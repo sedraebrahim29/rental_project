@@ -43,11 +43,44 @@ class _DetailsInfoState extends State<DetailsInfo> {
                 ),
               ),
 
-              Icon(
-                widget.apartment.isFavorite!
-                    ? Icons.favorite
-                    : Icons.favorite_border,
-                color: widget.apartment.isFavorite! ? Colors.red : Colors.grey,
+              BlocConsumer<FavoriteCubit, FavoriteState>(
+                listener: (context, state) {
+                  if (state is FavoriteUpdated &&
+                      state.propertyId == int.parse(widget.apartment.id!)) {
+                    setState(() {
+                      widget.apartment.isFavorite = state.isFavorite;
+                    });
+                  }
+                },
+
+                builder: (context, state) {
+                  final isLoading =
+                      state is FavoriteLoading &&
+                      state.propertyId == int.parse(widget.apartment.id!);
+                  return IconButton(
+                    onPressed: isLoading
+                        ? null
+                        : () {
+                            context.read<FavoriteCubit>().toggleFavorite(
+                              propertyId: int.parse(widget.apartment.id!),
+                            );
+                          },
+                    icon: isLoading
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : Icon(
+                            widget.apartment.isFavorite!
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            color: widget.apartment.isFavorite!
+                                ? Colors.red
+                                : Colors.grey,
+                          ),
+                  );
+                },
               ),
             ],
           ),

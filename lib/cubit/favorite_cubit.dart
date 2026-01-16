@@ -10,11 +10,11 @@ class FavoriteCubit extends Cubit<FavoriteState> {
 
   Future<void> toggleFavorite({required int propertyId}) async {
     emit(FavoriteLoading(propertyId));
-
+    final String token = await SecureStorage.getToken();
     try {
       final isFavorite = await service.toggleFavorite(
         propertyId: propertyId,
-        token: SecureStorage.getToken().toString(),
+        token: token,
       );
 
       emit(FavoriteUpdated(propertyId, isFavorite));

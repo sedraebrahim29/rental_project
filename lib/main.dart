@@ -70,9 +70,10 @@ class Rent extends StatelessWidget {
         BlocProvider(create: (context) => FavoriteCubit(FavoriteService())),
       ],
       child: MaterialApp(
-        theme: ThemeData(useMaterial3: false),
+        theme: ThemeData.light(),
+        darkTheme: ThemeData.dark(),
+        themeMode: ThemeMode.dark,
         debugShowCheckedModeBanner: false,
-
         locale: context
             .watch<LanguageCubit>()
             .state
@@ -80,17 +81,6 @@ class Rent extends StatelessWidget {
         supportedLocales: AppLocalizations.supportedLocales,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
 
-        //home:  SearchScreen()
-        // home:
-        // Scaffold(
-        //
-        //   body: Column(
-        //     children: [
-        //       SizedBox(height: 80,),
-        //       BookingBottomSheet(),
-        //     ],
-        //   ),
-        // )
         home: LoginView(),
 
         initialRoute: '/login',
