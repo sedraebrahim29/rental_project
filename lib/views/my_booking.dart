@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rent/data/colors.dart';
+import 'package:rent/l10n/app_localizations.dart';
 import 'package:rent/models/booking_model.dart';
 import 'package:rent/providers/booking_provider.dart';
 import 'package:rent/widgets/booking_card.dart';
@@ -12,6 +13,7 @@ class MyBooking extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final t = AppLocalizations.of(context)!;//للترجمة
     // Watch the selected tab state
     final selectedStatus = ref.watch(selectedBookingStatusProvider);
     // Watch the API data state (Loading / Data / Error)
@@ -30,10 +32,10 @@ class MyBooking extends ConsumerWidget {
         child: SafeArea(
           child: Column(
             children: [
-              const Padding(
+               Padding(
                 padding: EdgeInsets.only(top: 20, bottom: 10),
                 child: Text(
-                  "My Bookings",
+                  t.my_booking,
                   style: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
@@ -88,7 +90,7 @@ class MyBooking extends ConsumerWidget {
                         const Icon(Icons.error_outline, color: Colors.red, size: 40),
                         const SizedBox(height: 10),
                         Text(
-                          "Error loading bookings:\n$error",
+                          "${t.error_loading_bookings}\n$error",
                           textAlign: TextAlign.center,
                           style: const TextStyle(color: MyColor.deepBlue),
                         ),
@@ -97,7 +99,7 @@ class MyBooking extends ConsumerWidget {
                             // Retry logic: Refresh the provider
                             ref.refresh(bookingListProvider);
                           },
-                          child: const Text("Try Again"),
+                          child:  Text(t.try_again),
                         )
                       ],
                     ),
@@ -106,8 +108,8 @@ class MyBooking extends ConsumerWidget {
                   // 3. Success State
                   data: (bookings) {
                     if (bookings.isEmpty) {
-                      return const Center(
-                        child: Text("No bookings found.", style: TextStyle(color: MyColor.deepBlue)),
+                      return  Center(
+                        child: Text(t.no_bookings, style: TextStyle(color: MyColor.deepBlue)),
                       );
                     }
                     return ListView.builder(

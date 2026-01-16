@@ -13,6 +13,7 @@ class FilterCubit extends Cubit<FilterState> {
     int? governorateId,
     int? cityId,
     List<int>? amenities,
+    required String lang,
   }) async {
     emit(FilterLoading());
     try {
@@ -31,6 +32,7 @@ class FilterCubit extends Cubit<FilterState> {
       final result = await FilterService().filterProperties(
         body: body,
         token: token,
+        lang: lang,
       );
 
       if (result.isEmpty) {

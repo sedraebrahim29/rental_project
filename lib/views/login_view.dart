@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rent/cubit/language_cubit/language_cubit.dart';
 import 'package:rent/cubit/login_cubit/login_cubit.dart';
 import 'package:rent/cubit/login_cubit/login_state.dart';
+import 'package:rent/l10n/app_localizations.dart';
 import 'package:rent/models/textfield_model.dart';
 import 'package:rent/views/homeScreenAndProperties/home_screen.dart';
 import 'package:rent/views/signup_view.dart';
@@ -21,15 +23,18 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
+
+    final t = AppLocalizations.of(context)!;//للترجمة
+
     final phoneField = TextFieldModel(
-      text: 'Phone Number',
-      hintText: 'Enter your phone number',
+      text: t.phone_number,
+      hintText: t.enter_phone_num,
       controller: phoneController,
     );
 
     final passwordField = TextFieldModel(
-      text: 'Password',
-      hintText: 'Enter your password',
+      text: t.password,
+      hintText:t.enter_pass,
       controller: passwordController,
       isPassword: true,
     );
@@ -85,15 +90,17 @@ class _LoginViewState extends State<LoginView> {
 
                     return GestureDetector(
                       onTap: () async {
+                        final lang = context.read<LanguageCubit>().state.languageCode;
                         //trigger cubit
                         context.read<LoginCubit>().login(
                           phone: phoneController.text,
                           password: passwordController.text,
+                          lang: lang
                         );
 
                       },
-                      child: const Text(
-                        'Login',
+                      child: Text(
+                        t.login,
                         style: TextStyle(
                           fontSize: 25,
                           fontFamily: 'DM Serif Display',
@@ -108,12 +115,12 @@ class _LoginViewState extends State<LoginView> {
 
             const SizedBox(height: 30),
 
-            /// SIGN UP
+            // SIGN UP
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  'Don\'t you have an account?',
+                 Text(
+                  t.dontHaveAccount,
                   style: TextStyle(
                     color: Color(0xff5B7CA9),
                     fontFamily: 'DM Serif Display',
@@ -127,8 +134,8 @@ class _LoginViewState extends State<LoginView> {
                       MaterialPageRoute(builder: (_) => const SignupView()),
                     );
                   },
-                  child: const Text(
-                    ' Sing up',
+                  child: Text(
+                    t.signup,
                     style: TextStyle(
                       fontSize: 23,
                       fontFamily: 'DM Serif Display',

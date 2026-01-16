@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:rent/l10n/app_localizations.dart';
 import '../../cubit/property_cubit.dart';
 import '../../cubit/property_state.dart';
 import '../../data/colors.dart';
@@ -64,15 +65,16 @@ class _EditPropertyScreenState extends State<EditPropertyScreen> {
       });
     }
   }
-
+  late final t = AppLocalizations.of(context)!;//للترجمة
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: MyColor.offWhite,
       appBar: AppBar(
         elevation: 0,
-        title: const Text(
-          "Edit Property",
+        title:  Text(
+          t.edit_property,
           style: TextStyle(
             color: MyColor.offWhite,
             fontWeight: FontWeight.bold,
@@ -145,27 +147,27 @@ class _EditPropertyScreenState extends State<EditPropertyScreen> {
                     ),
                     const SizedBox(height: 15),
 
-                    _buildEditField("Price", priceController, "/per mon"),
+                    _buildEditField(t.price, priceController, t.per_mon),
                     const SizedBox(height: 15),
 
                     Row(
                       children: [
                         Expanded(
-                          child: _buildEditField("Beds", bedsController, ""),
+                          child: _buildEditField(t.beds, bedsController, ""),
                         ),
                         const SizedBox(width: 15),
                         Expanded(
-                          child: _buildEditField("Baths", bathsController, ""),
+                          child: _buildEditField(t.baths, bathsController, ""),
                         ),
                       ],
                     ),
                     const SizedBox(height: 15),
 
-                    _buildEditField("Area", areaController, "m2"),
+                    _buildEditField(t.area, areaController, "m2"),
                     const SizedBox(height: 15),
 
-                    const Text(
-                      "Amenities",
+                    Text(
+                      t.amenities,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -232,7 +234,7 @@ class _EditPropertyScreenState extends State<EditPropertyScreen> {
                     ),
                     const SizedBox(height: 20),
 
-                    _buildEditField("Address details", addressController, ""),
+                    _buildEditField(t.address_details, addressController, ""),
                     const SizedBox(height: 30),
 
                     // Action Buttons Row
@@ -261,8 +263,8 @@ class _EditPropertyScreenState extends State<EditPropertyScreen> {
                                 borderRadius: BorderRadius.circular(30),
                               ),
                             ),
-                            child: const Text(
-                              "Save",
+                            child: Text(
+                              t.save,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
@@ -327,20 +329,20 @@ class _EditPropertyScreenState extends State<EditPropertyScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text("Delete Property"),
-        content: const Text("Are you sure?"),
+        title:  Text(t.delete_property),
+        content:  Text(t.are_you_sure),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text("Cancel"),
+            child: Text(t.cancel),
           ),
           TextButton(
             onPressed: () {
               context.read<PropertyCubit>().deleteProperty(widget.property.id!);
               Navigator.pop(ctx);
             },
-            child: const Text(
-              "Delete",
+            child: Text(
+              t.delete,
               style: TextStyle(color: MyColor.darkRed),
             ),
           ),

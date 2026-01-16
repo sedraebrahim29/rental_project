@@ -7,13 +7,17 @@ import '../../service/login_service.dart';
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit() : super(LoginInitial());
 
-  Future<void> login({required String phone, required String password}) async {
+  Future<void> login({
+    required String phone,
+    required String password,
+    required String lang,}) async {
     emit(LoginLoading());
 
     try {
      final token =  await LoginService().loginService(
         phone: phone,
         password: password,
+       lang: lang,
       );
       await SecureStorage.storeToken(token);
       emit(LoginSuccess());

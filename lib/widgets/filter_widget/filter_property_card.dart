@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rent/data/colors.dart';
+import 'package:rent/l10n/app_localizations.dart';
 import 'package:rent/models/filter_model.dart';
 
 class FilteredPropertyCard extends StatelessWidget {
@@ -14,6 +15,7 @@ class FilteredPropertyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;//للترجمة
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
@@ -55,7 +57,7 @@ class FilteredPropertyCard extends StatelessWidget {
                   const SizedBox(height: 6),
 
                   Text(
-                    '\$${property.price} / per mon',
+                    '\$${property.price} /${t.per_mon}',
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,

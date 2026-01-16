@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rent/l10n/app_localizations.dart';
 
 import '../../cubit/add_property_cubit.dart';
 import '../../cubit/add_property_state.dart';
@@ -10,6 +11,7 @@ class AddPropertyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;//للترجمة
     // 1. Initialize Cubit and Load Data
     return BlocProvider(
       create: (context) => AddPropertyCubit()..loadInitialData(),
@@ -17,7 +19,7 @@ class AddPropertyScreen extends StatelessWidget {
         listener: (context, state) {
           if (state is AddPropertySuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Property Added Successfully!")),
+              SnackBar(content: Text(t.property_added_success)),
             );
             Navigator.pop(context); // Close screen
           } else if (state is AddPropertyError) {
@@ -56,8 +58,8 @@ class AddPropertyScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                'Add Property',
+                               Text(
+                                t.add_property,
                                 style: TextStyle(
                                   fontSize: 28,
                                   fontWeight: FontWeight.bold,
@@ -132,20 +134,20 @@ class AddPropertyScreen extends StatelessWidget {
                                   // DROPDOWNS
                                   _row(
                                     _Dropdown(
-                                      'Governorate',
+                                      t.governorate,
                                       cubit.selectedGovId,
                                       cubit.governorates, // Pass the List<Map>
                                           (v) => cubit.changeGovernorate(v),
                                     ),
                                     _Dropdown(
-                                      'City',
+                                      t.city,
                                       cubit.selectedCityId,
                                       cubit.cities, // Pass the List<Map>
                                           (v) => cubit.selectedCityId = v,
                                     ),
                                   ),
                                   _Dropdown(
-                                    'Category',
+                                    t.category,
                                     cubit.selectedCatId,
                                     cubit.categories, // Pass the List<Map>
                                         (v) => cubit.selectedCatId = v,
@@ -153,7 +155,7 @@ class AddPropertyScreen extends StatelessWidget {
                                   const SizedBox(height: 15),
 
                                   // AMENITIES CHIPS
-                                  const Text("Amenities", style: TextStyle(fontWeight: FontWeight.bold, color: MyColor.deepBlue)),
+                                   Text(t.amenities, style: TextStyle(fontWeight: FontWeight.bold, color: MyColor.deepBlue)),
                                   const SizedBox(height: 8),
                                   Wrap(
                                     spacing: 8.0,
@@ -182,14 +184,14 @@ class AddPropertyScreen extends StatelessWidget {
 
                                   // TEXT INPUTS
                                   _row(
-                                    _Input('Area', cubit.areaCtrl),
-                                    _Input('Price', cubit.priceCtrl),
+                                    _Input(t.area, cubit.areaCtrl),
+                                    _Input(t.price, cubit.priceCtrl),
                                   ),
                                   _row(
-                                    _Input('Beds', cubit.bedsCtrl),
-                                    _Input('Baths', cubit.bathsCtrl),
+                                    _Input(t.beds, cubit.bedsCtrl),
+                                    _Input(t.baths, cubit.bathsCtrl),
                                   ),
-                                  _Input('Address Details', cubit.addressCtrl),
+                                  _Input(t.address_details, cubit.addressCtrl),
                                   const SizedBox(height: 24),
 
                                   // SUBMIT BUTTON
@@ -206,7 +208,7 @@ class AddPropertyScreen extends StatelessWidget {
                                           : cubit.submitProperty,
                                       child: state is AddPropertySubmitting
                                           ? const CircularProgressIndicator(color: Colors.white)
-                                          : const Text('Add Property', style: TextStyle(color: Colors.white, fontSize: 18)),
+                                          :  Text(t.add_property, style: TextStyle(color: Colors.white, fontSize: 18)),
                                     ),
                                   ),
                                 ],

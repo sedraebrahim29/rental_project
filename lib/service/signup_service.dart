@@ -13,9 +13,12 @@ class SignupService {
     required String passwordConfirmation,
     required File image,
     required File idImage,
+    required String lang,
   }) async {
     final uri = Uri.parse('http://192.168.2.187:8000/api/register');
     final request = http.MultipartRequest('POST', uri);
+
+    request.headers['Accept-Language'] = lang;// هون عم ضيف اللغة
 
     request.fields.addAll({
       'first_name': firstName,

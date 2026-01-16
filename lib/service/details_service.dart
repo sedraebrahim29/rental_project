@@ -6,8 +6,11 @@ class DetailsService {
 
   static const String baseUrl = 'http://127.0.0.1:8000/api';
 
-  Future<PropertyModel> getDetails({required int id,required String token,}) async {
-    final response = await Api().get(
+  Future<PropertyModel> getDetails({
+    required int id,
+    required String token,
+    required String lang}) async {
+    final response = await Api(languageCode: lang).get(
       url: '$baseUrl/properties/$id',
       token: token,
     );

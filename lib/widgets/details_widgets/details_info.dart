@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rent/cubit/booking_cubit/booking_cubit.dart';
+import 'package:rent/cubit/language_cubit/language_cubit.dart';
 import 'package:rent/data/colors.dart';
+import 'package:rent/l10n/app_localizations.dart';
 
 import 'package:rent/models/property_model.dart';
 import 'package:rent/widgets/details_widgets/booking_bottom_sheet.dart';
@@ -17,6 +19,7 @@ class DetailsInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;//للترجمة
     return Padding(
       padding: const EdgeInsets.only(left: 40, right: 20),
       child: Column(
@@ -75,7 +78,7 @@ class DetailsInfo extends StatelessWidget {
 
 // ADDRESS DETAILS
           Text(
-            'Address details : ${apartment.address}',
+            '${t.address_details} : ${apartment.address}',
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
@@ -87,7 +90,7 @@ class DetailsInfo extends StatelessWidget {
 
           //price
           Text(
-            '\$${apartment.price}  per night',
+            '\$${apartment.price}  ${t.per_night}',
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
@@ -102,21 +105,21 @@ class DetailsInfo extends StatelessWidget {
           Row(
             children: [
 
-              Text('bedrooms : ${apartment.beds}',
+              Text('${t.beds} : ${apartment.beds}',
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
                   color: MyColor.deepBlue,
                 ),),
               const SizedBox(width: 20),
-              Text('bathrooms : ${apartment.baths}',
+              Text('${t.baths} : ${apartment.baths}',
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
                   color: MyColor.deepBlue,
                 ),) ,
               const SizedBox(width: 20),
-              Text('area : ${apartment.area}',
+              Text('${t.area} : ${apartment.area}',
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
@@ -135,7 +138,7 @@ class DetailsInfo extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(bottom: 100),
           child: Text(
-          'Amenities :',
+          t.amenities,
           style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.bold,
@@ -198,17 +201,21 @@ class DetailsInfo extends StatelessWidget {
                     backgroundColor: Colors.transparent,
 
                     // provide cubit & trigger cubit
-                    builder: (context) => BlocProvider(
-                      create: (context) => BookingCubit()
-                        ..loadInitialData(int.parse(apartment.id!)),
-                      child: BookingBottomSheet(
-                        apartmentId: int.parse(apartment.id!),
-                        pricePerNight: apartment.price,
-                      ),
-                    ),
+                    //get request(loadInitialData)
+                    builder: (context){
+                      final lang = context.read<LanguageCubit>().state.languageCode;
+                      return BlocProvider(
+                        create: (context) => BookingCubit()
+                          ..loadInitialData(int.parse(apartment.id!),lang),
+                        child: BookingBottomSheet(
+                          apartmentId: int.parse(apartment.id!),
+                          pricePerNight: apartment.price,
+                        ),
+                      );
+                    },
                   );
                 },
-                child: const Text('BOOK', style: TextStyle(fontSize: 20,
+                child:  Text(t.book, style: TextStyle(fontSize: 20,
                 )),
               ),
             ),

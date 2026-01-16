@@ -3,8 +3,10 @@ import 'package:rent/helper/api.dart';
 import 'package:rent/models/profile_model.dart';
 
 class ProfileService {
-  Future<ProfileModel> getProfile({required String token}) async {
-    final response = await Api().get(
+  Future<ProfileModel> getProfile({
+    required String token,
+    required String lang,}) async {
+    final response = await Api(languageCode: lang).get(
       url: 'http://127.0.0.1:8000/api/users/showProfile',
       token: token,
     );

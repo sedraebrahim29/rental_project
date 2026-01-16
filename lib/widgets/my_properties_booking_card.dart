@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:rent/l10n/app_localizations.dart';
 import '../data/colors.dart';
 import '../models/my_properties_booking_model.dart';
 
@@ -19,6 +20,7 @@ class BookingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;//للترجمة
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(16),
@@ -60,9 +62,9 @@ class BookingCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildActionButton('accept', MyColor.deepBlue, onAccept),
+              _buildActionButton(t.accept, MyColor.deepBlue, onAccept),
               const SizedBox(width: 16),
-              _buildActionButton('rejected', Colors.red.shade900, onReject),
+              _buildActionButton(t.rejected, Colors.red.shade900, onReject),
             ],
           ),
         ],

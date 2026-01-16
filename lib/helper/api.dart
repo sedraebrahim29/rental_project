@@ -3,12 +3,17 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Api {
+  final String languageCode;
+  Api({required this.languageCode});
+
   Future<http.Response> post({
     required String url,
     required dynamic body,
     String? token,
   }) async {
-    Map<String, String> headers = {'Content-Type': 'application/json'};
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Accept-Language': languageCode,};
 
     if (token != null) {
       headers['Authorization'] = 'Bearer $token';
@@ -25,6 +30,7 @@ class Api {
   Future<http.Response> get({required String url, String? token}) async {
     final headers = {
       'Content-Type': 'application/json',
+      'Accept-Language': languageCode,
       if (token != null) 'Authorization': 'Bearer $token',
     };
 
@@ -34,6 +40,7 @@ class Api {
   Future<http.Response> patch({required String url, String? token}) async {
     final headers = {
       'Content-Type': 'application/json',
+      'Accept-Language': languageCode,
       if (token != null) 'Authorization': 'Bearer $token',
     };
 

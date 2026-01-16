@@ -1,27 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:rent/categories/details_category.dart';
 import 'package:rent/cubit/details_cubit/details_cubit.dart';
 import 'package:rent/cubit/filter_cubit/filter_cubit.dart';
 import 'package:rent/cubit/filter_cubit/filter_meta_cubit.dart';
+import 'package:rent/cubit/language_cubit/language_cubit.dart';
 import 'package:rent/cubit/login_cubit/login_cubit.dart';
 import 'package:rent/cubit/profile_cubit/profile_cubit.dart';
 import 'package:rent/cubit/signup_cubit/signup_cubit.dart';
+import 'package:rent/l10n/app_localizations.dart';
 import 'package:rent/models/profile_model.dart';
 import 'package:rent/models/property_model.dart';
 import 'package:rent/views/homeScreenAndProperties/home_screen.dart';
 import 'package:rent/views/homeScreenAndProperties/profile.dart';
 import 'package:rent/views/homeScreenAndProperties/search_screen.dart';
 import 'package:rent/views/login_view.dart';
+import 'package:rent/views/setting_screen.dart';
 import 'package:rent/views/signup_view.dart';
 import 'package:rent/widgets/details_widgets/booking_bottom_sheet.dart';
 
 import 'cubit/property_cubit.dart';
 
 void main() {
-  runApp(ProviderScope(child: const Rent()));
+  runApp( MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => LanguageCubit()),
+      ],
+      child: const Rent()));
 }
 
 class Rent extends StatelessWidget {
@@ -32,27 +40,32 @@ class Rent extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => PropertyCubit()), // شغل زميلك
-        BlocProvider(create: (context) => LoginCubit()),    // شغلك
-        BlocProvider(create: (context) => SignupCubit()),   // شغلك
+        BlocProvider(create: (context) => LoginCubit()), // شغلك
+        BlocProvider(create: (context) => SignupCubit()), // شغلك
         BlocProvider(create: (context) => DetailsCubit()),
         BlocProvider(create: (context) => FilterCubit()),
-        BlocProvider(create: (context) => FilterMetaCubit()..loadInitialData()),
-        BlocProvider(create: (context) => ProfileCubit()..getProfile()),
+        BlocProvider(create: (context) => FilterMetaCubit()..loadInitialData( context.read<LanguageCubit>().state.languageCode,)),
+        BlocProvider(create: (context) => ProfileCubit()),
+
+
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-home: LoginView(),
-//home:  SearchScreen()
-// home:
-// Scaffold(
-//
-//   body: Column(
-//     children: [
-//       SizedBox(height: 80,),
-//       BookingBottomSheet(),
-//     ],
-//   ),
-// )
+        locale: context.watch<LanguageCubit>().state.locale, //  يخلي اللغة حسب الجهاز
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        home: SettingsScreen(),
+        //home:  SearchScreen()
+        // home:
+        // Scaffold(
+        //
+        //   body: Column(
+        //     children: [
+        //       SizedBox(height: 80,),
+        //       BookingBottomSheet(),
+        //     ],
+        //   ),
+        // )
 
         // home: Profile( prof: ProfileModel(
         //  firstName: 'sedra',
@@ -62,7 +75,6 @@ home: LoginView(),
         //   properties: 3,
         //   balance: 12,
         //     image: 'http://127.0.0.1:8000/api/avatar/2'), ),
-
 
         // home: DetailsCategory(
         //   apartment: PropertyModel(
@@ -81,7 +93,6 @@ home: LoginView(),
         //
         //   ), apartmentId: 1,
         // ),
-
 
         // initialRoute: '/login',
         // routes: {

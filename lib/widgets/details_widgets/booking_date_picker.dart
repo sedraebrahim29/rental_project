@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rent/data/colors.dart';
+import 'package:rent/l10n/app_localizations.dart';
 
 class BookingDatePicker extends StatelessWidget {
    BookingDatePicker({ required this.controller, required this.onPicked,});
@@ -9,6 +10,7 @@ class BookingDatePicker extends StatelessWidget {
 
    @override
   Widget build(BuildContext context) {
+     final t = AppLocalizations.of(context)!;//للترجمة
     return Container(
 width: 300,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
@@ -20,9 +22,9 @@ width: 300,
       child: TextField(
         controller: controller,
         readOnly: true,
-        decoration: const InputDecoration(
+        decoration:  InputDecoration(
           border: InputBorder.none,
-          hintText: 'Day :    Mon :    Year : ',
+          hintText: t.date_hint,
           hintStyle: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rent/cubit/signup_cubit/signup_cubit.dart';
+import 'package:rent/l10n/app_localizations.dart';
 import 'package:rent/models/textfield_model.dart';
 import 'package:rent/widgets/login_signup_widgets/textfieldwidget.dart';
 
@@ -20,22 +21,23 @@ class Step2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;//للترجمة
     final phone = TextFieldModel(
-      text: 'Phone Number',
-      hintText: 'Enter your phone number',
+      text: t.phone_number,
+      hintText: t.enter_phone_num,
       controller: phoneController,
     );
 
     final password = TextFieldModel(
-      text: 'Your password',
-      hintText: 'Enter your password',
+      text: t.password,
+      hintText: t.enter_pass,
       controller: passwordController,
       isPassword: true,
     );
 
     final confirmPassword = TextFieldModel(
-      text: 'Password confirmation',
-      hintText: 'Enter your password again',
+      text: t.pass_confirm,
+      hintText: t.enter_pass_again,
       controller: confirmPasswordController,
       isPassword: true,
     );
@@ -71,8 +73,8 @@ class Step2 extends StatelessWidget {
 
                 onNext();
               },
-              child: const Text(
-                'Next',
+              child:  Text(
+                t.next,
                 style: TextStyle(
                   fontSize: 25,
                   color: Colors.white,

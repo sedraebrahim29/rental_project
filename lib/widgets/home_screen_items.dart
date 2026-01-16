@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rent/categories/details_category.dart';
 import 'package:rent/cubit/details_cubit/details_cubit.dart';
+import 'package:rent/l10n/app_localizations.dart';
 import 'package:rent/models/property_model.dart';
 
 import '../data/colors.dart';
@@ -16,6 +17,7 @@ class HomeScreenItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;//للترجمة
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -107,7 +109,7 @@ class HomeScreenItems extends StatelessWidget {
 
                     // PRICE
                     Text(
-                      '\$${apartment.price} / per mon',
+                      '\$${apartment.price} / ${t.per_mon}',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,

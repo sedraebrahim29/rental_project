@@ -6,8 +6,11 @@ import 'package:rent/models/login_model.dart';
 
 class LoginService{
 
-  Future<String> loginService({required String phone , required String password}) async {
-    final response = await Api().post(
+  Future<String> loginService({
+    required String phone ,
+    required String password,
+    required String lang,}) async {
+    final response = await Api(languageCode: lang).post(
       url: 'http://192.168.2.187:8000/api/login',
         body:
         {'phone': phone,

@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:rent/l10n/app_localizations.dart';
 
 import '../../data/colors.dart';
 import '../../models/my_properties_booking_model.dart';
@@ -54,6 +55,7 @@ class _MyPropertiesBookingScreenState extends State<MyPropertiesBookingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;//للترجمة
     // Filter list based on selection
     final filteredList = _allBookings.where((b) => b.status == _selectedStatus).toList();
 
@@ -78,10 +80,10 @@ class _MyPropertiesBookingScreenState extends State<MyPropertiesBookingScreen> {
                     icon: const Icon(Icons.arrow_back, color: Colors.white),
                     onPressed: () => Navigator.pop(context),
                   ),
-                  const Expanded(
+                  Expanded(
                     child: Center(
                       child: Text(
-                        'My Properties Booking',
+                        t.my_properties_booking,
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
@@ -108,9 +110,9 @@ class _MyPropertiesBookingScreenState extends State<MyPropertiesBookingScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildFilterTab("pending", BookingStatus.pending),
-                  _buildFilterTab("current", BookingStatus.current),
-                  _buildFilterTab("update-request", BookingStatus.updateRequest),
+                  _buildFilterTab(t.pending, BookingStatus.pending),
+                  _buildFilterTab(t.current, BookingStatus.current),
+                  _buildFilterTab(t.update_request, BookingStatus.updateRequest),
                 ],
               ),
             ),
@@ -120,7 +122,7 @@ class _MyPropertiesBookingScreenState extends State<MyPropertiesBookingScreen> {
             /// BOOKING LIST
             Expanded(
               child: filteredList.isEmpty
-                  ? const Center(child: Text("No bookings found", style: TextStyle(color: Colors.white)))
+                  ?  Center(child: Text(t.no_bookings_found, style: TextStyle(color: Colors.white)))
                   : ListView.builder(
                 padding: const EdgeInsets.only(top: 10, bottom: 80),
                 itemCount: filteredList.length,

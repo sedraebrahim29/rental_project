@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' hide State;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rent/cubit/add_property_cubit.dart';
+import 'package:rent/l10n/app_localizations.dart';
 import 'package:rent/views/homeScreenAndProperties/add_property.dart';
 
 import '../../cubit/properties/properties_cubit.dart';
@@ -15,6 +16,7 @@ class MyPropertiesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;//للترجمة
     return BlocProvider(
       create: (context) => PropertiesCubit()..getProperties(),
       child: Scaffold(
@@ -32,8 +34,8 @@ class MyPropertiesScreen extends StatelessWidget {
               );
             },
             backgroundColor: MyColor.deepBlue,
-            label: const Text(
-              'My Properties Booking',
+            label: Text(
+             t.my_properties_booking,
               style: TextStyle(
                 color: MyColor.offWhite,
                 fontWeight: FontWeight.bold,
@@ -55,8 +57,8 @@ class MyPropertiesScreen extends StatelessWidget {
                 const SizedBox(height: 50),
 
                 /// TITLE
-                const Text(
-                  'My Properties',
+                Text(
+                  t.my_properties,
                   style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.bold,
@@ -88,8 +90,8 @@ class MyPropertiesScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(25),
                     ),
                   ),
-                  child: const Text(
-                    'Add',
+                  child:  Text(
+                    t.add,
                     style: TextStyle(
                       color: MyColor.offWhite,
                       fontWeight: FontWeight.bold,
@@ -119,9 +121,9 @@ class MyPropertiesScreen extends StatelessWidget {
 
                         case State.success:
                           if (state.properties.isEmpty) {
-                            return const Center(
+                            return Center(
                               child: Text(
-                                'No properties yet',
+                                t.no_properties_yet,
                                 style: TextStyle(color: Colors.white),
                               ),
                             );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:rent/l10n/app_localizations.dart';
 import '../data/colors.dart';
 import '../models/booking_model.dart';
 
@@ -11,6 +12,7 @@ class BookingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;//للترجمة
     final dateFormat = DateFormat('dd-MM-yyyy');
 
     return Container(
@@ -33,13 +35,13 @@ class BookingCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(booking.property.ownerName, style: const TextStyle(fontWeight: FontWeight.bold, color: MyColor.deepBlue)),
-                    Text("From: ${dateFormat.format(booking.fromDate)}", style: const TextStyle(fontSize: 12)),
-                    Text("To: ${dateFormat.format(booking.toDate)}", style: const TextStyle(fontSize: 12)),
-                    Text("Total: \$${booking.totalPrice}", style: const TextStyle(fontWeight: FontWeight.bold, color: MyColor.darkRed)),
+                    Text("${t.from}: ${dateFormat.format(booking.fromDate)}", style: const TextStyle(fontSize: 12)),
+                    Text("${t.to}: ${dateFormat.format(booking.toDate)}", style: const TextStyle(fontSize: 12)),
+                    Text("${t.total_price}: \$${booking.totalPrice}", style: const TextStyle(fontWeight: FontWeight.bold, color: MyColor.darkRed)),
                   ],
                 ),
               ),
-              _buildActionButton(),
+              _buildActionButton(t),
             ],
           ),
           if (booking.statusMessage != null) ...[
@@ -51,10 +53,10 @@ class BookingCard extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButton() {
-    String label = "Edit";
-    if (booking.status == BookingStatus.current) label = "Cancel";
-    if (booking.status == BookingStatus.ended) label = "Rate";
+  Widget _buildActionButton(AppLocalizations t) {
+    String label = t.edit;
+    if (booking.status == BookingStatus.current) label = t.cancel;
+    if (booking.status == BookingStatus.ended) label = t.rate;
 
     return ElevatedButton(
       onPressed: onAction,

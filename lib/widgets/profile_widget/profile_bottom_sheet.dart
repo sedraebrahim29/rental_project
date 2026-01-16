@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rent/cubit/language_cubit/language_cubit.dart';
 import 'package:rent/cubit/profile_cubit/topup_cubit.dart';
 import 'package:rent/cubit/profile_cubit/topup_state.dart';
 
 import 'package:rent/data/colors.dart';
+import 'package:rent/l10n/app_localizations.dart';
 
 class ProfileBottomSheet extends StatefulWidget {
   const ProfileBottomSheet({super.key});
@@ -17,6 +19,7 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;//للترجمة
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
     // provide + integrate
     return BlocProvider(
@@ -28,7 +31,7 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
               if (state is TopUpSuccess) {
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Balance topped up successfully")),
+                   SnackBar(content: Text(t.balance_success)),
                 );
               }
 
@@ -51,8 +54,8 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
                   children: [
                     const SizedBox(height: 40),
 
-                    const Text(
-                      'Enter the amount you would like to topped up :',
+                     Text(
+                      t.enter_amount,
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
@@ -115,15 +118,16 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
 
                         if (value == null || value <= 0) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Enter valid amount")),
+                            SnackBar(content: Text(t.enter_valid_amount)),
                           );
                           return;
                         }
+                        final lang = context.read<LanguageCubit>().state.languageCode;
                         //trigger
-                        context.read<TopUpCubit>().topUp(value);
+                        context.read<TopUpCubit>().topUp(value,lang);
                       },
-                      child: const Text(
-                        'Submit',
+                      child:  Text(
+                        t.submit,
                         style: TextStyle(fontSize: 17, color: Colors.white),
                       ),
                     ),

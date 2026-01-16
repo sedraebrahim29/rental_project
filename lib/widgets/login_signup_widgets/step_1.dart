@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rent/l10n/app_localizations.dart';
 import 'package:rent/models/textfield_model.dart';
 import 'package:rent/widgets/login_signup_widgets/textfieldwidget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,15 +21,16 @@ class Step1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;//للترجمة
     final firstName = TextFieldModel(
-      text: 'Your first name',
-      hintText: 'Enter your first name',
+      text: t.your_first_name,
+      hintText: t.enter_first_name,
       controller: firstNameController,
     );
 
     final lastName = TextFieldModel(
-      text: 'Your last name',
-      hintText: 'Enter your last name',
+      text: t.your_last_name,
+      hintText: t.enter_last_name,
       controller: lastNameController,
     );
 
@@ -40,10 +42,10 @@ class Step1 extends StatelessWidget {
         const SizedBox(height: 25),
 
         // Birthday label
-        const Padding(
+         Padding(
           padding: EdgeInsets.only(right: 200, bottom: 5),
           child: Text(
-            'Your birthday',
+            t.your_birthday,
             style: TextStyle(
               fontSize: 17,
               fontFamily: 'DM Serif Display',
@@ -61,7 +63,7 @@ class Step1 extends StatelessWidget {
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,
-              hintText: 'Day / Month / Year',
+              hintText: t.date_hint,
               hintStyle: const TextStyle(
                 fontFamily: 'DM Serif Display',
                 fontSize: 17,
@@ -116,8 +118,8 @@ class Step1 extends StatelessWidget {
 
                 onNext();
               },
-              child: const Text(
-                'Next',
+              child:  Text(
+                t.next,
                 style: TextStyle(
                   fontSize: 25,
                   color: Colors.white,
