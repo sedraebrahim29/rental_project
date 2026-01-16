@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rent/cubit/booking_cubit/booking_cubit.dart';
 import 'package:rent/cubit/booking_cubit/booking_state.dart';
 import 'package:rent/cubit/language_cubit/language_cubit.dart';
-import 'package:rent/data/colors.dart';
 import 'package:rent/l10n/app_localizations.dart';
 import 'package:rent/widgets/details_widgets/booked_date_display.dart';
 import 'package:rent/widgets/details_widgets/booking_date_picker.dart';
@@ -52,12 +51,14 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;//للترجمة
+    final theme = Theme.of(context);
+
     return BlocListener<BookingCubit, BookingState>(
       listener: (context, state) {
         if (state is BookingSuccess) {
           Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
-             SnackBar(content: Text(t.booking_success)),
+            SnackBar(content: Text(t.booking_success)),
           );
         }
 
@@ -69,9 +70,9 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
       },
       child: Container(
         height: MediaQuery.of(context).size.height * 0.6,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(80)),
+        decoration: BoxDecoration(
+          color: theme.scaffoldBackgroundColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(80)),
         ),
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -81,10 +82,10 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
             Center(
               child: Text(
                 t.this_apartment_booked,
-                style: TextStyle(
+                style: theme.textTheme.titleMedium?.copyWith(
                   fontSize: 17,
                   fontWeight: FontWeight.bold,
-                  color: MyColor.deepBlue,
+                  color: theme.colorScheme.primary,
                 ),
               ),
             ),
@@ -120,10 +121,10 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
 
                       Text(
                         t.choose_available_date,
-                        style: TextStyle(
+                        style: theme.textTheme.bodyMedium?.copyWith(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: MyColor.deepBlue,
+                          color: theme.colorScheme.primary,
                         ),
                       ),
 
@@ -133,10 +134,10 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
                         children: [
                           Text(
                             t.from,
-                            style: TextStyle(
+                            style: theme.textTheme.bodyMedium?.copyWith(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: MyColor.deepBlue,
+                              color: theme.colorScheme.primary,
                             ),
                           ),
                           BookingDatePicker(
@@ -152,10 +153,10 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
                         children: [
                           Text(
                             t.to,
-                            style: TextStyle(
+                            style: theme.textTheme.bodyMedium?.copyWith(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: MyColor.deepBlue,
+                              color: theme.colorScheme.primary,
                             ),
                           ),
                           BookingDatePicker(
@@ -169,10 +170,10 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
 
                       Text(
                         '${t.total_price} : $totalPrice \$',
-                        style: TextStyle(
+                        style: theme.textTheme.bodyMedium?.copyWith(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: MyColor.deepBlue,
+                          color: theme.colorScheme.primary,
                         ),
                       ),
 
@@ -187,9 +188,8 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
                             selectedCityId = null;
                             final lang = context.read<LanguageCubit>().state.languageCode;
                             context.read<BookingCubit>().loadCities(
-                              selectedGovernorateId!,
-                              lang
-
+                                selectedGovernorateId!,
+                                lang
                             );
                           },
                         ),
@@ -223,7 +223,8 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
                 height: 55,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: MyColor.deepBlue,
+                    backgroundColor: theme.colorScheme.primary,
+                    foregroundColor: theme.colorScheme.onPrimary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(28),
                     ),
@@ -232,7 +233,7 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
                     if (selectedGovernorateId == null ||
                         selectedCityId == null) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                         SnackBar(
+                        SnackBar(
                           content: Text(t.select_city_governorate),
                         ),
                       );
@@ -252,7 +253,14 @@ class _BookingBottomSheetState extends State<BookingBottomSheet> {
                       lang: lang,
                     );
                   },
-                  child: Text(t.book, style: TextStyle(fontSize: 20)),
+                  child: Text(
+                    t.book,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onPrimary,
+                    ),
+                  ),
                 ),
               ),
             ),

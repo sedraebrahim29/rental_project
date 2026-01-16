@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rent/data/colors.dart';
 
 class DropDown extends StatelessWidget {
   final List<String> items;
@@ -13,9 +12,18 @@ class DropDown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return DropdownButtonFormField<int>(
-      value: null, //  بدون قيمة مبدئية
-      icon: const Icon(Icons.keyboard_arrow_down),
+      initialValue: null, //  بدون قيمة مبدئية
+      icon: Icon(
+        Icons.keyboard_arrow_down,
+        color: theme.colorScheme.primary,
+      ),
+      dropdownColor: theme.cardColor,
+      style: theme.textTheme.bodyMedium?.copyWith(
+        color: theme.colorScheme.onSurface,
+      ),
       items: List.generate(items.length, (index) {
         return DropdownMenuItem<int>(
           value: index,
@@ -27,76 +35,17 @@ class DropDown extends StatelessWidget {
       },
       decoration: InputDecoration(
         isDense: true,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+        contentPadding:
+        const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: MyColor.deepBlue),
+          borderSide: BorderSide(color: theme.colorScheme.primary),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: MyColor.deepBlue, width: 2),
+          borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
         ),
       ),
     );
   }
 }
-
-
-
-// import 'package:flutter/material.dart';
-// import 'package:rent/data/colors.dart';
-//
-// class DropDown extends StatelessWidget {
-//   const DropDown({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return GestureDetector(
-//       child: Padding(
-//         padding: const EdgeInsets.only(right: 65),
-//         child: Container(
-//           height: 45,
-//
-//           decoration: BoxDecoration(
-//             color: Colors.transparent,
-//             borderRadius: BorderRadius.circular(18),
-//             border: Border.all(color: MyColor.deepBlue),
-//           ),
-//           child: const Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               Text(''),
-//               Center(child: Icon(Icons.keyboard_arrow_down)),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

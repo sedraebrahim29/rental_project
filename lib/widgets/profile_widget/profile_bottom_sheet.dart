@@ -3,8 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rent/cubit/language_cubit/language_cubit.dart';
 import 'package:rent/cubit/profile_cubit/topup_cubit.dart';
 import 'package:rent/cubit/profile_cubit/topup_state.dart';
-
-import 'package:rent/data/colors.dart';
 import 'package:rent/l10n/app_localizations.dart';
 
 class ProfileBottomSheet extends StatefulWidget {
@@ -19,8 +17,11 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context)!;//للترجمة
+    final t = AppLocalizations.of(context)!; // للترجمة
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+
     // provide + integrate
     return BlocProvider(
       create: (context) => TopUpCubit(),
@@ -31,35 +32,35 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
               if (state is TopUpSuccess) {
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                   SnackBar(content: Text(t.balance_success)),
+                  SnackBar(content: Text(t.balance_success)),
                 );
               }
 
               if (state is TopUpError) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(state.message)));
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(state.message)));
               }
             },
             child: Padding(
               padding: EdgeInsets.only(bottom: bottomInset),
               child: Container(
                 height: MediaQuery.of(context).size.height * 0.3,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(70)),
+                decoration: BoxDecoration(
+                  color: theme.cardColor,
+                  borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(70)),
                 ),
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
                     const SizedBox(height: 40),
 
-                     Text(
+                    Text(
                       t.enter_amount,
-                      style: TextStyle(
+                      style: theme.textTheme.bodyLarge?.copyWith(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
-                        color: MyColor.deepBlue,
+                        color: colors.primary,
                       ),
                     ),
 
@@ -71,16 +72,16 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(18),
-                        border: Border.all(color: MyColor.deepBlue),
+                        border: Border.all(color: colors.primary),
                       ),
                       child: Row(
                         children: [
-                          const Text(
+                          Text(
                             '\$',
-                            style: TextStyle(
+                            style: theme.textTheme.titleLarge?.copyWith(
                               fontSize: 23,
                               fontWeight: FontWeight.bold,
-                              color: MyColor.deepBlue,
+                              color: colors.primary,
                             ),
                           ),
 
@@ -90,13 +91,18 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
                             child: TextField(
                               controller: amountController,
                               keyboardType: TextInputType.number,
-                              cursorColor: MyColor.deepBlue,
-                              decoration: const InputDecoration(
+                              cursorColor: colors.primary,
+                              style: theme.textTheme.bodyLarge?.copyWith(
+                                color: colors.onSurface,
+                              ),
+                              decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: '0',
-                                hintStyle: TextStyle(
-                                  color: Colors.grey,
+                                hintStyle:
+                                theme.textTheme.bodyLarge?.copyWith(
                                   fontSize: 20,
+                                  color: colors.onSurface
+                                      .withValues(alpha: 0.5),
                                 ),
                               ),
                             ),
@@ -104,17 +110,19 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 20),
+
+                    const SizedBox(height: 20),
 
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: MyColor.deepBlue,
+                        backgroundColor: colors.primary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18),
                         ),
                       ),
                       onPressed: () {
-                        final value = double.tryParse(amountController.text);
+                        final value =
+                        double.tryParse(amountController.text);
 
                         if (value == null || value <= 0) {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -122,13 +130,22 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
                           );
                           return;
                         }
-                        final lang = context.read<LanguageCubit>().state.languageCode;
-                        //trigger
-                        context.read<TopUpCubit>().topUp(value,lang);
+
+                        final lang = context
+                            .read<LanguageCubit>()
+                            .state
+                            .languageCode;
+
+                        // trigger
+                        context.read<TopUpCubit>().topUp(value, lang);
                       },
-                      child:  Text(
+                      child: Text(
                         t.submit,
-                        style: TextStyle(fontSize: 17, color: Colors.white),
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          fontSize: 17,
+                          color: colors.onPrimary,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
@@ -136,7 +153,7 @@ class _ProfileBottomSheetState extends State<ProfileBottomSheet> {
               ),
             ),
           );
-        }
+        },
       ),
     );
   }

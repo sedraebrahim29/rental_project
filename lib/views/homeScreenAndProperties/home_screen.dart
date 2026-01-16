@@ -13,73 +13,95 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     final t = AppLocalizations.of(context)!;//للترجمة
+    final t = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
       drawer: const MainDrawer(),
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/HomeBackground.png'),
-            fit: BoxFit.fill,
+      body: Stack(
+        children: [
+          // Background Image
+          const Positioned.fill(
+            child: Image(
+              image: AssetImage('assets/HomeBackground.png'),
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        child: Column(
-          children: [
-            const HomeHeader(),
-            const SizedBox(height: 55),
 
-            Expanded(
-              child: BlocBuilder<PropertyCubit, PropertyState>(
-                builder: (context, state) {
-                  // 1. Loading State
-                  if (state is PropertyLoading) {
-                    return const Center(child: CircularProgressIndicator(color: MyColor.deepBlue));
-                  }
+          // Overlay حسب الوضع
+          Positioned.fill(
+            child: Container(
+              color: isDark
+                  ? Colors.black.withOpacity(0.65)
+                  : Colors.black.withOpacity(0.25),
+            ),
+          ),
 
-                  // 2. Error State
-                  if (state is PropertyError) {
-                    return Center(child: Text(state.message, style: const TextStyle(color: Colors.red)));
-                  }
+          // Content
+          Column(
+            children: [
+              const HomeHeader(),
+              const SizedBox(height: 55),
 
-                  // 3. Success State
-                  if (state is PropertyUpdated) {
-                    final allProperties = state.properties;
-
-                    if (allProperties.isEmpty) {
-                      return  Center(
-                        child: Text(
-                          t.no_properties,
-                          style: TextStyle(color: MyColor.deepBlue, fontSize: 18),
+              Expanded(
+                child: BlocBuilder<PropertyCubit, PropertyState>(
+                  builder: (context, state) {
+                    if (state is PropertyLoading) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: theme.colorScheme.onBackground,
                         ),
                       );
                     }
 
-                    return ListView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: allProperties.length,
-                      itemBuilder: (context, index) {
-                        final prop = allProperties[index];
+                    if (state is PropertyError) {
+                      return Center(
+                        child: Text(
+                          state.message,
+                          style: theme.textTheme.bodyLarge?.copyWith(color: Colors.red),
+                        ),
+                      );
+                    }
 
-                        return PropertyCard(
-                          property: prop,
-                          // Only onTap is provided.
-                          // onEdit is NOT provided, so the edit button remains hidden.
-                          onTap: () {
-                            //  Navigate to Detail Screen
+                    if (state is PropertyUpdated) {
+                      final allProperties = state.properties;
 
-                          },
+                      if (allProperties.isEmpty) {
+                        return Center(
+                          child: Text(
+                            t.no_properties,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              color: theme.colorScheme.onBackground,
+                              fontSize: 18,
+                            ),
+                          ),
                         );
-                      },
-                    );
-                  }
+                      }
 
-                  // 4. Initial State
-                  return const SizedBox();
-                },
+                      return ListView.builder(
+                        padding: EdgeInsets.zero,
+                        itemCount: allProperties.length,
+                        itemBuilder: (context, index) {
+                          final prop = allProperties[index];
+
+                          return PropertyCard(
+                            property: prop,
+                            onTap: () {
+                              // navigate to details
+                            },
+                          );
+                        },
+                      );
+                    }
+
+                    return const SizedBox();
+                  },
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }

@@ -5,7 +5,6 @@ import 'package:rent/l10n/app_localizations.dart';
 import 'package:rent/views/homeScreenAndProperties/add_property.dart';
 
 import '../../cubit/properties/properties_cubit.dart';
-
 import '../../data/colors.dart';
 import '../../widgets/property_card.dart';
 import 'edit_property.dart';
@@ -16,7 +15,10 @@ class MyPropertiesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context)!;//للترجمة
+    final t = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return BlocProvider(
       create: (context) => PropertiesCubit()..getProperties(),
       child: Scaffold(
@@ -25,6 +27,7 @@ class MyPropertiesScreen extends StatelessWidget {
         floatingActionButton: Padding(
           padding: const EdgeInsets.only(bottom: 20, right: 10),
           child: FloatingActionButton.extended(
+            backgroundColor: MyColor.deepBlue,
             onPressed: () {
               Navigator.push(
                 context,
@@ -33,33 +36,44 @@ class MyPropertiesScreen extends StatelessWidget {
                 ),
               );
             },
-            backgroundColor: MyColor.deepBlue,
             label: Text(
-             t.my_properties_booking,
-              style: TextStyle(
-                color: MyColor.offWhite,
+              t.my_properties_booking,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
         ),
 
-        body: SizedBox.expand(
-          child: Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
+        body: Stack(
+          children: [
+            // Background image
+            const Positioned.fill(
+              child: Image(
                 image: AssetImage('assets/HomeBackground.png'),
-                fit: BoxFit.fill,
+                fit: BoxFit.cover,
               ),
             ),
-            child: Column(
+
+            // Overlay
+            Positioned.fill(
+              child: Container(
+                color: isDark
+                    ? Colors.black.withValues(alpha: 0.65)
+                    : Colors.black.withValues(alpha: 0.25),
+              ),
+            ),
+
+            // Content
+            Column(
               children: [
                 const SizedBox(height: 50),
 
                 /// TITLE
                 Text(
                   t.my_properties,
-                  style: TextStyle(
+                  style: theme.textTheme.titleLarge?.copyWith(
                     fontSize: 26,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -76,11 +90,10 @@ class MyPropertiesScreen extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (_) => BlocProvider(
                           create: (_) => AddPropertyCubit(),
-                          child: AddPropertyScreen(),
+                          child: const AddPropertyScreen(),
                         ),
                       ),
                     ).then((_) {
-                      /// Refresh list when coming back
                       context.read<PropertiesCubit>().getProperties();
                     });
                   },
@@ -90,10 +103,10 @@ class MyPropertiesScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(25),
                     ),
                   ),
-                  child:  Text(
+                  child: Text(
                     t.add,
-                    style: TextStyle(
-                      color: MyColor.offWhite,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -107,15 +120,15 @@ class MyPropertiesScreen extends StatelessWidget {
                     builder: (context, state) {
                       switch (state.state) {
                         case State.loading:
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
+                          return const Center(child: CircularProgressIndicator());
 
                         case State.error:
                           return Center(
                             child: Text(
                               state.error,
-                              style: const TextStyle(color: Colors.red),
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: Colors.red,
+                              ),
                             ),
                           );
 
@@ -124,7 +137,9 @@ class MyPropertiesScreen extends StatelessWidget {
                             return Center(
                               child: Text(
                                 t.no_properties_yet,
-                                style: TextStyle(color: Colors.white),
+                                style: theme.textTheme.bodyLarge?.copyWith(
+                                  color: Colors.white,
+                                ),
                               ),
                             );
                           }
@@ -133,6 +148,7 @@ class MyPropertiesScreen extends StatelessWidget {
                             itemCount: state.properties.length,
                             itemBuilder: (context, index) {
                               final prop = state.properties[index];
+
                               return PropertyCard(
                                 property: prop,
                                 onEdit: () {
@@ -148,12 +164,11 @@ class MyPropertiesScreen extends StatelessWidget {
                                         .getProperties();
                                   });
                                 },
-                                onTap: () {
-                                  // الانتقال لصفحة التفاصيل
-                                },
+                                onTap: () {},
                               );
                             },
                           );
+
                         case State.init:
                           return const SizedBox.shrink();
                       }
@@ -162,7 +177,7 @@ class MyPropertiesScreen extends StatelessWidget {
                 ),
               ],
             ),
-          ),
+          ],
         ),
       ),
     );

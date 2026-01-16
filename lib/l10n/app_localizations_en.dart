@@ -9,6 +9,15 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get theme_mode => 'Theme Mode';
+
+  @override
+  String get dark_mode => 'Dark Mode';
+
+  @override
+  String get light_mode => 'Light Mode';
+
+  @override
   String get add_property => 'Add Property';
 
   @override
@@ -181,6 +190,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get balance => 'Balance';
+
+  @override
+  String get language => 'Language';
 
   @override
   String get login => 'Login';

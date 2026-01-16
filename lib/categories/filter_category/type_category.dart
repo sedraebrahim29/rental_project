@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rent/data/colors.dart';
 
 class TypeCategoryp extends StatelessWidget {
   final String title;
@@ -15,6 +14,8 @@ class TypeCategoryp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -22,20 +23,22 @@ class TypeCategoryp extends StatelessWidget {
         width: 105,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: isSelected ? MyColor.deepBlue.withOpacity(0.1) : Colors.transparent,
+          color: isSelected
+              ? theme.colorScheme.primary.withValues(alpha: 0.12) // بدل withOpacity
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(15),
           border: Border.all(
-            color: isSelected ? MyColor.deepBlue : MyColor.deepBlue,
+            color: theme.colorScheme.primary,
             width: isSelected ? 2 : 1.5,
           ),
         ),
         child: Text(
           title,
           textAlign: TextAlign.center,
-          style: const TextStyle(
+          style: theme.textTheme.bodySmall?.copyWith(
             fontSize: 13,
             fontWeight: FontWeight.bold,
-            color: MyColor.deepBlue,
+            color: theme.colorScheme.primary,
           ),
         ),
       ),

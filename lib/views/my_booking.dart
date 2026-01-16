@@ -1,227 +1,147 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:rent/data/colors.dart';
 import 'package:rent/l10n/app_localizations.dart';
 import 'package:rent/models/booking_model.dart';
 import 'package:rent/providers/booking_provider.dart';
 import 'package:rent/widgets/booking_card.dart';
-
-
 
 class MyBooking extends ConsumerWidget {
   const MyBooking({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final t = AppLocalizations.of(context)!;//للترجمة
-    // Watch the selected tab state
+    final t = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     final selectedStatus = ref.watch(selectedBookingStatusProvider);
-    // Watch the API data state (Loading / Data / Error)
     final bookingsAsyncValue = ref.watch(bookingListProvider);
 
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/HomeBackground.png'),
-            fit: BoxFit.fill,
+      body: Stack(
+        children: [
+          const Positioned.fill(
+            child: Image(
+              image: AssetImage('assets/HomeBackground.png'),
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-               Padding(
-                padding: EdgeInsets.only(top: 20, bottom: 10),
-                child: Text(
-                  t.my_booking,
-                  style: TextStyle(
+
+          // ✅ withValues بدل withOpacity
+          Positioned.fill(
+            child: Container(
+              color: isDark
+                  ? Colors.black.withValues(alpha: 0.65)
+                  : Colors.black.withValues(alpha: 0.25),
+            ),
+          ),
+
+          SafeArea(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 20, bottom: 10),
+                  child: Text(
+                    t.my_booking,
+                    style: theme.textTheme.titleLarge?.copyWith(
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white // White to match background
-                  ),
-                ),
-              ),
-
-              // --- 5 Buttons Navigation ---
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                child: Row(
-                  children: BookingStatus.values.map((status) {
-                    final isSelected = selectedStatus == status;
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: ChoiceChip(
-                        label: Text(status.name.toUpperCase()),
-                        selected: isSelected,
-                        onSelected: (selected) {
-                          if (selected) {
-                            // Update the provider state -> triggers API fetch
-                            ref.read(selectedBookingStatusProvider.notifier).state = status;
-                          }
-                        },
-                        selectedColor: MyColor.deepBlue,
-                        backgroundColor: MyColor.offWhite.withOpacity(0.8),
-                        labelStyle: TextStyle(
-                          color: isSelected ? Colors.white : MyColor.deepBlue,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-
-              // --- List Area (Handles Loading, Error, Data) ---
-              Expanded(
-                child: bookingsAsyncValue.when(
-                  // 1. Loading State
-                  loading: () => const Center(
-                    child: CircularProgressIndicator(color: MyColor.deepBlue),
-                  ),
-
-                  // 2. Error State
-                  error: (error, stack) => Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.error_outline, color: Colors.red, size: 40),
-                        const SizedBox(height: 10),
-                        Text(
-                          "${t.error_loading_bookings}\n$error",
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(color: MyColor.deepBlue),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            // Retry logic: Refresh the provider
-                            ref.refresh(bookingListProvider);
-                          },
-                          child:  Text(t.try_again),
-                        )
-                      ],
+                      color: Colors.white,
                     ),
                   ),
-
-                  // 3. Success State
-                  data: (bookings) {
-                    if (bookings.isEmpty) {
-                      return  Center(
-                        child: Text(t.no_bookings, style: TextStyle(color: MyColor.deepBlue)),
-                      );
-                    }
-                    return ListView.builder(
-                      itemCount: bookings.length,
-                      padding: const EdgeInsets.only(bottom: 20),
-                      itemBuilder: (context, index) {
-                        return BookingCard(
-                          booking: bookings[index],
-                          onAction: () {
-                            // Handle Edit/Cancel/Rate clicks here later
-                          },
-                        );
-                      },
-                    );
-                  },
                 ),
-              ),
-            ],
+
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  child: Row(
+                    children: BookingStatus.values.map((status) {
+                      final isSelected = selectedStatus == status;
+
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: ChoiceChip(
+                          label: Text(
+                            status.name.toUpperCase(),
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              // ✅ onSurface بدل onBackground
+                              color: isSelected
+                                  ? Colors.white
+                                  : theme.colorScheme.onSurface,
+                            ),
+                          ),
+                          selected: isSelected,
+                          onSelected: (selected) {
+                            if (selected) {
+                              ref.read(selectedBookingStatusProvider.notifier).state = status;
+                            }
+                          },
+                          selectedColor: theme.colorScheme.primary,
+                          // ✅ withValues بدل withOpacity
+                          backgroundColor: theme.cardColor.withValues(alpha: 0.9),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+
+                Expanded(
+                  child: bookingsAsyncValue.when(
+                    loading: () => const Center(child: CircularProgressIndicator()),
+
+                    error: (error, stack) => Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.error_outline, color: Colors.red, size: 40),
+                          const SizedBox(height: 10),
+                          Text(
+                            "${t.error_loading_bookings}\n$error",
+                            textAlign: TextAlign.center,
+                            style: theme.textTheme.bodyMedium,
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              // ✅ استخدم قيمة refresh
+                              final _ = ref.refresh(bookingListProvider);
+                            },
+                            child: Text(t.try_again),
+                          )
+                        ],
+                      ),
+                    ),
+
+                    data: (bookings) {
+                      if (bookings.isEmpty) {
+                        return Center(
+                          child: Text(
+                            t.no_bookings,
+                            style: theme.textTheme.bodyLarge?.copyWith(
+                              color: Colors.white,
+                            ),
+                          ),
+                        );
+                      }
+
+                      return ListView.builder(
+                        itemCount: bookings.length,
+                        padding: const EdgeInsets.only(bottom: 20),
+                        itemBuilder: (context, index) {
+                          return BookingCard(
+                            booking: bookings[index],
+                            onAction: () {},
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-// import 'package:flutter/material.dart';
-// import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import '../providers/booking_provider.dart';
-// import '../models/booking_model.dart';
-// import '../widgets/booking_card.dart';
-// import '../data/colors.dart';
-//
-// class MyBooking extends ConsumerWidget {
-//   const MyBooking({super.key});
-//
-//   @override
-//   Widget build(BuildContext context, WidgetRef ref) {
-//     final selectedStatus = ref.watch(bookingTabProvider);
-//     final bookings = ref.watch(filteredBookingsProvider);
-//
-//     return Scaffold(
-//       body: Container(
-//         width: double.infinity,
-//         height: double.infinity,
-//         decoration: const BoxDecoration(
-//           image: DecorationImage(
-//             image: AssetImage('assets/HomeBackground.png'),
-//             fit: BoxFit.fill,
-//           ),
-//         ),
-//         child: SafeArea( // Ensures content stays below the status bar
-//           child: Column(
-//             children: [
-//               const Padding(
-//                 padding: EdgeInsets.symmetric(vertical: 15),
-//                 child: Text(
-//                   "My Bookings",
-//                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: MyColor.offWhite),
-//                 ),
-//               ),
-//               // 5 Selection Buttons [cite: 1, 2, 3, 4, 14, 22]
-//               SingleChildScrollView(
-//                 scrollDirection: Axis.horizontal,
-//                 padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-//                 child: Row(
-//                   children: BookingStatus.values.map((status) {
-//                     final isSelected = selectedStatus == status;
-//                     return Padding(
-//                       padding: const EdgeInsets.symmetric(horizontal: 4),
-//                       child: ChoiceChip(
-//                         label: Text(status.name.toUpperCase()),
-//                         selected: isSelected,
-//                         onSelected: (_) => ref.read(bookingTabProvider.notifier).state = status,
-//                         selectedColor: MyColor.deepBlue,
-//                         backgroundColor: MyColor.offWhite.withOpacity(0.7),
-//                         labelStyle: TextStyle(
-//                             color: isSelected ? Colors.white : MyColor.deepBlue,
-//                             fontWeight: FontWeight.bold
-//                         ),
-//                       ),
-//                     );
-//                   }).toList(),
-//                 ),
-//               ),
-//               // List of Booking Cards
-//               Expanded(
-//                 child: bookings.isEmpty
-//                     ? const Center(child: Text("No bookings for this status"))
-//                     : ListView.builder(
-//                   itemCount: bookings.length,
-//                   padding: const EdgeInsets.only(bottom: 20),
-//                   itemBuilder: (context, index) => BookingCard(
-//                     booking: bookings[index],
-//                     onAction: () {
-//                       // API call logic will go here
-//                     },
-//                   ),
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

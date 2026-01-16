@@ -1,4 +1,8 @@
 {
+  "theme_mode": "المظهر",
+  "dark_mode": "الوضع الداكن",
+  "light_mode": "الوضع الفاتح",
+
   "add_property": "إضافة عقار",
   "properties": "العقارات",
   "property_added_success": "تمت إضافة العقار بنجاح",
@@ -62,6 +66,7 @@
   "balance_success": "تم شحن الرصيد بنجاح",
   "enter_valid_amount": "يرجى إدخال مبلغ صالح",
   "balance": "الرصيد",
+  "language" : "اللغة",
 
 
   "login": "تسجيل الدخول",

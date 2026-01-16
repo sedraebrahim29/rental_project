@@ -4,7 +4,7 @@ class DetailsImage extends StatefulWidget {
 
   final List<String> images;
 
-  const DetailsImage({required this.images});
+  const DetailsImage({super.key, required this.images});
 
 
   @override
@@ -13,8 +13,11 @@ class DetailsImage extends StatefulWidget {
 
 class _DetailsImageState extends State<DetailsImage> {
   int currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.only(top: 45),
@@ -42,7 +45,6 @@ class _DetailsImageState extends State<DetailsImage> {
                     widget.images[index],
                     fit: BoxFit.cover,
                   );
-
                 },
               ),
             ),
@@ -56,12 +58,12 @@ class _DetailsImageState extends State<DetailsImage> {
                 widget.images.length,
                     (index) => Container(
                   margin: const EdgeInsets.symmetric(horizontal: 4),
-                  width:  8,
+                  width: 8,
                   height: 8,
                   decoration: BoxDecoration(
                     color: currentIndex == index
-                        ? Colors.white
-                        : Colors.white54,
+                        ? theme.colorScheme.primary
+                        : theme.colorScheme.onSurface.withValues(alpha: 0.4),
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),

@@ -95,6 +95,24 @@ abstract class AppLocalizations {
     Locale('en')
   ];
 
+  /// No description provided for @theme_mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme Mode'**
+  String get theme_mode;
+
+  /// No description provided for @dark_mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Mode'**
+  String get dark_mode;
+
+  /// No description provided for @light_mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Light Mode'**
+  String get light_mode;
+
   /// No description provided for @add_property.
   ///
   /// In en, this message translates to:
@@ -442,6 +460,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Balance'**
   String get balance;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
 
   /// No description provided for @login.
   ///

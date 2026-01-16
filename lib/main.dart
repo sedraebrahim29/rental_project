@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:rent/categories/details_category.dart';
+import 'package:rent/core/theme/app_theme.dart';
 import 'package:rent/cubit/details_cubit/details_cubit.dart';
 import 'package:rent/cubit/filter_cubit/filter_cubit.dart';
 import 'package:rent/cubit/filter_cubit/filter_meta_cubit.dart';
@@ -11,6 +12,7 @@ import 'package:rent/cubit/language_cubit/language_cubit.dart';
 import 'package:rent/cubit/login_cubit/login_cubit.dart';
 import 'package:rent/cubit/profile_cubit/profile_cubit.dart';
 import 'package:rent/cubit/signup_cubit/signup_cubit.dart';
+import 'package:rent/cubit/theme_cubit.dart';
 import 'package:rent/l10n/app_localizations.dart';
 import 'package:rent/models/profile_model.dart';
 import 'package:rent/models/property_model.dart';
@@ -28,6 +30,7 @@ void main() {
   runApp( MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => LanguageCubit()),
+        BlocProvider(create: (_) => ThemeCubit()),
       ],
       child: const Rent()));
 }
@@ -49,8 +52,16 @@ class Rent extends StatelessWidget {
 
 
       ],
-      child: MaterialApp(
+      child: BlocBuilder<ThemeCubit, ThemeMode>(
+  builder: (context, themeMode) {
+    return MaterialApp(
         debugShowCheckedModeBanner: false,
+        //  الثيم
+        theme: lightTheme,
+        darkTheme: darkTheme,
+      themeMode: themeMode, //  من Cubit
+
+        //اللغات
         locale: context.watch<LanguageCubit>().state.locale, //  يخلي اللغة حسب الجهاز
         supportedLocales: AppLocalizations.supportedLocales,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -101,7 +112,9 @@ class Rent extends StatelessWidget {
         //   '/home': (context) => const HomeScreen(),
         //   '/admin': (context) => const AdminDashboard(),
         // },
-      ),
+      );
+  },
+),
     );
   }
 }

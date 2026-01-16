@@ -17,7 +17,9 @@ class PropertyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context)!;//للترجمة
+    final t = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
@@ -25,13 +27,13 @@ class PropertyCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: MyColor.offWhite,
+          color: theme.cardColor,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: MyColor.deepBlue, width: 1.2),
+          border: Border.all(color: theme.colorScheme.primary, width: 1.2),
         ),
         child: Row(
           children: [
-            //قسم الصور
+            // قسم الصور
             ClipRRect(
               borderRadius: BorderRadius.circular(14),
               child: _buildImage(),
@@ -43,17 +45,16 @@ class PropertyCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Edit الاسم وزر ال
+                  // الاسم + زر التعديل
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
                         child: Text(
-                          property.ownerName, // اسم صاحب الشقة فوق
-                          style: const TextStyle(
+                          property.ownerName,
+                          style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: MyColor.deepBlue,
+                            color: theme.colorScheme.onSurface,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -64,40 +65,44 @@ class PropertyCard extends StatelessWidget {
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
-                              color: MyColor.deepBlue,
+                              color: theme.colorScheme.primary,
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child:  Text(
+                            child: Text(
                               t.edit,
-                              style: TextStyle(color: Colors.white, fontSize: 12),
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onPrimary,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
                     ],
                   ),
+
                   const SizedBox(height: 4),
 
-                  // نوع الشقة والمساحة
-                  _buildInfoItem(Icons.home, property.category),
+                  _buildInfoItem(context, Icons.home, property.category),
                   const SizedBox(height: 2),
-                  _buildInfoItem(Icons.square_foot_sharp, "${property.area} m²"),
+                  _buildInfoItem(context, Icons.square_foot_sharp, "${property.area} m²"),
 
                   const SizedBox(height: 6),
 
                   // السعر
                   Text(
                     '\$${property.price} / ${t.per_mon}',
-                    style: const TextStyle(
-                      fontSize: 14,
+                    style: theme.textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: MyColor.deepBlue,
+                      color: theme.colorScheme.primary,
                     ),
                   ),
 
                   // الموقع
                   Text(
                     "${property.city} - ${property.governorate}",
-                    style: const TextStyle(color: MyColor.blueGray, fontSize: 12),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
 
@@ -110,9 +115,9 @@ class PropertyCard extends StatelessWidget {
                       const SizedBox(width: 4),
                       Text(
                         property.rating.toString(),
-                        style: const TextStyle(
+                        style: theme.textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: MyColor.deepBlue,
+                          color: theme.colorScheme.onSurface,
                         ),
                       ),
                     ],
@@ -126,35 +131,44 @@ class PropertyCard extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoItem(IconData icon, String label) {
+  Widget _buildInfoItem(BuildContext context, IconData icon, String label) {
+    final theme = Theme.of(context);
+
     return Row(
       children: [
-        Icon(icon, size: 16, color: MyColor.blueGray),
+        Icon(icon, size: 16, color: theme.colorScheme.onSurface.withValues(alpha: 0.6)),
         const SizedBox(width: 6),
         Text(
           label,
-          style: const TextStyle(color: MyColor.deepBlue, fontSize: 13),
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurface,
+          ),
         ),
       ],
     );
   }
 
   Widget _buildImage() {
-    // هون الأولوية للصور المحلية (عند الإضافة) ثم لروابط الـ API
     if (property.localImages != null && property.localImages!.isNotEmpty) {
       return Image.file(
         property.localImages!.first,
-        width: 110, height: 130, fit: BoxFit.cover,
+        width: 110,
+        height: 130,
+        fit: BoxFit.cover,
       );
     } else if (property.imageUrls.isNotEmpty) {
       return Image.network(
         property.imageUrls.first,
-        width: 110, height: 130, fit: BoxFit.cover,
+        width: 110,
+        height: 130,
+        fit: BoxFit.cover,
         errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
       );
     }
+
     return Container(
-      width: 110, height: 130,
+      width: 110,
+      height: 130,
       color: MyColor.blueGray,
       child: const Icon(Icons.image),
     );

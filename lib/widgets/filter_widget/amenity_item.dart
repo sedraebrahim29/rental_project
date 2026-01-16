@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rent/data/colors.dart';
 
 class AmenityItem extends StatelessWidget {
   final String title;
@@ -15,24 +14,28 @@ class AmenityItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
         height: 40,
         padding: const EdgeInsets.symmetric(horizontal: 14),
         decoration: BoxDecoration(
-          color: isSelected ? MyColor.deepBlue.withOpacity(0.1) : Colors.transparent,
+          color: isSelected
+              ? theme.colorScheme.primary.withValues(alpha: 0.1)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(15),
           border: Border.all(
-            color: MyColor.deepBlue,
+            color: theme.colorScheme.primary,
             width: 1.5,
           ),
         ),
         child: Center(
           child: Text(
             title,
-            style: TextStyle(
-              color: MyColor.deepBlue,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.primary,
               fontWeight: FontWeight.w600,
             ),
           ),

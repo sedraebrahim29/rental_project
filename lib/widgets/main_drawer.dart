@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:rent/l10n/app_localizations.dart';
-import 'package:rent/models/profile_model.dart';
-import 'package:rent/models/property_model.dart';
 import 'package:rent/views/homeScreenAndProperties/profile.dart';
-import 'package:rent/views/my_booking.dart';
 import 'package:rent/views/setting_screen.dart';
-
-import '../data/colors.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context)!;//للترجمة
+    final t = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+
     return Drawer(
-      backgroundColor: MyColor.offWhite,
+      backgroundColor: theme.scaffoldBackgroundColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -23,13 +21,16 @@ class MainDrawer extends StatelessWidget {
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 40),
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [MyColor.deepBlue, MyColor.skyBlue],
+                colors: [
+                  colors.primary,
+                  colors.primaryContainer,
+                ],
                 begin: Alignment.bottomLeft,
                 end: Alignment.topRight,
               ),
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                 bottomRight: Radius.circular(40),
                 bottomLeft: Radius.circular(40),
               ),
@@ -39,17 +40,21 @@ class MainDrawer extends StatelessWidget {
                 // AVATAR
                 CircleAvatar(
                   radius: 40,
-                  backgroundColor: MyColor.offWhite,
-                  child: Icon(Icons.person, size: 45, color: MyColor.deepBlue),
+                  backgroundColor: theme.cardColor,
+                  child: Icon(
+                    Icons.person,
+                    size: 45,
+                    color: colors.primary,
+                  ),
                 ),
                 const SizedBox(height: 12),
+
                 // USER NAME
-                const Text(
+                Text(
                   'Ahmad Rahal',
-                  style: TextStyle(
-                    fontSize: 18,
+                  style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: MyColor.deepBlue,
+                    color: colors.onPrimary,
                   ),
                 ),
               ],
@@ -65,7 +70,7 @@ class MainDrawer extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => Profile()),
+                MaterialPageRoute(builder: (_) => const Profile()),
               );
             },
           ),
@@ -77,18 +82,17 @@ class MainDrawer extends StatelessWidget {
           _DrawerItem(
             icon: Icons.archive_outlined,
             title: t.my_booking,
-            onTap: () {
-              // Navigator.push(
-              //     context, MaterialPageRoute(builder: (_) => MyBooking()));
-            },
+            onTap: () {},
           ),
           _DrawerItem(
             icon: Icons.settings_outlined,
             title: t.settings,
-            onTap: () { Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const SettingsScreen()),
-            );},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const SettingsScreen()),
+              );
+            },
           ),
           _DrawerItem(icon: Icons.help_outline, title: t.help, onTap: () {}),
           _DrawerItem(icon: Icons.logout, title: t.logout, onTap: () {}),
@@ -101,7 +105,7 @@ class MainDrawer extends StatelessWidget {
 class _DrawerItem extends StatelessWidget {
   final IconData icon;
   final String title;
-  final Function() onTap;
+  final VoidCallback onTap;
 
   const _DrawerItem({
     required this.icon,
@@ -111,16 +115,22 @@ class _DrawerItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+
     return ListTile(
       onTap: onTap,
       leading: CircleAvatar(
         radius: 18,
-        backgroundColor: MyColor.skyBlue.withValues(alpha: 0.3),
-        child: Icon(icon, size: 18, color: MyColor.deepBlue),
+        backgroundColor: colors.primary.withValues(alpha: 0.15),
+        child: Icon(icon, size: 18, color: colors.primary),
       ),
       title: Text(
         title,
-        style: const TextStyle(fontSize: 16, color: MyColor.deepBlue),
+        style: theme.textTheme.bodyLarge?.copyWith(
+          color: colors.onSurface,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }

@@ -11,8 +11,10 @@ class AddPropertyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context)!;//للترجمة
-    // 1. Initialize Cubit and Load Data
+    final t = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return BlocProvider(
       create: (context) => AddPropertyCubit()..loadInitialData(),
       child: BlocListener<AddPropertyCubit, AddPropertyState>(
@@ -21,34 +23,43 @@ class AddPropertyScreen extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(t.property_added_success)),
             );
-            Navigator.pop(context); // Close screen
+            Navigator.pop(context);
           } else if (state is AddPropertyError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message), backgroundColor: Colors.red),
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red,
+              ),
             );
           }
         },
         child: Scaffold(
           body: Stack(
             children: [
-              Container(
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/AddProperty.jpg'),
-                    fit: BoxFit.cover,
-                  ),
+              // Background image
+              const Positioned.fill(
+                child: Image(
+                  image: AssetImage('assets/AddProperty.jpg'),
+                  fit: BoxFit.cover,
                 ),
               ),
-              Container(color: Colors.black.withAlpha(120)),
+
+              // Dark overlay (only in dark mode)
+              Positioned.fill(
+                child: Container(
+                  color: isDark ? Colors.black.withValues(alpha: 0.65) : Colors.black.withValues(alpha: 0.35),
+                ),
+              ),
 
               SafeArea(
                 child: BlocBuilder<AddPropertyCubit, AddPropertyState>(
                   builder: (context, state) {
                     final cubit = context.read<AddPropertyCubit>();
 
-                    // Show loader if data is fetching initially
                     if (state is AddPropertyLoading && cubit.governorates.isEmpty) {
-                      return const Center(child: CircularProgressIndicator(color: Colors.white));
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
                     }
 
                     return Column(
@@ -58,45 +69,47 @@ class AddPropertyScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                               Text(
+                              Text(
                                 t.add_property,
-                                style: TextStyle(
+                                style: theme.textTheme.titleLarge?.copyWith(
                                   fontSize: 28,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                                  color: Colors.white, // ثابت لأن فوق صورة داكنة
                                 ),
                               ),
                               const SizedBox(height: 20),
 
-                              // IMAGES SECTION
+                              // IMAGES
                               SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 child: Row(
                                   children: [
-                                    ...cubit.images.map((file) => Stack(
-                                      children: [
-                                        Container(
-                                          margin: const EdgeInsets.only(right: 10),
-                                          width: 80,
-                                          height: 80,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(10),
-                                            image: DecorationImage(
-                                              image: FileImage(file),
-                                              fit: BoxFit.cover,
+                                    ...cubit.images.map(
+                                          (file) => Stack(
+                                        children: [
+                                          Container(
+                                            margin: const EdgeInsets.only(right: 10),
+                                            width: 80,
+                                            height: 80,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(10),
+                                              image: DecorationImage(
+                                                image: FileImage(file),
+                                                fit: BoxFit.cover,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        Positioned(
-                                          right: 5,
-                                          top: -5,
-                                          child: IconButton(
-                                            icon: const Icon(Icons.cancel, color: Colors.red),
-                                            onPressed: () => cubit.removeImage(file),
+                                          Positioned(
+                                            right: 5,
+                                            top: -5,
+                                            child: IconButton(
+                                              icon: const Icon(Icons.cancel, color: Colors.red),
+                                              onPressed: () => cubit.removeImage(file),
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    )),
+                                        ],
+                                      ),
+                                    ),
                                     if (cubit.images.length < 6)
                                       GestureDetector(
                                         onTap: cubit.pickImage,
@@ -117,13 +130,13 @@ class AddPropertyScreen extends StatelessWidget {
                           ),
                         ),
 
-                        // FORM SECTION
+                        // FORM
                         Expanded(
                           child: Container(
                             padding: const EdgeInsets.all(20),
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
+                            decoration: BoxDecoration(
+                              color: theme.cardColor,
+                              borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(30),
                                 topRight: Radius.circular(30),
                               ),
@@ -131,84 +144,88 @@ class AddPropertyScreen extends StatelessWidget {
                             child: SingleChildScrollView(
                               child: Column(
                                 children: [
-                                  // DROPDOWNS
                                   _row(
                                     _Dropdown(
                                       t.governorate,
                                       cubit.selectedGovId,
-                                      cubit.governorates, // Pass the List<Map>
+                                      cubit.governorates,
                                           (v) => cubit.changeGovernorate(v),
                                     ),
                                     _Dropdown(
                                       t.city,
                                       cubit.selectedCityId,
-                                      cubit.cities, // Pass the List<Map>
+                                      cubit.cities,
                                           (v) => cubit.selectedCityId = v,
                                     ),
                                   ),
                                   _Dropdown(
                                     t.category,
                                     cubit.selectedCatId,
-                                    cubit.categories, // Pass the List<Map>
+                                    cubit.categories,
                                         (v) => cubit.selectedCatId = v,
                                   ),
                                   const SizedBox(height: 15),
 
-                                  // AMENITIES CHIPS
-                                   Text(t.amenities, style: TextStyle(fontWeight: FontWeight.bold, color: MyColor.deepBlue)),
+                                  Text(
+                                    t.amenities,
+                                    style: theme.textTheme.titleMedium?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                   const SizedBox(height: 8),
+
                                   Wrap(
-                                    spacing: 8.0,
-                                    runSpacing: 4.0,
+                                    spacing: 8,
+                                    runSpacing: 4,
                                     children: cubit.amenitiesList.map((item) {
                                       final id = item['id'];
                                       final name = item['name'];
                                       final isSelected = cubit.selectedAmenitiesIds.contains(id);
 
                                       return FilterChip(
-                                        label: Text(name),
+                                        label: Text(
+                                          name,
+                                          style: theme.textTheme.bodyMedium?.copyWith(
+                                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                          ),
+                                        ),
                                         selected: isSelected,
                                         selectedColor: MyColor.skyBlue,
                                         checkmarkColor: MyColor.deepBlue,
-                                        labelStyle: TextStyle(
-                                            color: isSelected ? MyColor.deepBlue : Colors.black,
-                                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal
-                                        ),
-                                        onSelected: (bool selected) {
-                                          cubit.toggleAmenity(id);
-                                        },
+                                        onSelected: (_) => cubit.toggleAmenity(id),
                                       );
                                     }).toList(),
                                   ),
+
                                   const SizedBox(height: 15),
 
-                                  // TEXT INPUTS
-                                  _row(
-                                    _Input(t.area, cubit.areaCtrl),
-                                    _Input(t.price, cubit.priceCtrl),
-                                  ),
-                                  _row(
-                                    _Input(t.beds, cubit.bedsCtrl),
-                                    _Input(t.baths, cubit.bathsCtrl),
-                                  ),
+                                  _row(_Input(t.area, cubit.areaCtrl), _Input(t.price, cubit.priceCtrl)),
+                                  _row(_Input(t.beds, cubit.bedsCtrl), _Input(t.baths, cubit.bathsCtrl)),
                                   _Input(t.address_details, cubit.addressCtrl),
                                   const SizedBox(height: 24),
 
-                                  // SUBMIT BUTTON
                                   SizedBox(
                                     width: double.infinity,
                                     height: 55,
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: MyColor.deepBlue,
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(15),
+                                        ),
                                       ),
                                       onPressed: state is AddPropertySubmitting
                                           ? null
                                           : cubit.submitProperty,
                                       child: state is AddPropertySubmitting
                                           ? const CircularProgressIndicator(color: Colors.white)
-                                          :  Text(t.add_property, style: TextStyle(color: Colors.white, fontSize: 18)),
+                                          : Text(
+                                        t.add_property,
+                                        style: theme.textTheme.titleMedium?.copyWith(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -229,7 +246,7 @@ class AddPropertyScreen extends StatelessWidget {
   }
 }
 
-// HELPERS
+// ---------------- HELPERS ----------------
 
 Widget _row(Widget a, Widget b) {
   return Padding(
@@ -251,52 +268,57 @@ class _Input extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return TextField(
       controller: controller,
-      decoration: _decoration(label),
+      style: theme.textTheme.bodyMedium,
+      decoration: _decoration(context, label),
     );
   }
 }
 
-// UPDATED DROPDOWN to handle API Maps
 class _Dropdown extends StatelessWidget {
   final String label;
-  final int? value; // Value is now ID (int)
-  final List<Map<String, dynamic>> items; // Items are Maps
+  final int? value;
+  final List<Map<String, dynamic>> items;
   final ValueChanged<int?> onChanged;
 
   const _Dropdown(this.label, this.value, this.items, this.onChanged);
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return DropdownButtonFormField<int>(
       value: value,
-      // Map the List<Map> to DropdownMenuItem<int>
-      items: items.map((e) => DropdownMenuItem(
-          value: e['id'] as int,
-          child: Text(e['name'].toString())
-      )).toList(),
+      items: items
+          .map((e) => DropdownMenuItem(
+        value: e['id'] as int,
+        child: Text(
+          e['name'].toString(),
+          style: theme.textTheme.bodyMedium,
+        ),
+      ))
+          .toList(),
       onChanged: onChanged,
-      decoration: _decoration(label),
+      decoration: _decoration(context, label),
       menuMaxHeight: 300,
     );
   }
 }
 
-InputDecoration _decoration(String label) {
+InputDecoration _decoration(BuildContext context, String label) {
+  final theme = Theme.of(context);
+
   return InputDecoration(
     labelText: label,
+    labelStyle: theme.textTheme.bodyMedium,
     filled: true,
-    fillColor: MyColor.offWhite,
-    border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+    fillColor: theme.cardColor,
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(15),
+      borderSide: BorderSide.none,
+    ),
   );
 }
-
-
-
-
-
-
-
-
-

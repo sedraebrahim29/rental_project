@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:rent/data/colors.dart';
 
 class FilterInfoRow extends StatelessWidget {
-  const FilterInfoRow({super.key,
+  const FilterInfoRow({
+    super.key,
     required this.label,
-    required this.field,});
+    required this.field,
+  });
 
-final  String label;
-final  Widget field;
+  final String label;
+  final Widget field;
 
   @override
   Widget build(BuildContext context) {
-    return  Row(
+    final theme = Theme.of(context);
+
+    return Row(
       children: [
         SizedBox(
           width: 140,
           child: Text(
             '$label :',
-            style: TextStyle(
+            style: theme.textTheme.bodyMedium?.copyWith(
               fontSize: 17,
               fontWeight: FontWeight.bold,
-              color:  MyColor.deepBlue,
+              color: theme.colorScheme.primary,
             ),
           ),
         ),

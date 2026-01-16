@@ -21,7 +21,10 @@ class Step1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context)!;//للترجمة
+    final t = AppLocalizations.of(context)!; // للترجمة
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+
     final firstName = TextFieldModel(
       text: t.your_first_name,
       hintText: t.enter_first_name,
@@ -42,14 +45,14 @@ class Step1 extends StatelessWidget {
         const SizedBox(height: 25),
 
         // Birthday label
-         Padding(
-          padding: EdgeInsets.only(right: 200, bottom: 5),
+        Padding(
+          padding: const EdgeInsets.only(right: 200, bottom: 5),
           child: Text(
             t.your_birthday,
-            style: TextStyle(
+            style: theme.textTheme.bodyMedium?.copyWith(
               fontSize: 17,
               fontFamily: 'DM Serif Display',
-              color: Colors.white,
+              color: colors.onSurface, // ✅ بدل onBackground
             ),
           ),
         ),
@@ -60,26 +63,37 @@ class Step1 extends StatelessWidget {
           child: TextField(
             controller: birthDateController,
             readOnly: true,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              fontFamily: 'DM Serif Display',
+              color: colors.onSurface,
+            ),
             decoration: InputDecoration(
               filled: true,
-              fillColor: Colors.white,
+              fillColor: theme.cardColor.withValues(alpha: 0.95), // ✅
               hintText: t.date_hint,
-              hintStyle: const TextStyle(
+              hintStyle: theme.textTheme.bodyMedium?.copyWith(
                 fontFamily: 'DM Serif Display',
                 fontSize: 17,
-                color: Color(0xff5B7CA9),
+                color: colors.onSurface.withValues(alpha: 0.5), // ✅
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
+                borderSide: BorderSide(color: colors.primary),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: BorderSide(
+                  color: colors.primary.withValues(alpha: 0.5), // ✅
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: BorderSide(color: colors.primary, width: 2),
               ),
             ),
             onTap: () async {
               final now = DateTime.now();
-              final minAgeDate = DateTime(
-                  now.year - 15,
-                  12,
-                  31
-              );
+              final minAgeDate = DateTime(now.year - 15, 12, 31);
 
               final date = await showDatePicker(
                 context: context,
@@ -103,7 +117,7 @@ class Step1 extends StatelessWidget {
           height: 60,
           width: 250,
           decoration: BoxDecoration(
-            color: const Color(0xff011963),
+            color: colors.primary,
             borderRadius: BorderRadius.circular(28),
           ),
           child: Center(
@@ -118,11 +132,11 @@ class Step1 extends StatelessWidget {
 
                 onNext();
               },
-              child:  Text(
+              child: Text(
                 t.next,
-                style: TextStyle(
+                style: theme.textTheme.titleLarge?.copyWith(
                   fontSize: 25,
-                  color: Colors.white,
+                  color: colors.onPrimary,
                   fontFamily: 'DM Serif Display',
                 ),
               ),

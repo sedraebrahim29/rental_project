@@ -1,4 +1,9 @@
 {
+
+  "theme_mode": "Theme Mode",
+  "dark_mode": "Dark Mode",
+  "light_mode": "Light Mode",
+
   "add_property": "Add Property",
   "properties": "Properties",
   "property_added_success": "Property added successfully!",
@@ -64,6 +69,7 @@
   "balance_success": "Balance topped up successfully",
   "enter_valid_amount": "Enter valid amount",
   "balance": "Balance",
+  "language" : "Language",
 
 
   "login": "Login",

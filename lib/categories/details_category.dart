@@ -4,7 +4,6 @@ import 'package:rent/cubit/details_cubit/details_cubit.dart';
 import 'package:rent/cubit/details_cubit/details_state.dart';
 import 'package:rent/cubit/language_cubit/language_cubit.dart';
 import 'package:rent/l10n/app_localizations.dart';
-import 'package:rent/models/property_model.dart';
 import 'package:rent/widgets/details_widgets/details_image.dart';
 import 'package:rent/widgets/details_widgets/details_info.dart';
 
@@ -23,7 +22,7 @@ class DetailsCategory extends StatefulWidget {
 class _DetailsCategoryState extends State<DetailsCategory> {
 
   void _loadDetails() {
-    final lang =context.read<LanguageCubit>().state.languageCode;
+    final lang = context.read<LanguageCubit>().state.languageCode;
     context.read<DetailsCubit>().getDetails(widget.apartmentId, lang);
   }
 
@@ -37,10 +36,14 @@ class _DetailsCategoryState extends State<DetailsCategory> {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context)!;//للترجمة
+    final t = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
       body: BlocBuilder<DetailsCubit, DetailsState>(
         builder: (context, state) {
+
           if (state is DetailsLoading) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -50,7 +53,7 @@ class _DetailsCategoryState extends State<DetailsCategory> {
               child: ElevatedButton.icon(
                 onPressed: _loadDetails,
                 icon: const Icon(Icons.refresh),
-                label:  Text(t.try_again),
+                label: Text(t.try_again),
               ),
             );
           }
@@ -58,34 +61,44 @@ class _DetailsCategoryState extends State<DetailsCategory> {
           if (state is DetailsSuccess) {
             final apartment = state.apartment;
 
-            return Column(
+            return Stack(
               children: [
-                Expanded(
+                const Positioned.fill(
+                  child: Image(
+                    image: AssetImage('assets/details_page_1.jpg'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+
+                //  Overlay (Light / Dark)
+                Positioned.fill(
                   child: Container(
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/details_page_1.jpg'),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          DetailsImage(
-                            images: apartment.imageUrls.isNotEmpty
-                                ? apartment.imageUrls
-                                : const [
-                              'assets/Screenshot 2025-11-01 234119.png',
-                              'assets/Screenshot 2025-11-01 234119.png',
-                              'assets/Screenshot 2025-11-01 234119.png',
-                              'assets/Screenshot 2025-11-01 234119.png',
-                            ],
-                          ),
-                          const SizedBox(height: 100),
-                          DetailsInfo(apartment: apartment),
-                        ],
-                      ),
+                    color: isDark
+                        ? Colors.black.withValues(alpha: 0.65)
+                        : Colors.black.withValues(alpha: 0.25),
+                  ),
+                ),
+
+                SafeArea(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        DetailsImage(
+                          images: apartment.imageUrls.isNotEmpty
+                              ? apartment.imageUrls
+                              : const [
+                            'assets/Screenshot 2025-11-01 234119.png',
+                            'assets/Screenshot 2025-11-01 234119.png',
+                            'assets/Screenshot 2025-11-01 234119.png',
+                            'assets/Screenshot 2025-11-01 234119.png',
+                          ],
+                        ),
+
+                        const SizedBox(height: 100),
+
+                        DetailsInfo(apartment: apartment),
+                      ],
                     ),
                   ),
                 ),
@@ -99,4 +112,3 @@ class _DetailsCategoryState extends State<DetailsCategory> {
     );
   }
 }
-

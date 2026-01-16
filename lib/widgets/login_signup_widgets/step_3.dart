@@ -26,43 +26,46 @@ class Step3 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context)!;//للترجمة
+    final t = AppLocalizations.of(context)!; // للترجمة
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+
     return Column(
       children: [
         // PROFILE IMAGE
-         Padding(
-          padding: EdgeInsets.only(right: 85, bottom: 4),
+        Padding(
+          padding: const EdgeInsets.only(right: 85, bottom: 4),
           child: Text(
             t.your_photo,
-            style: TextStyle(
-              color: Colors.white,
+            style: theme.textTheme.bodyMedium?.copyWith(
               fontSize: 17,
               fontFamily: 'DM Serif Display',
+              color: colors.onSurface,
             ),
           ),
         ),
         GestureDetector(
           onTap: onPickProfile,
-          child: imageBox(profileImage),
+          child: imageBox(context, profileImage),
         ),
 
         const SizedBox(height: 25),
 
-        //  ID IMAGE
-         Padding(
-          padding: EdgeInsets.only(right: 70, bottom: 4),
+        // ID IMAGE
+        Padding(
+          padding: const EdgeInsets.only(right: 70, bottom: 4),
           child: Text(
             t.your_id_photo,
-            style: TextStyle(
-              color: Colors.white,
+            style: theme.textTheme.bodyMedium?.copyWith(
               fontSize: 17,
               fontFamily: 'DM Serif Display',
+              color: colors.onSurface,
             ),
           ),
         ),
         GestureDetector(
           onTap: onPickId,
-          child: imageBox(idImage),
+          child: imageBox(context, idImage),
         ),
 
         const SizedBox(height: 135),
@@ -82,14 +85,14 @@ class Step3 extends StatelessWidget {
           },
           builder: (context, state) {
             if (state is SignupLoading) {
-              return const CircularProgressIndicator(color: Colors.white);
+              return CircularProgressIndicator(color: colors.onSurface);
             }
 
             return Container(
               height: 60,
               width: 250,
               decoration: BoxDecoration(
-                color: const Color(0xff011963),
+                color: colors.primary,
                 borderRadius: BorderRadius.circular(28),
               ),
               child: Center(
@@ -97,23 +100,25 @@ class Step3 extends StatelessWidget {
                   onTap: () {
                     if (profileImage == null || idImage == null) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                         SnackBar(content: Text(t.select_image)),
+                        SnackBar(content: Text(t.select_image)),
                       );
                       return;
                     }
-                    final lang =  context.read<LanguageCubit>().state.languageCode;
-                    //  trigger cubit
+                    final lang =
+                        context.read<LanguageCubit>().state.languageCode;
+
+                    // trigger cubit
                     context.read<SignupCubit>().signup(
                       image: profileImage!,
                       idImage: idImage!,
                       lang: lang,
                     );
                   },
-                  child:  Text(
+                  child: Text(
                     t.signup,
-                    style: TextStyle(
+                    style: theme.textTheme.titleLarge?.copyWith(
                       fontSize: 25,
-                      color: Colors.white,
+                      color: colors.onPrimary,
                       fontFamily: 'DM Serif Display',
                     ),
                   ),
@@ -126,15 +131,19 @@ class Step3 extends StatelessWidget {
     );
   }
 
-  //  IMAGE BOX
-  Widget imageBox(File? image) {
+  // IMAGE BOX
+  Widget imageBox(BuildContext context, File? image) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+
     return Center(
       child: Container(
         height: 120,
         width: 180,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: theme.cardColor,
           borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: colors.primary.withValues(alpha: 0.4)),
           image: image != null
               ? DecorationImage(
             image: FileImage(image),
@@ -142,7 +151,9 @@ class Step3 extends StatelessWidget {
           )
               : null,
         ),
-        child: image == null ? const Icon(Icons.camera_alt) : null,
+        child: image == null
+            ? Icon(Icons.camera_alt, color: colors.onSurface)
+            : null,
       ),
     );
   }

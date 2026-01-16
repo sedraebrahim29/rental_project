@@ -18,7 +18,6 @@ class EditPropertyScreen extends StatefulWidget {
 }
 
 class _EditPropertyScreenState extends State<EditPropertyScreen> {
-  // Controllers
   late TextEditingController areaController;
   late TextEditingController priceController;
   late TextEditingController addressController;
@@ -30,7 +29,6 @@ class _EditPropertyScreenState extends State<EditPropertyScreen> {
   late List<File> newLocalImages;
   final ImagePicker _picker = ImagePicker();
 
-  // This matches your physical UI exactly
   final List<String> availableAmenities = [
     'WiFi',
     'Pool',
@@ -56,32 +54,30 @@ class _EditPropertyScreenState extends State<EditPropertyScreen> {
   }
 
   Future<void> _pickImage() async {
-    final XFile? pickedFile = await _picker.pickImage(
-      source: ImageSource.gallery,
-    );
+    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
-      setState(() {
-        newLocalImages.add(File(pickedFile.path));
-      });
+      setState(() => newLocalImages.add(File(pickedFile.path)));
     }
   }
-  late final t = AppLocalizations.of(context)!;//للترجمة
+
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: MyColor.offWhite,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         elevation: 0,
-        title:  Text(
+        backgroundColor: MyColor.deepBlue,
+        centerTitle: true,
+        title: Text(
           t.edit_property,
-          style: TextStyle(
-            color: MyColor.offWhite,
+          style: theme.textTheme.titleMedium?.copyWith(
+            color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: MyColor.deepBlue,
-        centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
@@ -89,22 +85,17 @@ class _EditPropertyScreenState extends State<EditPropertyScreen> {
       ),
       body: BlocListener<PropertyCubit, PropertyState>(
         listener: (context, state) {
-          if (state is PropertyUpdated) {
-            Navigator.pop(
-              context,
-            ); // Close on success, HomeScreen updates automatically
-          }
+          if (state is PropertyUpdated) Navigator.pop(context);
         },
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // Header Image Section
               Container(
                 height: 200,
                 width: double.infinity,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: MyColor.deepBlue,
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(50),
                     bottomRight: Radius.circular(50),
                   ),
@@ -116,71 +107,52 @@ class _EditPropertyScreenState extends State<EditPropertyScreen> {
                       height: 100,
                       width: 100,
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: const Icon(
-                        Icons.add_a_photo,
-                        color: Colors.white,
-                        size: 40,
-                      ),
+                      child: const Icon(Icons.add_a_photo, color: Colors.white, size: 40),
                     ),
                   ),
                 ),
               ),
 
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 25,
-                  vertical: 20,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Category Dropdown
-                    _buildDropdown(
-                      selectedCategory,
-                      ['House', 'Apartment', 'Villa', 'Studio'],
-                      (val) {
-                        setState(() => selectedCategory = val);
-                      },
-                    ),
+                    _buildDropdown(context, selectedCategory,
+                        ['House', 'Apartment', 'Villa', 'Studio'],
+                            (val) => setState(() => selectedCategory = val)),
                     const SizedBox(height: 15),
 
-                    _buildEditField(t.price, priceController, t.per_mon),
+                    _buildEditField(context, t.price, priceController, t.per_mon),
                     const SizedBox(height: 15),
 
                     Row(
                       children: [
-                        Expanded(
-                          child: _buildEditField(t.beds, bedsController, ""),
-                        ),
+                        Expanded(child: _buildEditField(context, t.beds, bedsController, "")),
                         const SizedBox(width: 15),
-                        Expanded(
-                          child: _buildEditField(t.baths, bathsController, ""),
-                        ),
+                        Expanded(child: _buildEditField(context, t.baths, bathsController, "")),
                       ],
                     ),
                     const SizedBox(height: 15),
 
-                    _buildEditField(t.area, areaController, "m2"),
+                    _buildEditField(context, t.area, areaController, "m2"),
                     const SizedBox(height: 15),
 
                     Text(
                       t.amenities,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+                      style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 10),
 
-                    // Wrap matches your Chip UI
                     Wrap(
                       spacing: 10,
                       runSpacing: 10,
                       children: availableAmenities.map((amenity) {
                         final isSelected = selectedAmenities.contains(amenity);
+
                         return GestureDetector(
                           onTap: () {
                             setState(() {
@@ -190,40 +162,28 @@ class _EditPropertyScreenState extends State<EditPropertyScreen> {
                             });
                           },
                           child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 8,
-                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                             decoration: BoxDecoration(
-                              color: isSelected
-                                  ? MyColor.skyBlue
-                                  : Colors.white,
+                              color: isSelected ? MyColor.skyBlue : theme.cardColor,
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
-                                color: isSelected
-                                    ? MyColor.deepBlue
-                                    : Colors.grey.shade300,
+                                color: isSelected ? MyColor.deepBlue : theme.dividerColor,
                               ),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 if (isSelected)
-                                  const Icon(
-                                    Icons.check,
-                                    size: 16,
-                                    color: MyColor.deepBlue,
-                                  ),
+                                  const Icon(Icons.check, size: 16, color: MyColor.deepBlue),
                                 if (isSelected) const SizedBox(width: 5),
                                 Text(
                                   amenity,
-                                  style: TextStyle(
+                                  style: theme.textTheme.bodyMedium?.copyWith(
                                     color: isSelected
                                         ? MyColor.deepBlue
-                                        : Colors.black,
-                                    fontWeight: isSelected
-                                        ? FontWeight.bold
-                                        : FontWeight.normal,
+                                        : theme.colorScheme.onSurface,
+                                    fontWeight:
+                                    isSelected ? FontWeight.bold : FontWeight.normal,
                                   ),
                                 ),
                               ],
@@ -234,25 +194,22 @@ class _EditPropertyScreenState extends State<EditPropertyScreen> {
                     ),
                     const SizedBox(height: 20),
 
-                    _buildEditField(t.address_details, addressController, ""),
+                    _buildEditField(context, t.address_details, addressController, ""),
                     const SizedBox(height: 30),
 
-                    // Action Buttons Row
                     Row(
                       children: [
-                        // Delete Button
                         Container(
                           decoration: BoxDecoration(
                             color: MyColor.darkRed,
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: IconButton(
-                            onPressed: () => _showDeleteDialog(context),
+                            onPressed: () => _showDeleteDialog(context, t),
                             icon: const Icon(Icons.delete, color: Colors.white),
                           ),
                         ),
                         const SizedBox(width: 15),
-                        // Save Button
                         Expanded(
                           child: ElevatedButton(
                             onPressed: _onSave,
@@ -265,9 +222,8 @@ class _EditPropertyScreenState extends State<EditPropertyScreen> {
                             ),
                             child: Text(
                               t.save,
-                              style: TextStyle(
+                              style: theme.textTheme.titleMedium?.copyWith(
                                 color: Colors.white,
-                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -290,11 +246,8 @@ class _EditPropertyScreenState extends State<EditPropertyScreen> {
     final updatedProperty = PropertyModel(
       id: widget.property.id,
       ownerName: widget.property.ownerName,
-      // Required field fixed
       city: widget.property.city,
-      // Required field fixed
       governorate: widget.property.governorate,
-      // Required field fixed
       category: selectedCategory ?? widget.property.category,
       amenities: selectedAmenities,
       area: areaController.text,
@@ -307,12 +260,11 @@ class _EditPropertyScreenState extends State<EditPropertyScreen> {
       localImages: newLocalImages,
     );
 
-    // Prepare API Body for the PUT request
     Map<String, String> body = {
       "price": priceController.text,
       "area": areaController.text,
-      "bedrooms": bedsController.text, // API expects 'bedrooms'
-      "bathrooms": bathsController.text, // API expects 'bathrooms'
+      "bedrooms": bedsController.text,
+      "bathrooms": bathsController.text,
       "address": addressController.text,
       "category": selectedCategory ?? widget.property.category,
     };
@@ -325,26 +277,22 @@ class _EditPropertyScreenState extends State<EditPropertyScreen> {
     );
   }
 
-  void _showDeleteDialog(BuildContext context) {
+  void _showDeleteDialog(BuildContext context, AppLocalizations t) {
+    final theme = Theme.of(context);
+
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title:  Text(t.delete_property),
-        content:  Text(t.are_you_sure),
+        title: Text(t.delete_property, style: theme.textTheme.titleMedium),
+        content: Text(t.are_you_sure, style: theme.textTheme.bodyMedium),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(t.cancel),
-          ),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text(t.cancel)),
           TextButton(
             onPressed: () {
               context.read<PropertyCubit>().deleteProperty(widget.property.id!);
               Navigator.pop(ctx);
             },
-            child: Text(
-              t.delete,
-              style: TextStyle(color: MyColor.darkRed),
-            ),
+            child: Text(t.delete, style: const TextStyle(color: MyColor.darkRed)),
           ),
         ],
       ),
@@ -352,14 +300,17 @@ class _EditPropertyScreenState extends State<EditPropertyScreen> {
   }
 
   Widget _buildDropdown(
-    String? value,
-    List<String> items,
-    Function(String?) onChanged,
-  ) {
+      BuildContext context,
+      String? value,
+      List<String> items,
+      Function(String?) onChanged,
+      ) {
+    final theme = Theme.of(context);
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(15),
       ),
       child: DropdownButtonHideUnderline(
@@ -367,7 +318,10 @@ class _EditPropertyScreenState extends State<EditPropertyScreen> {
           value: value,
           isExpanded: true,
           items: items
-              .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+              .map((e) => DropdownMenuItem(
+            value: e,
+            child: Text(e, style: theme.textTheme.bodyMedium),
+          ))
               .toList(),
           onChanged: onChanged,
         ),
@@ -376,24 +330,26 @@ class _EditPropertyScreenState extends State<EditPropertyScreen> {
   }
 
   Widget _buildEditField(
-    String label,
-    TextEditingController controller,
-    String suffix,
-  ) {
+      BuildContext context,
+      String label,
+      TextEditingController controller,
+      String suffix,
+      ) {
+    final theme = Theme.of(context);
+
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(15),
       ),
       child: TextField(
         controller: controller,
+        style: theme.textTheme.bodyMedium,
         decoration: InputDecoration(
           labelText: label,
+          labelStyle: theme.textTheme.bodyMedium,
           suffixText: suffix,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 15,
-          ),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           border: InputBorder.none,
         ),
       ),

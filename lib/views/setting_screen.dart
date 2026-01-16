@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rent/cubit/language_cubit/language_cubit.dart';
 import 'package:rent/cubit/language_cubit/language_state.dart';
+import 'package:rent/cubit/theme_cubit.dart';
 import 'package:rent/l10n/app_localizations.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -10,15 +11,19 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
     return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Color(0xff353F7A),
-        title: Text(t.settings,
-        style: TextStyle(
-          color: Colors.white,
-            fontWeight: FontWeight.bold
-        ),),
+        backgroundColor: theme.appBarTheme.backgroundColor,
+        title: Text(
+          t.settings,
+          style: theme.textTheme.titleMedium?.copyWith(
+            color: theme.appBarTheme.foregroundColor,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: BlocBuilder<LanguageCubit, LanguageState>(
         builder: (context, state) {
@@ -27,29 +32,33 @@ class SettingsScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 Text(
-                  "Language",
-                  style: const TextStyle(fontSize: 21, fontWeight: FontWeight.bold,
-                  color: Color(0xff0C0E4C)),
+                  t.language,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontSize: 21,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 15),
 
                 DropdownButton<String>(
                   value: state.languageCode,
                   isExpanded: true,
-                  items: const [
+                  dropdownColor: theme.cardColor,
+                  items: [
                     DropdownMenuItem(
                       value: 'en',
-                      child: Text('English',
-                        style: TextStyle( color: Color(0xff0C0E4C)),
-                        ),
+                      child: Text(
+                        'English',
+                        style: theme.textTheme.bodyMedium,
+                      ),
                     ),
                     DropdownMenuItem(
                       value: 'ar',
-                      child: Text('العربية',
-                        style: TextStyle( color: Color(0xff0C0E4C)),
-                        ),
+                      child: Text(
+                        'العربية',
+                        style: theme.textTheme.bodyMedium,
+                      ),
                     ),
                   ],
                   onChanged: (value) {
@@ -58,6 +67,44 @@ class SettingsScreen extends StatelessWidget {
                     }
                   },
                 ),
+                const SizedBox(height: 35),
+
+                Text(
+                  t.theme_mode,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontSize: 21,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+                const SizedBox(height: 15),
+
+                BlocBuilder<ThemeCubit, ThemeMode>(
+                  builder: (context, mode) {
+                    final isDark = mode == ThemeMode.dark;
+
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          isDark ? t.dark_mode : t.light_mode,
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+
+                        Switch(
+                          value: isDark,
+                          onChanged: (value) {
+                            context.read<ThemeCubit>().toggle(value);
+                          },
+                          activeColor: theme.colorScheme.primary,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+
               ],
             ),
           );

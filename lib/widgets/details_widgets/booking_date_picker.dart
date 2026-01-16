@@ -1,35 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:rent/data/colors.dart';
 import 'package:rent/l10n/app_localizations.dart';
 
 class BookingDatePicker extends StatelessWidget {
-   BookingDatePicker({ required this.controller, required this.onPicked,});
+  const BookingDatePicker({super.key,  required this.controller, required this.onPicked,});
 
   final TextEditingController controller;
-   final VoidCallback onPicked;
+  final VoidCallback onPicked;
 
-   @override
+  @override
   Widget build(BuildContext context) {
-     final t = AppLocalizations.of(context)!;//للترجمة
+    final t = AppLocalizations.of(context)!;//للترجمة
+    final theme = Theme.of(context);
+
     return Container(
-width: 300,
+      width: 300,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(17),
-        border: Border.all(color: MyColor.deepBlue),
+        border: Border.all(color: theme.colorScheme.primary),
       ),
       child: TextField(
         controller: controller,
         readOnly: true,
-        decoration:  InputDecoration(
+        style: theme.textTheme.bodyMedium?.copyWith(
+          fontWeight: FontWeight.bold,
+          color: theme.colorScheme.onSurface,
+        ),
+        decoration: InputDecoration(
           border: InputBorder.none,
           hintText: t.date_hint,
-          hintStyle: TextStyle(
+          hintStyle: theme.textTheme.bodyMedium?.copyWith(
             fontSize: 16,
             fontWeight: FontWeight.bold,
-            color: Colors.black54,
-          ),),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+          ),
+        ),
 
         onTap: () async {
           final date = await showDatePicker(

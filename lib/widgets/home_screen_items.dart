@@ -5,19 +5,22 @@ import 'package:rent/cubit/details_cubit/details_cubit.dart';
 import 'package:rent/l10n/app_localizations.dart';
 import 'package:rent/models/property_model.dart';
 
-import '../data/colors.dart';
-
-
 class HomeScreenItems extends StatelessWidget {
-  const HomeScreenItems({super.key, required this.apartment,
-    required this.apartmentId,});
+  const HomeScreenItems({
+    super.key,
+    required this.apartment,
+    required this.apartmentId,
+  });
 
-  final PropertyModel apartment; //للعرض السريع بالـ Home
-  final int apartmentId; //للربط مع صفحة التفاصيل
+  final PropertyModel apartment; // للعرض السريع بالـ Home
+  final int apartmentId; // للربط مع صفحة التفاصيل
 
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context)!;//للترجمة
+    final t = AppLocalizations.of(context)!; // للترجمة
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -26,10 +29,7 @@ class HomeScreenItems extends StatelessWidget {
             builder: (_) => BlocProvider(
               create: (_) => DetailsCubit(),
               child: DetailsCategory(
-
                 apartmentId: apartmentId,
-                
-                  
               ),
             ),
           ),
@@ -40,9 +40,9 @@ class HomeScreenItems extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 10),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
-          side: BorderSide(color: MyColor.deepBlue, width: 1.5),
+          side: BorderSide(color: colors.primary.withValues(alpha: 0.4), width: 1.5),
         ),
-        color: MyColor.offWhite,
+        color: theme.cardColor,
         elevation: 4,
         child: Padding(
           padding: const EdgeInsets.all(12),
@@ -75,9 +75,9 @@ class HomeScreenItems extends StatelessWidget {
                     // NAME
                     Text(
                       apartment.ownerName,
-                      style: TextStyle(
-                        fontSize: 16,
+                      style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
+                        color: colors.onSurface,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -87,7 +87,9 @@ class HomeScreenItems extends StatelessWidget {
                     // LOCATION
                     Text(
                       apartment.address,
-                      style: TextStyle(color: MyColor.deepBlue),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colors.primary,
+                      ),
                       overflow: TextOverflow.ellipsis,
                     ),
 
@@ -97,7 +99,7 @@ class HomeScreenItems extends StatelessWidget {
                     Row(
                       children: [
                         InfoItem(icon: Icons.home, label: apartment.category),
-                        SizedBox(width: 12),
+                        const SizedBox(width: 12),
                         InfoItem(
                           icon: Icons.square_foot_sharp,
                           label: apartment.area,
@@ -110,10 +112,9 @@ class HomeScreenItems extends StatelessWidget {
                     // PRICE
                     Text(
                       '\$${apartment.price} / ${t.per_mon}',
-                      style: TextStyle(
-                        fontSize: 14,
+                      style: theme.textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: MyColor.deepBlue,
+                        color: colors.primary,
                       ),
                     ),
                   ],
@@ -135,11 +136,19 @@ class InfoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+
     return Row(
       children: [
-        Icon(icon, size: 20, color: MyColor.blueGray),
+        Icon(icon, size: 20, color: colors.onSurface.withValues(alpha: 0.6)),
         const SizedBox(width: 6),
-        Text(label, style: TextStyle(color: MyColor.deepBlue)),
+        Text(
+          label,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: colors.onSurface,
+          ),
+        ),
       ],
     );
   }

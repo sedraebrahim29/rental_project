@@ -21,7 +21,10 @@ class Step2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context)!;//للترجمة
+    final t = AppLocalizations.of(context)!; // للترجمة
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+
     final phone = TextFieldModel(
       text: t.phone_number,
       hintText: t.enter_phone_num,
@@ -57,7 +60,7 @@ class Step2 extends StatelessWidget {
           height: 60,
           width: 250,
           decoration: BoxDecoration(
-            color: const Color(0xff011963),
+            color: colors.primary,
             borderRadius: BorderRadius.circular(28),
           ),
           child: Center(
@@ -67,17 +70,16 @@ class Step2 extends StatelessWidget {
                 context.read<SignupCubit>().setStep2Data(
                   phoneNumber: phoneController.text,
                   pass: passwordController.text,
-                  confirmPass:
-                  confirmPasswordController.text,
+                  confirmPass: confirmPasswordController.text,
                 );
 
                 onNext();
               },
-              child:  Text(
+              child: Text(
                 t.next,
-                style: TextStyle(
+                style: theme.textTheme.titleLarge?.copyWith(
                   fontSize: 25,
-                  color: Colors.white,
+                  color: colors.onPrimary,
                   fontFamily: 'DM Serif Display',
                 ),
               ),

@@ -9,6 +9,15 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
+  String get theme_mode => 'المظهر';
+
+  @override
+  String get dark_mode => 'الوضع الداكن';
+
+  @override
+  String get light_mode => 'الوضع الفاتح';
+
+  @override
   String get add_property => 'إضافة عقار';
 
   @override
@@ -181,6 +190,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get balance => 'الرصيد';
+
+  @override
+  String get language => 'اللغة';
 
   @override
   String get login => 'تسجيل الدخول';

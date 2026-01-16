@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rent/cubit/language_cubit/language_cubit.dart';
-import 'package:rent/data/colors.dart';
 import 'package:rent/l10n/app_localizations.dart';
-import 'package:rent/models/profile_model.dart';
 import 'package:rent/widgets/profile_widget/profile_bottom_sheet.dart';
 import 'package:rent/cubit/profile_cubit/profile_cubit.dart';
 import 'package:rent/cubit/profile_cubit/profile_state.dart';
@@ -16,10 +14,9 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-
   void _loadProfile() {
     final lang = context.read<LanguageCubit>().state.languageCode;
-    context.read<ProfileCubit>().getProfile(lang);//trigger
+    context.read<ProfileCubit>().getProfile(lang);
   }
 
   @override
@@ -27,15 +24,17 @@ class _ProfileState extends State<Profile> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadProfile();
-    }); // trigger
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context)!;//للترجمة
+    final t = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      //integrate cubit
       body: BlocBuilder<ProfileCubit, ProfileState>(
         builder: (context, state) {
           if (state is ProfileLoading) {
@@ -49,41 +48,54 @@ class _ProfileState extends State<Profile> {
           if (state is ProfileLoaded) {
             final prof = state.profile;
 
-            return Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/android_compact_1.jpg'),
-                  fit: BoxFit.fill,
+            return Stack(
+              children: [
+                // Background image
+                const Positioned.fill(
+                  child: Image(
+                    image: AssetImage('assets/android_compact_1.jpg'),
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-              child: Column(
-                children: [
-                  const SizedBox(height: 100),
 
-                  CircleAvatar(
-                    radius: 75,
-                    backgroundImage: NetworkImage(prof.image),
+                // Overlay
+                Positioned.fill(
+                  child: Container(
+                    color: isDark
+                        ? Colors.black.withValues(alpha: 0.65)
+                        : Colors.black.withValues(alpha: 0.25),
                   ),
+                ),
 
-                  const SizedBox(height: 30),
+                // Content
+                Column(
+                  children: [
+                    const SizedBox(height: 100),
 
-                  Text(
-                    '${prof.firstName} ${prof.lastName}',
-                    style: const TextStyle(
-                      color: MyColor.deepBlue,
-                      fontSize: 30,
+                    CircleAvatar(
+                      radius: 75,
+                      backgroundImage: NetworkImage(prof.image),
                     ),
-                  ),
 
-                  const SizedBox(height: 20),
+                    const SizedBox(height: 30),
 
-                  Center(
-                    child: SizedBox(
+                    Text(
+                      '${prof.firstName} ${prof.lastName}',
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    SizedBox(
                       width: 210,
                       height: 40,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
+                          backgroundColor: theme.cardColor.withValues(alpha: 0.95),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
@@ -91,70 +103,40 @@ class _ProfileState extends State<Profile> {
                         onPressed: () {},
                         child: Text(
                           t.edit_profile,
-                          style: TextStyle(
+                          style: theme.textTheme.bodyMedium?.copyWith(
                             fontSize: 17,
-                            color: MyColor.deepBlue,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                     ),
-                  ),
 
-                  const SizedBox(height: 40),
+                    const SizedBox(height: 40),
 
-                  Padding(
-                    padding: const EdgeInsets.only(right: 115),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                    "${t.phone_number}: ${prof.phone}",
-                    style: const TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            color: MyColor.deepBlue,
-                          ),
-                        ),
-                        const SizedBox(height: 25),
-                        Text(
-                          "${t.birth_date} : ${prof.birthDate}",
-                          style: const TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            color: MyColor.deepBlue,
-                          ),
-                        ),
-                        const SizedBox(height: 25),
-                        Text(
-                          "${t.properties} : ${prof.propertiesCount}",
-                          style: const TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            color: MyColor.deepBlue,
-                          ),
-                        ),
-                        const SizedBox(height: 25),
-                        Text(
-                          "${t.balance} : ${prof.balance}",
-                          style: const TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            color: MyColor.deepBlue,
-                          ),
-                        ),
-                      ],
+                    Padding(
+                      padding: const EdgeInsets.only(right: 115),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _infoText(context, "${t.phone_number}: ${prof.phone}"),
+                          const SizedBox(height: 25),
+                          _infoText(context, "${t.birth_date}: ${prof.birthDate}"),
+                          const SizedBox(height: 25),
+                          _infoText(context, "${t.properties}: ${prof.propertiesCount}"),
+                          const SizedBox(height: 25),
+                          _infoText(context, "${t.balance}: ${prof.balance}"),
+                        ],
+                      ),
                     ),
-                  ),
 
-                  const SizedBox(height: 50),
+                    const SizedBox(height: 50),
 
-                  Center(
-                    child: SizedBox(
+                    SizedBox(
                       width: 270,
                       height: 40,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
+                          backgroundColor: theme.cardColor.withValues(alpha: 0.95),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
@@ -172,18 +154,18 @@ class _ProfileState extends State<Profile> {
                             builder: (_) => const ProfileBottomSheet(),
                           );
                         },
-                        child:  Text(
+                        child: Text(
                           t.top_up_balance,
-                          style: TextStyle(
+                          style: theme.textTheme.bodyMedium?.copyWith(
                             fontSize: 17,
-                            color: MyColor.deepBlue,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+              ],
             );
           }
 
@@ -192,12 +174,17 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
-}
 
-// FilterInfoRow(label: 'Phone number', field: Input()),
-// SizedBox(height: 25),
-// FilterInfoRow(label: 'Birth date', field: Input()),
-// SizedBox(height: 25),
-// FilterInfoRow(label: 'Properties', field: Input()),
-// SizedBox(height: 25),
-// FilterInfoRow(label: 'Balance', field: Input()),
+  Widget _infoText(BuildContext context, String text) {
+    final theme = Theme.of(context);
+
+    return Text(
+      text,
+      style: theme.textTheme.bodyLarge?.copyWith(
+        fontSize: 17,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+    );
+  }
+}
