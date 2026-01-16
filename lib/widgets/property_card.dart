@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../data/colors.dart';
+import '../l10n/app_localizations.dart';
 import '../models/property_model.dart';
 
 class PropertyCard extends StatelessWidget {
@@ -19,6 +20,7 @@ class PropertyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
@@ -58,8 +60,8 @@ class PropertyCard extends StatelessWidget {
                               color: MyColor.deepBlue,
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: const Text(
-                              'Booking',
+                            child:  Text(
+                              t.my_booking,
                               style: TextStyle(
                                   color: MyColor.offWhite,
                                   fontSize: 12,
@@ -90,8 +92,8 @@ class PropertyCard extends StatelessWidget {
                               color: MyColor.deepBlue,
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: const Text(
-                              'edit',
+                            child:  Text(
+                              t.edit,
                               style: TextStyle(color: Colors.white, fontSize: 12),
                             ),
                           ),
@@ -109,7 +111,7 @@ class PropertyCard extends StatelessWidget {
 
                   // السعر
                   Text(
-                    '\$${property.price} / per night',
+                    '\$${property.price} / ${t.per_night}',
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,

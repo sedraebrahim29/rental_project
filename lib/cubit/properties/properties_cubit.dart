@@ -11,9 +11,9 @@ class PropertiesCubit extends Cubit<PropertiesState> {
 
   PropertyRepo propertyRepo = PropertyRepo();
 
-  Future<void> getProperties() async {
+  Future<void> getProperties(String lang) async {
     try {
-      var properties = await propertyRepo.getProperties();
+      var properties = await propertyRepo.getProperties(lang);
       emit(PropertiesState.success(properties));
     } catch (e) {
       emit(PropertiesState.error(e.toString()));

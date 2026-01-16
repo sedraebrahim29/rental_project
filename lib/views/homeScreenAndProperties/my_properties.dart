@@ -4,9 +4,11 @@ import 'package:rent/cubit/add_property_cubit.dart';
 import 'package:rent/cubit/property_cubit.dart';
 import 'package:rent/views/homeScreenAndProperties/add_property.dart';
 
+import '../../cubit/language_cubit/language_cubit.dart';
 import '../../cubit/properties/properties_cubit.dart';
 
 import '../../data/colors.dart';
+import '../../l10n/app_localizations.dart';
 import '../../widgets/property_card.dart';
 import 'edit_property.dart';
 import 'my_properties_booking_screen.dart';
@@ -16,8 +18,14 @@ class MyPropertiesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final t = AppLocalizations.of(context)!;
+
+    final lang = context.read<LanguageCubit>().state.languageCode;
+
+
     return BlocProvider(
-      create: (context) => PropertiesCubit()..getProperties(),
+      create: (context) => PropertiesCubit()..getProperties(lang),
       child: Scaffold(
         body: SizedBox.expand(
           child: Container(
@@ -32,8 +40,8 @@ class MyPropertiesScreen extends StatelessWidget {
                 const SizedBox(height: 50),
 
                 /// TITLE
-                const Text(
-                  'My Properties',
+                 Text(
+                  t.my_properties,
                   style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.bold,
@@ -56,7 +64,7 @@ class MyPropertiesScreen extends StatelessWidget {
                       ),
                     ).then((_) {
                       /// Refresh list when coming back
-                      context.read<PropertiesCubit>().getProperties();
+                      context.read<PropertiesCubit>().getProperties(lang);
                     });
                   },
                   style: ElevatedButton.styleFrom(
@@ -65,8 +73,8 @@ class MyPropertiesScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(25),
                     ),
                   ),
-                  child: const Text(
-                    'Add',
+                  child: Text(
+                    t.add,
                     style: TextStyle(
                       color: MyColor.offWhite,
                       fontWeight: FontWeight.bold,
@@ -99,15 +107,15 @@ class MyPropertiesScreen extends StatelessWidget {
                             // empty state in RefreshIndicator so user can pull to check 
                             return RefreshIndicator(
                               onRefresh: () async {
-                                await context.read<PropertiesCubit>().getProperties();
+                                await context.read<PropertiesCubit>().getProperties(lang);
                               },
                               child: SingleChildScrollView(
                                 physics: const AlwaysScrollableScrollPhysics(),
                                 child: Container(
                                   height: 500, 
                                   alignment: Alignment.center,
-                                  child: const Text(
-                                    'No properties yet',
+                                  child:  Text(
+                                    t.no_properties_yet,
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 ),
@@ -118,7 +126,7 @@ class MyPropertiesScreen extends StatelessWidget {
                           return RefreshIndicator(
                             color: MyColor.deepBlue,
                             onRefresh: () async {
-                              await context.read<PropertiesCubit>().getProperties();
+                              await context.read<PropertiesCubit>().getProperties(lang);
                             },
                             child: ListView.builder(
                               physics: const AlwaysScrollableScrollPhysics(),
@@ -142,7 +150,7 @@ class MyPropertiesScreen extends StatelessWidget {
                                     ).then((_) {
                                       context
                                           .read<PropertiesCubit>()
-                                          .getProperties();
+                                          .getProperties(lang);
                                     });
                                   },
                             

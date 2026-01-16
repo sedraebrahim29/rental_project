@@ -3,13 +3,14 @@ import 'package:rent/core/constant.dart';
 
 class PropertyApi {
   // 1. Fetch User's Properties for MyProperties Screen
-  Future<String> getProperties( token) async {
+  Future<String> getProperties( token,String lang) async {
     try {
       var response = await http.get(
         Uri.parse("$baseUrl/properties/myProperties"),
         headers: {
           "authorization": "Bearer $token",
           "accept":"application/json",
+          "Accept-Language": lang,
 
         },
       );

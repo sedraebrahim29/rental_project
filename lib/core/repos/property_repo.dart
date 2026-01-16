@@ -12,9 +12,9 @@ class PropertyRepo {
   PropertyApi propertyApi = PropertyApi();
 
   // For MyProperties Screen
-  Future<List<PropertyModel>>  getProperties() async {
+  Future<List<PropertyModel>>  getProperties(String lang) async {
     final String token = await SecureStorage.getToken();
-    var response = await propertyApi.getProperties(token);
+    var response = await propertyApi.getProperties(token,lang);
     var responseBody = json.decode(response);
     var properties = PropertyModel.fromListProperties(responseBody);
     return properties;
@@ -94,9 +94,3 @@ class PropertyRepo {
 
 }
 
-// Future<List<PropertyModel>>  postProperty(var body) async {
-//   var response = await propertyApi.postProperty(json.encode(body));
-//   var responseBody = json.decode(response);
-//   var properties = PropertyModel.fromListProperties(responseBody);
-//   return properties;
-// }
