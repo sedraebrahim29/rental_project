@@ -171,14 +171,18 @@ class AddPropertyScreen extends StatelessWidget {
                               'City',
                               cubit.selectedCityId,
                               cubit.cities,
-                              (v) => cubit.selectedCityId = v,
+                              //FIX HERE
+                              cubit.cities.isEmpty
+                                  ? null
+                                  : (v) => cubit.selectCity(v),
                             ),
                           ),
                           _Dropdown(
                             'Category',
                             cubit.selectedCatId,
                             cubit.categories,
-                            (v) => cubit.selectedCatId = v,
+                            //FIX HERE
+                            (v) => cubit.selectCategory(v),
                           ),
                           const SizedBox(height: 15),
 
@@ -353,7 +357,7 @@ class _Dropdown extends StatelessWidget {
   final String label;
   final int? value;
   final List<Map<String, dynamic>> items;
-  final ValueChanged<int?> onChanged;
+  final ValueChanged<int?>? onChanged; //FIX HERE :Make it nullable
 
   const _Dropdown(this.label, this.value, this.items, this.onChanged);
 

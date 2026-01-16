@@ -46,6 +46,7 @@ class Rent extends StatelessWidget {
         BlocProvider(create: (context) => ProfileCubit()..getProfile()),
       ],
       child: MaterialApp(
+        theme: ThemeData(useMaterial3: false),
         debugShowCheckedModeBanner: false,
 
         home: LoginView(),
